@@ -14,28 +14,28 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
-outputparser = StrOutputParser()
 
-
-def get_transcript_summary(transcript: str, llm: ChatOpenAI, **kwargs):
+def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
     user_prompt = dedent(
-        f"""Summarize the provided video transcript briefly in whole sentences. Prefix your response with a short title for the video, consisting of maximum five words and followed by a hyphen. Answer in plain text format.
-                    Here is the transcript, delimited by ---
-                    ---
-                    {transcript}
-                    ---
-                    """
+        f"""
+        The heading should be a short title for the video, consisting of maximum five words.
+        Secondly, summarize the provided video transcript briefly in whole sentences. 
+        Answer in markdown format. Here is the transcript, delimited by ---
+        ---
+        {transcript_text}
+        ---
+        """
     )
 
     if "custom_prompt" in kwargs:
         user_prompt = dedent(
-            f"""{kwargs['custom_prompt']} 
-                Answer in plain text format.
-                Here is the transcript, delimited by ---
-                ---
-                {transcript}
-                ---
-                """
+            f"""
+            {kwargs['custom_prompt']} 
+            Here is the transcript, delimited by ---
+            ---
+            {transcript_text}
+            ---
+            """
         )
-    chain = prompt | llm | outputparser
+    chain = prompt | llm | StrOutputParser()
     return chain.invoke({"input": user_prompt})

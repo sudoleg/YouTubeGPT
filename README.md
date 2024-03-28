@@ -1,6 +1,10 @@
-# (YouTube) Video Summarizer
+# LLM-based YouTube Video Summarizer
+
+## Installation
 
 ## Section
+
+## Feedback and contributing
 
 ### Inspiration
 
