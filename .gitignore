@@ -1,6 +1,7 @@
 # my stuff
 responses/
 video_meta/
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
