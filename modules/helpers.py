@@ -40,26 +40,28 @@ def save_response_as_file(
     dir_name: str, filename: str, file_content, content_type: str = "text"
 ):
     """
-    Saves given content to a file in the specified directory, formatted as either plain text or JSON.
+    Saves given content to a file in the specified directory, formatted as either plain text, JSON, or Markdown.
 
     Args:
         dir_name (str): The directory where the file will be saved.
         filename (str): The name of the file without extension.
-        file_content: The content to be saved. Can be a string for text or a dictionary/list for JSON.
-        content_type (str): The type of content: "text" for plain text or "json" for JSON format. Defaults to "text".
+        file_content: The content to be saved. Can be a string for text or Markdown, or a dictionary/list for JSON.
+        content_type (str): The type of content: "text" for plain text, "json" for JSON format, or "markdown" for Markdown format. Defaults to "text".
 
     The function creates the directory if it doesn't exist. It saves `file_content` in a file named `filename`
-    within that directory, adding the appropriate extension (.txt for plain text, .json for JSON) based on `content_type`.
-    For JSON content, it is formatted with an indentation of 4 spaces for readability.
+    within that directory, adding the appropriate extension (.txt for plain text, .json for JSON, .md for Markdown) based on `content_type`.
     """
+
+    # Sanitize the filename by replacing slashes with underscores
+    filename = filename.replace("/", "_").replace("\\", "_")
+
     # Create the directory if it does not exist
     os.makedirs(dir_name, exist_ok=True)
 
     # Adjust the filename extension based on the content type
-    if content_type == "json":
-        filename += ".json"
-    else:
-        filename += ".txt"
+    extensions = {"text": ".txt", "json": ".json", "markdown": ".md"}
+    file_extension = extensions.get(content_type, ".txt")
+    filename += file_extension
 
     # Construct the full path for the file
     file_path = os.path.join(dir_name, filename)
