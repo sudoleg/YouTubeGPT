@@ -18,7 +18,7 @@ prompt = ChatPromptTemplate.from_messages(
 def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
     user_prompt = dedent(
         f"""
-        The heading should be a short title for the video, consisting of maximum five words.
+        The heading should be a single short title for the video, consisting of maximum five words.
         Secondly, summarize the provided video transcript briefly in whole sentences. 
         Answer in markdown format. Here is the transcript, delimited by ---
         ---

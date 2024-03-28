@@ -10,7 +10,7 @@ from modules.youtube import fetch_youtube_transcript, get_video_metadata
 
 OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 OPENAI_MODEL = getenv("OPEAI_MODEL", "gpt-3.5-turbo")
-TEMPERATURE = float(getenv("MODEL_TEMPERATURE", "0.2"))
+TEMPERATURE = float(getenv("MODEL_TEMPERATURE", "0.5"))
 
 
 def setup():
@@ -33,8 +33,9 @@ def main():
 
         if submitted:
             vid_metadata = get_video_metadata(url)
-            st.caption(
-                f"We are working with a video called '{vid_metadata['name']}' from {vid_metadata['channel']} on {vid_metadata['provider_name']}."
+            st.subheader(
+                f"'{vid_metadata['name']}' from {vid_metadata['channel']} on {vid_metadata['provider_name']}.",
+                divider="rainbow",
             )
             transcript = fetch_youtube_transcript(url)
             with st.spinner("Summarizing video. Hang on..."):
