@@ -1,3 +1,14 @@
 {
-    "app_title": "AI YouTube Video Summarizer"
+    "app_title": "AI YouTube Video Summarizer",
+    "openai_model": "gpt-3.5-turbo",
+    "available_models": [
+        "gpt-3.5-turbo",
+        "gpt-4",
+        "gpt-4-turbo"
+    ],
+    "temperature": 0.7,
+    "help_texts": {
+        "model": "The OpenAI API is powered by a diverse set of models with different capabilities and price points. Read more at https://platform.openai.com/docs/models/overview",
+        "temperature": "Lower values indicate greater determinism and higher values indicate more randomness. Read more at https://platform.openai.com/docs/guides/text-generation/how-should-i-set-the-temperature-parameter."
+    }
 }
