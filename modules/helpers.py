@@ -3,7 +3,7 @@ import os
 import json
 
 
-def extract_video_id(url):
+def extract_youtube_video_id(url):
     """
     Extracts the video ID from a given YouTube URL.
 
@@ -16,13 +16,13 @@ def extract_video_id(url):
         str or None: The extracted video ID as a string if the URL is valid and the video ID is found, otherwise None.
 
     Example:
-        >>> extract_video_id("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+        >>> extract_youtube_video_id("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
         'dQw4w9WgXcQ'
-        >>> extract_video_id("https://youtu.be/dQw4w9WgXcQ")
+        >>> extract_youtube_video_id("https://youtu.be/dQw4w9WgXcQ")
         'dQw4w9WgXcQ'
-        >>> extract_video_id("https://www.youtube.com/embed/dQw4w9WgXcQ")
+        >>> extract_youtube_video_id("https://www.youtube.com/embed/dQw4w9WgXcQ")
         'dQw4w9WgXcQ'
-        >>> extract_video_id("This is not a valid YouTube URL")
+        >>> extract_youtube_video_id("This is not a valid YouTube URL")
         None
 
     Note:
@@ -72,3 +72,8 @@ def save_response_as_file(
             json.dump(file_content, file, indent=4)
         else:
             file.write(file_content)
+
+
+def get_preffered_languages():
+    # TODO: return from configuration object or config.json
+    return ["en-US", "en", "de"]

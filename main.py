@@ -1,5 +1,6 @@
 import json
 from os import getenv
+import logging
 
 import streamlit as st
 from langchain_openai import ChatOpenAI
@@ -42,8 +43,13 @@ def main():
         submitted = st.form_submit_button("Go!")
 
         if submitted:
+            vid_metadata = get_video_metadata(url)
+            if vid_metadata is not None:
+                st.subheader(
+                    f"'{vid_metadata['name']}' from {vid_metadata['channel']} on {vid_metadata['provider_name']}.",
+                    divider="rainbow",
+                )
             try:
-                vid_metadata = get_video_metadata(url)
                 transcript = fetch_youtube_transcript(url)
                 transcript_num_token = llm.get_num_tokens(transcript)
 
@@ -71,6 +77,7 @@ def main():
                     "Unfortunately, there is no transcript for this video, and therefore a summary can't be provided."
                 )
             except Exception as e:
+                logging.error("An unexpected error occurred %s", str(e))
                 # General error handling, could be network errors, JSON parsing errors, etc.
                 display_error_message(f"An unexpected error occurred: {str(e)}")
 
