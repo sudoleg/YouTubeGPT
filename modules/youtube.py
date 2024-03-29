@@ -2,9 +2,14 @@ import json
 
 from requests import api
 from youtube_transcript_api import YouTubeTranscriptApi, Transcript
+from youtube_transcript_api import CouldNotRetrieveTranscript
 from youtube_transcript_api.formatters import TextFormatter
 
-from .helpers import extract_video_id, save_response_as_file
+from .helpers import extract_youtube_video_id, save_response_as_file
+
+
+class NoTranscriptFoundException(Exception):
+    pass
 
 
 def get_video_metadata(url: str):
@@ -24,17 +29,19 @@ def get_video_metadata(url: str):
 
 
 def fetch_youtube_transcript(url: str):
-    video_id = extract_video_id(url)
+    video_id = extract_youtube_video_id(url)
     if video_id is None:
         return "Error: Could not extract video ID from URL."
 
     try:
         transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
+    except CouldNotRetrieveTranscript as e:
+        print(f"Error: {str(e)}")
+        raise NoTranscriptFoundException
+    else:
         formatter = TextFormatter()
         transcript = formatter.format_transcript(transcript_list)
         return transcript
-    except Exception as e:
-        return f"Error: {str(e)}"
 
 
 def analyze_transcripts(video_id: str):
