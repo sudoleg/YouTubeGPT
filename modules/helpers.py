@@ -1,6 +1,7 @@
 import re
 import os
 import json
+import tiktoken
 
 
 def extract_youtube_video_id(url):
@@ -77,3 +78,18 @@ def save_response_as_file(
 def get_preffered_languages():
     # TODO: return from configuration object or config.json
     return ["en-US", "en", "de"]
+
+
+def num_tokens_from_string(string: str, encoding_name: str) -> int:
+    """
+    Returns the number of tokens in a text string.
+
+    Args:
+        string (str): The string to count tokens in.
+        encoding_name (str):
+
+    Learn more ebout encodings at https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken#encodings
+    """
+    encoding = tiktoken.get_encoding(encoding_name)
+    num_tokens = len(encoding.encode(string))
+    return num_tokens

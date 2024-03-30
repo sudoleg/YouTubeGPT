@@ -7,7 +7,7 @@ from langchain_community.callbacks.openai_info import OpenAICallbackHandler
 from langchain_openai import ChatOpenAI
 
 from modules.helpers import save_response_as_file
-from modules.summary import get_transcript_summary
+from modules.summary import get_transcript_summary, TranscriptTooLongForModelException
 from modules.youtube import (
     NoTranscriptFoundException,
     fetch_youtube_transcript,
@@ -53,6 +53,10 @@ def get_available_models() -> tuple[str]:
 
 def display_error_message(message: str):
     st.error(message)
+
+
+def display_warning_message(message: str):
+    st.warning(message)
 
 
 def display_sidebar():
@@ -122,6 +126,8 @@ def main():
                 display_error_message(
                     "Unfortunately, there is no transcript for this video, and therefore a summary can't be provided."
                 )
+            except TranscriptTooLongForModelException as e:
+                display_warning_message(e.message)
             except Exception as e:
                 logging.error("An unexpected error occurred %s", str(e))
                 # General error handling, could be network errors, JSON parsing errors, etc.
