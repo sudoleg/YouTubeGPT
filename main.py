@@ -3,7 +3,7 @@ import logging
 from os import getenv
 
 import streamlit as st
-from langchain_community.callbacks import openai_info
+from langchain_community.callbacks.openai_info import OpenAICallbackHandler
 from langchain_openai import ChatOpenAI
 
 from modules.helpers import save_response_as_file
@@ -91,12 +91,13 @@ def main():
                 )
             try:
                 transcript = fetch_youtube_transcript(url)
+                cb = OpenAICallbackHandler()
                 llm = ChatOpenAI(
                     api_key=OPENAI_API_KEY,
                     temperature=st.session_state.temperature,
                     model=st.session_state.model,
+                    callbacks=[cb],
                 )
-                transcript_num_token = llm.get_num_tokens(transcript)
 
                 with st.spinner("Summarizing video. Hang on..."):
                     if custom_prompt:
@@ -107,9 +108,9 @@ def main():
                         resp = get_transcript_summary(transcript, llm)
 
                 st.markdown(resp)
-                st.caption(
-                    f"The transcript has {transcript_num_token} tokens. Estimated cost: {openai_info.get_openai_token_cost_for_model(model_name=st.session_state.model, num_tokens=transcript_num_token)}$"
-                )
+
+                st.caption(f"The estimated cost for the request is: {cb.total_cost}$")
+
                 save_response_as_file(
                     dir_name="./responses",
                     filename=f"{vid_metadata['name']}",
