@@ -6,7 +6,7 @@ import streamlit as st
 from langchain_community.callbacks.openai_info import OpenAICallbackHandler
 from langchain_openai import ChatOpenAI
 
-from modules.helpers import save_response_as_file, extract_youtube_video_id
+from modules.helpers import save_response_as_file
 from modules.summary import TranscriptTooLongForModelException, get_transcript_summary
 from modules.youtube import (
     InvalidUrlException,
