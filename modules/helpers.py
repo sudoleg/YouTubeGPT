@@ -4,7 +4,7 @@ import json
 import tiktoken
 
 
-def extract_youtube_video_id(url):
+def extract_youtube_video_id(url: str):
     """
     Extracts the video ID from a given YouTube URL.
 

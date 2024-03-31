@@ -6,9 +6,10 @@ import streamlit as st
 from langchain_community.callbacks.openai_info import OpenAICallbackHandler
 from langchain_openai import ChatOpenAI
 
-from modules.helpers import save_response_as_file
-from modules.summary import get_transcript_summary, TranscriptTooLongForModelException
+from modules.helpers import save_response_as_file, extract_youtube_video_id
+from modules.summary import TranscriptTooLongForModelException, get_transcript_summary
 from modules.youtube import (
+    InvalidUrlException,
     NoTranscriptFoundException,
     fetch_youtube_transcript,
     get_video_metadata,
@@ -56,7 +57,7 @@ def display_error_message(message: str):
 
 
 def display_warning_message(message: str):
-    st.warning(message)
+    st.warning(message, icon=":warning:")
 
 
 def display_sidebar():
@@ -78,60 +79,70 @@ def display_sidebar():
         )
 
 
+def check_url_validity():
+    if extract_youtube_video_id(st.session_state.url_input) is None:
+        display_error_message("Invalid URL")
+
+
 def main():
     display_sidebar()
 
-    with st.form("form"):
-        url = st.text_input("Enter URL of the YouTube Video:")
-        custom_prompt = st.text_input("Enter a custom prompt if you want:")
-        submitted = st.form_submit_button("Go!")
+    with st.form(key="form", border=False):
+        url = st.text_input(
+            "Enter URL of the YouTube Video:",
+            key="url_input",
+            help=get_default_config_value("help_texts.youtube_url"),
+        )
+        custom_prompt = st.text_input(
+            "Enter a custom prompt if you want:",
+            help=get_default_config_value("help_texts.custom_prompt"),
+        )
+        submitted = st.form_submit_button("Summarize!")
 
-        if submitted:
+    if submitted:
+        try:
             vid_metadata = get_video_metadata(url)
             if vid_metadata is not None:
                 st.subheader(
                     f"'{vid_metadata['name']}' from {vid_metadata['channel']} on {vid_metadata['provider_name']}.",
                     divider="rainbow",
                 )
-            try:
-                transcript = fetch_youtube_transcript(url)
-                cb = OpenAICallbackHandler()
-                llm = ChatOpenAI(
-                    api_key=OPENAI_API_KEY,
-                    temperature=st.session_state.temperature,
-                    model=st.session_state.model,
-                    callbacks=[cb],
-                )
-
-                with st.spinner("Summarizing video. Hang on..."):
-                    if custom_prompt:
-                        resp = get_transcript_summary(
-                            transcript, llm, custom_prompt=custom_prompt
-                        )
-                    else:
-                        resp = get_transcript_summary(transcript, llm)
-
-                st.markdown(resp)
-
-                st.caption(f"The estimated cost for the request is: {cb.total_cost}$")
-
-                save_response_as_file(
-                    dir_name="./responses",
-                    filename=f"{vid_metadata['name']}",
-                    file_content=resp,
-                    content_type="markdown",
-                )
-
-            except NoTranscriptFoundException:
-                display_error_message(
-                    "Unfortunately, there is no transcript for this video, and therefore a summary can't be provided."
-                )
-            except TranscriptTooLongForModelException as e:
-                display_warning_message(e.message)
-            except Exception as e:
-                logging.error("An unexpected error occurred %s", str(e))
-                # General error handling, could be network errors, JSON parsing errors, etc.
-                display_error_message(f"An unexpected error occurred: {str(e)}")
+            transcript = fetch_youtube_transcript(url)
+            cb = OpenAICallbackHandler()
+            llm = ChatOpenAI(
+                api_key=OPENAI_API_KEY,
+                temperature=st.session_state.temperature,
+                model=st.session_state.model,
+                callbacks=[cb],
+            )
+            with st.spinner("Summarizing video :gear: Hang on..."):
+                if custom_prompt:
+                    resp = get_transcript_summary(
+                        transcript, llm, custom_prompt=custom_prompt
+                    )
+                else:
+                    resp = get_transcript_summary(transcript, llm)
+            st.markdown(resp)
+            st.caption(f"The estimated cost for the request is: {cb.total_cost}$")
+            save_response_as_file(
+                dir_name=f"./responses/{vid_metadata['channel']}",
+                filename=f"{vid_metadata['name']}",
+                file_content=resp,
+                content_type="markdown",
+            )
+        except InvalidUrlException as e:
+            display_error_message(e.message)
+            e.log_error()
+        except NoTranscriptFoundException as e:
+            display_error_message(e.message)
+            e.log_error()
+        except TranscriptTooLongForModelException as e:
+            display_warning_message(e.message)
+            e.log_error()
+        except Exception as e:
+            logging.error("An unexpected error occurred %s", str(e))
+            # General error handling, could be network errors, JSON parsing errors, etc.
+            display_error_message(f"An unexpected error occurred: {str(e)}")
 
 
 if __name__ == "__main__":
