@@ -79,11 +79,6 @@ def display_sidebar():
         )
 
 
-def check_url_validity():
-    if extract_youtube_video_id(st.session_state.url_input) is None:
-        display_error_message("Invalid URL")
-
-
 def main():
     display_sidebar()
 
