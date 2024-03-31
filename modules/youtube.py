@@ -67,20 +67,18 @@ def get_video_metadata(url: str):
         }
 
 
-def fetch_youtube_transcript(video_id: str):
-    video_id = extract_youtube_video_id(video_id)
-    if video_id is None:
-        raise InvalidUrlException(
-            "Something is wrong with the URL :confused:", video_id
-        )
+def fetch_youtube_transcript(url: str):
+    url = extract_youtube_video_id(url)
+    if url is None:
+        raise InvalidUrlException("Something is wrong with the URL :confused:", url)
 
     try:
         transcript_list = YouTubeTranscriptApi.get_transcript(
-            video_id, languages=get_preffered_languages()
+            url, languages=get_preffered_languages()
         )
     except CouldNotRetrieveTranscript as e:
         logging.error("Failed to retrieve transcript for URL: %s", str(e))
-        raise NoTranscriptFoundException(video_id)
+        raise NoTranscriptFoundException(url)
     else:
         formatter = TextFormatter()
         transcript = formatter.format_transcript(transcript_list)
