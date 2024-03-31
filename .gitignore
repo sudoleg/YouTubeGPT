@@ -2,6 +2,7 @@
 responses/
 video_meta/
 .vscode/
+logos/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
