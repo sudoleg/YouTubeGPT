@@ -22,7 +22,7 @@ def get_video_metadata(url: str):
     try:
         response = api.get("https://noembed.com/embed", params={"url": url}, timeout=5)
     except RequestException as e:
-        logging.warning(f"Can't retrieve metadata for provided video URL: {str(e)}")
+        logging.warning("Can't retrieve metadata for provided video URL: %s", {str(e)})
         return None
     else:
         json_response = json.loads(response.text)
@@ -49,7 +49,7 @@ def fetch_youtube_transcript(url: str):
             video_id, languages=get_preffered_languages()
         )
     except CouldNotRetrieveTranscript as e:
-        logging.error(f"Failed to retrieve transcript for URL {url}: {str(e)}")
+        logging.error("Failed to retrieve transcript for URL: %s", str(e))
         raise NoTranscriptFoundException(f"No transcript found for {url}.")
     else:
         formatter = TextFormatter()
