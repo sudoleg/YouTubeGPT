@@ -97,7 +97,7 @@ def main():
     display_sidebar()
 
     # define the columns
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([0.4, 0.6], gap="large")
 
     input_form = col1.form(key="input_form", border=False, clear_on_submit=True)
     with input_form:
