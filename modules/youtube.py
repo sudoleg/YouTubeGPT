@@ -80,7 +80,7 @@ def fetch_youtube_transcript(url: str):
         )
     except CouldNotRetrieveTranscript as e:
         logging.error("Failed to retrieve transcript for URL: %s", str(e))
-        raise NoTranscriptFoundException(video_id)
+        raise NoTranscriptFoundException(url)
     else:
         formatter = TextFormatter()
         transcript = formatter.format_transcript(transcript_list)
