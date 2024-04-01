@@ -53,7 +53,7 @@ def get_available_models() -> tuple[str]:
 
 
 def display_error_message(message: str):
-    st.error(message)
+    st.error(message, icon=":x:")
 
 
 def display_warning_message(message: str):
@@ -167,8 +167,9 @@ def main():
                 e.log_error()
             except Exception as e:
                 logging.error("An unexpected error occurred %s", str(e))
-                # General error handling, could be network errors, JSON parsing errors, etc.
-                display_error_message(f"An unexpected error occurred: {str(e)}")
+                display_error_message(
+                    "An unexpected error occurred. If you are a developer, you can view the logs to see details about the error."
+                )
 
 
 if __name__ == "__main__":
