@@ -11,7 +11,7 @@ prompt = ChatPromptTemplate.from_messages(
     [
         (
             "system",
-            "You are a helpful assistant, skilled in summarizing video transcripts, answering questions based on them and providing key take-aways.",
+            "You are a helpful assistant, skilled in processing video transcripts according to user's request. For example this could be summarization, question answering or providing key insights.",
         ),
         ("user", "{input}"),
     ]
