@@ -61,16 +61,22 @@ def display_warning_message(message: str):
 
 
 def display_sidebar():
+    """Function for displaying the sidebar and adjusting settings.
+
+    Every widget with a key is added to streamlits session state and can be accessed in the application.
+    Here, the selectbox for model has the key 'model'.
+    Thus the selected model can be accessed via st.session_state.model.
+    """
     with st.sidebar:
-        model = st.selectbox(
+        st.header("(Advanced) settings", divider="rainbow")
+        st.selectbox(
             "Select a model",
             get_available_models(),
             key="model",
             help=get_default_config_value("help_texts.model"),
         )
-        temperature = st.slider(
+        st.slider(
             label="Adjust temperature",
-            value=get_default_config_value("temperature"),
             min_value=0.0,
             max_value=2.0,
             step=0.1,
@@ -80,64 +86,89 @@ def display_sidebar():
 
 
 def main():
+    st.set_page_config(
+        "Video summarizer", layout="wide", initial_sidebar_state="collapsed"
+    )
+    # it's recommended to explicitly set session_state vars initially
+    if "model" not in st.session_state:
+        st.session_state.model = get_default_config_value("default_model")
+    if "temperature" not in st.session_state:
+        st.session_state.temperature = get_default_config_value("temperature")
     display_sidebar()
 
-    with st.form(key="form", border=False):
+    # define the columns
+    col1, col2 = st.columns(2)
+
+    input_form = col1.form(key="input_form", border=False, clear_on_submit=True)
+    with input_form:
         url = st.text_input(
-            "Enter URL of the YouTube Video:",
+            "Enter URL of the YouTube video:",
             key="url_input",
             help=get_default_config_value("help_texts.youtube_url"),
         )
-        custom_prompt = st.text_input(
+        custom_prompt = st.text_area(
             "Enter a custom prompt if you want:",
             help=get_default_config_value("help_texts.custom_prompt"),
         )
-        submitted = st.form_submit_button("Summarize!")
+        input_submitted = st.form_submit_button("Summarize!")
 
-    if submitted:
-        try:
-            vid_metadata = get_video_metadata(url)
+    with col1:
+        if input_submitted:
+            try:
+                vid_metadata = get_video_metadata(url)
+                st.video(url)
+            except InvalidUrlException as e:
+                display_error_message(e.message)
+                e.log_error()
+            except Exception as e:
+                logging.error("An unexpected error occurred %s", str(e))
+                # General error handling, could be network errors, JSON parsing errors, etc.
+                display_error_message(f"An unexpected error occurred: {str(e)}")
+
+    with col2:
+        if input_submitted:
             if vid_metadata is not None:
                 st.subheader(
                     f"'{vid_metadata['name']}' from {vid_metadata['channel']} on {vid_metadata['provider_name']}.",
                     divider="rainbow",
                 )
-            transcript = fetch_youtube_transcript(url)
-            cb = OpenAICallbackHandler()
-            llm = ChatOpenAI(
-                api_key=OPENAI_API_KEY,
-                temperature=st.session_state.temperature,
-                model=st.session_state.model,
-                callbacks=[cb],
-            )
-            with st.spinner("Summarizing video :gear: Hang on..."):
-                if custom_prompt:
-                    resp = get_transcript_summary(
-                        transcript, llm, custom_prompt=custom_prompt
-                    )
-                else:
-                    resp = get_transcript_summary(transcript, llm)
-            st.markdown(resp)
-            st.caption(f"The estimated cost for the request is: {cb.total_cost}$")
-            save_response_as_file(
-                dir_name=f"./responses/{vid_metadata['channel']}",
-                filename=f"{vid_metadata['name']}",
-                file_content=resp,
-                content_type="markdown",
-            )
-        except InvalidUrlException as e:
-            display_error_message(e.message)
-            e.log_error()
-        except NoTranscriptFoundException as e:
-            display_error_message(e.message)
-            e.log_error()
-        except TranscriptTooLongForModelException as e:
-            display_warning_message(e.message)
-            e.log_error()
-        except Exception as e:
-            logging.error("An unexpected error occurred %s", str(e))
-            # General error handling, could be network errors, JSON parsing errors, etc.
-            display_error_message(f"An unexpected error occurred: {str(e)}")
+            try:
+                transcript = fetch_youtube_transcript(url)
+                cb = OpenAICallbackHandler()
+                llm = ChatOpenAI(
+                    api_key=OPENAI_API_KEY,
+                    temperature=st.session_state.temperature,
+                    model=st.session_state.model,
+                    callbacks=[cb],
+                )
+                with st.spinner("Summarizing video :gear: Hang on..."):
+                    if custom_prompt:
+                        resp = get_transcript_summary(
+                            transcript, llm, custom_prompt=custom_prompt
+                        )
+                    else:
+                        resp = get_transcript_summary(transcript, llm)
+                st.markdown(resp)
+                st.caption(f"The estimated cost for the request is: {cb.total_cost}$")
+                save_response_as_file(
+                    dir_name=f"./responses/{vid_metadata['channel']}",
+                    filename=f"{vid_metadata['name']}",
+                    file_content=resp,
+                    content_type="markdown",
+                )
+            except InvalidUrlException as e:
+                display_error_message(e.message)
+                e.log_error()
+            except NoTranscriptFoundException as e:
+                display_error_message(e.message)
+                e.log_error()
+            except TranscriptTooLongForModelException as e:
+                display_warning_message(e.message)
+                e.log_error()
+            except Exception as e:
+                logging.error("An unexpected error occurred %s", str(e))
+                # General error handling, could be network errors, JSON parsing errors, etc.
+                display_error_message(f"An unexpected error occurred: {str(e)}")
 
 
 if __name__ == "__main__":
