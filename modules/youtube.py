@@ -75,7 +75,7 @@ def fetch_youtube_transcript(url: str):
         )
 
     try:
-        transcript_list = YouTubeTranscriptApi.get_transcript(
+        transcript = YouTubeTranscriptApi.get_transcript(
             video_id, languages=get_preffered_languages()
         )
     except CouldNotRetrieveTranscript as e:
@@ -83,7 +83,7 @@ def fetch_youtube_transcript(url: str):
         raise NoTranscriptFoundException(url)
     else:
         formatter = TextFormatter()
-        transcript = formatter.format_transcript(transcript_list)
+        transcript = formatter.format_transcript(transcript)
         return transcript
 
 
