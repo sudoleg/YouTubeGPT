@@ -1,0 +1,10 @@
+responses/*
+.gitignore
+.venv/
+README.md
+logos/
+test/
+.vscode/
+video_meta/*
+docs/
+.git/
