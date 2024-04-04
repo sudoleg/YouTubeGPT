@@ -17,6 +17,7 @@ from modules.youtube import (
 
 OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 PATH_TO_CONFIG = getenv("CONFIG_PATH", "./config.json")
+GENERAL_ERROR_MESSAGE = "An unexpected error occurred. If you are a developer, you can view the logs to see details about the error."
 
 
 def get_default_config_value(key_path: str) -> str:
@@ -112,6 +113,8 @@ def main():
         )
         input_submitted = st.form_submit_button("Summarize!")
 
+    vid_metadata = None
+
     with col1:
         if input_submitted:
             try:
@@ -123,13 +126,13 @@ def main():
             except Exception as e:
                 logging.error("An unexpected error occurred %s", str(e))
                 # General error handling, could be network errors, JSON parsing errors, etc.
-                display_error_message(f"An unexpected error occurred: {str(e)}")
+                display_error_message(GENERAL_ERROR_MESSAGE)
 
     with col2:
         if input_submitted:
             if vid_metadata is not None:
                 st.subheader(
-                    f"'{vid_metadata['name']}' from {vid_metadata['channel']} on {vid_metadata['provider_name']}.",
+                    f"'{vid_metadata['name']}' from {vid_metadata['channel']}.",
                     divider="rainbow",
                 )
             try:
@@ -167,9 +170,7 @@ def main():
                 e.log_error()
             except Exception as e:
                 logging.error("An unexpected error occurred %s", str(e))
-                display_error_message(
-                    "An unexpected error occurred. If you are a developer, you can view the logs to see details about the error."
-                )
+                display_error_message(GENERAL_ERROR_MESSAGE)
 
 
 if __name__ == "__main__":
