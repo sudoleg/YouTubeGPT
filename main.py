@@ -53,7 +53,7 @@ def get_available_models() -> tuple[str]:
 
 
 def display_error_message(message: str):
-    st.error(message, icon=":x:")
+    st.error(message)
 
 
 def display_warning_message(message: str):
