@@ -10,6 +10,8 @@ YTAI summarizes YouTube videos and is not the first project to do that. However,
 
 - **provide a custom prompt**
   - you can tailor the response to your needs by providing a custom prompt just use the default summarization
+- **automatically save summaries**
+  - the summaries will be saved in the directory where you run the app with docker. The summaries will be available under `<YT-channel-name>/<video-title>.md`
 - **choose from different models**
   - currently available: GPTs from OpenAI
   - Claude is planned
@@ -17,7 +19,16 @@ YTAI summarizes YouTube videos and is not the first project to do that. However,
 - **experiment with settings**
   - adjust the temperature of the model
 
-## Installation
+## Installation & usage
+
+### development in virtual environment
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+streamlit run main.py
+```
 
 ## Contributing
 
