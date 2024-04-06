@@ -36,7 +36,7 @@ Feedback and contributions are welcome! This is a small side-project and it's ve
 
 1. **Fork & clone**: Fork the repo and clone your fork to start.
 2. **Pick an issue or suggest One**: Choose an open issue to work on, or suggest a new feature or bug fix by creating an issue for discussion.
-3. **Develop**: Make your changes.**
+3. **Develop**: Make your changes.
    - Ensure your code is clean and documented. Test the changes at least exploratively. Make sure to test 'edge cases'.
    - Commit your changes with clear, descriptive messages, preferably using [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/).
 4. **Stay updated**: Keep your branch in sync with the main branch to avoid merge conflicts.
