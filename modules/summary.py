@@ -43,7 +43,7 @@ def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
         ---
         Answer in markdown format strictly adhering to this schema:
 
-        <short title>
+        ## <short title>
 
         <your summary>
         """
