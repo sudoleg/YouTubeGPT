@@ -58,7 +58,7 @@ def display_error_message(message: str):
 
 
 def display_warning_message(message: str):
-    st.warning(message, icon=":warning:")
+    st.warning(message)
 
 
 def display_sidebar():
@@ -70,7 +70,7 @@ def display_sidebar():
     """
     with st.sidebar:
         st.header("(Advanced) settings", divider="rainbow")
-        st.selectbox(
+        model = st.selectbox(
             "Select a model",
             get_available_models(),
             key="model",
@@ -90,11 +90,15 @@ def display_sidebar():
             help=get_default_config_value("help_texts.saving_responses"),
             key="save_responses",
         )
+        if model != get_default_config_value("default_model"):
+            display_warning_message(
+                ":warning: Make sure that you have at least Tier 1, as GPT-4 (turbo) is not available in the free tier. See https://platform.openai.com/docs/guides/rate-limits/usage-tiers"
+            )
 
 
 def main():
     st.set_page_config(
-        "Video summarizer", layout="wide", initial_sidebar_state="collapsed"
+        page_title="YouTube AI", layout="wide", initial_sidebar_state="auto"
     )
     # it's recommended to explicitly set session_state vars initially
     if "model" not in st.session_state:
