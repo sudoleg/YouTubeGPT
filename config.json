@@ -11,6 +11,7 @@
         "youtube_url": "Copy directly from the adress bar or use the 'Share' button.",
         "custom_prompt": "You can ask a specific question, require a more detailed summary, specify the format etc.",
         "model": "The OpenAI API is powered by a diverse set of models with different capabilities and price points. Read more at https://platform.openai.com/docs/models/overview",
-        "temperature": "Lower values indicate greater determinism and higher values indicate more randomness. Read more at https://platform.openai.com/docs/guides/text-generation/how-should-i-set-the-temperature-parameter."
+        "temperature": "Lower values indicate greater determinism and higher values indicate more randomness. Read more at https://platform.openai.com/docs/guides/text-generation/how-should-i-set-the-temperature-parameter.",
+        "saving_responses": "Whether to save responses in the directory, where you run the app. The responses will be saved under '<YT-channel-name>/<video-title>.md'."
     }
 }

@@ -84,6 +84,12 @@ def display_sidebar():
             key="temperature",
             help=get_default_config_value("help_texts.temperature"),
         )
+        st.checkbox(
+            label="Save responses",
+            value=False,
+            help=get_default_config_value("help_texts.saving_responses"),
+            key="save_responses",
+        )
 
 
 def main():
@@ -95,6 +101,8 @@ def main():
         st.session_state.model = get_default_config_value("default_model")
     if "temperature" not in st.session_state:
         st.session_state.temperature = get_default_config_value("temperature")
+    if "save_responses" not in st.session_state:
+        st.session_state.save_responses = False
     display_sidebar()
 
     # define the columns
@@ -153,12 +161,13 @@ def main():
                         resp = get_transcript_summary(transcript, llm)
                 st.markdown(resp)
                 st.caption(f"The estimated cost for the request is: {cb.total_cost}$")
-                save_response_as_file(
-                    dir_name=f"./responses/{vid_metadata['channel']}",
-                    filename=f"{vid_metadata['name']}",
-                    file_content=resp,
-                    content_type="markdown",
-                )
+                if st.session_state.save_responses:
+                    save_response_as_file(
+                        dir_name=f"./responses/{vid_metadata['channel']}",
+                        filename=f"{vid_metadata['name']}",
+                        file_content=resp,
+                        content_type="markdown",
+                    )
             except InvalidUrlException as e:
                 display_error_message(e.message)
                 e.log_error()
