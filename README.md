@@ -21,6 +21,13 @@ YTAI summarizes YouTube videos and is not the first project to do that. However,
 
 ## Installation & usage
 
+### build & run with Docker
+
+```bash
+docker build --tag=ytai:latest .
+docker run -p 8501:8501 -v $(pwd):/app/responses -e OPENAI_API_KEY=<your-openai-api-key> --name yt-summarizer ytai:latest
+```
+
 ### development in virtual environment
 
 ```bash
