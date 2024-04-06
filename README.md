@@ -21,11 +21,16 @@ YTAI summarizes YouTube videos and is not the first project to do that. However,
 
 ## Installation & usage
 
+No matter how you choose to run the app, you will first need to get an OpenAI API-Key. This is very straightforward and free. Have a look at [their instructions](https://platform.openai.com/docs/quickstart/account-setup) to get started.
+
 ### build & run with Docker
 
 ```bash
+# build locally
 docker build --tag=ytai:latest .
-docker run -p 8501:8501 -v $(pwd):/app/responses -e OPENAI_API_KEY=<your-openai-api-key> --name yt-summarizer ytai:latest
+# or pull from Docker Hub
+docker pull sudoleg/ytai:latest
+docker run -p 8501:8501 -v $(pwd):/app/responses -e OPENAI_API_KEY=<your-openai-api-key> --name yt-summarizer sudoleg/ytai:latest
 ```
 
 ### development in virtual environment
@@ -34,6 +39,7 @@ docker run -p 8501:8501 -v $(pwd):/app/responses -e OPENAI_API_KEY=<your-openai-
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+export OPENAI_API_KEY=<your-openai-api-key>
 streamlit run main.py
 ```
 
