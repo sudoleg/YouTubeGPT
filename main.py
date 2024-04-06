@@ -119,7 +119,6 @@ def main():
         if input_submitted:
             try:
                 vid_metadata = get_video_metadata(url)
-                st.video(url)
             except InvalidUrlException as e:
                 display_error_message(e.message)
                 e.log_error()
@@ -127,14 +126,15 @@ def main():
                 logging.error("An unexpected error occurred %s", str(e))
                 # General error handling, could be network errors, JSON parsing errors, etc.
                 display_error_message(GENERAL_ERROR_MESSAGE)
-
-    with col2:
-        if input_submitted:
-            if vid_metadata is not None:
+            else:
                 st.subheader(
                     f"'{vid_metadata['name']}' from {vid_metadata['channel']}.",
                     divider="rainbow",
                 )
+                st.video(url)
+
+    with col2:
+        if input_submitted:
             try:
                 transcript = fetch_youtube_transcript(url)
                 cb = OpenAICallbackHandler()
