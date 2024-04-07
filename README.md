@@ -65,3 +65,5 @@ The project is built using some amazing libraries:
 - The UI is built using [Streamlit](https://github.com/streamlit/streamlit).
 
 ## License
+
+This project is licensed under the MIT License - see the LICENSE.md file for details.
