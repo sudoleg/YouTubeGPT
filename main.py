@@ -164,7 +164,9 @@ def main():
                     else:
                         resp = get_transcript_summary(transcript, llm)
                 st.markdown(resp)
-                st.caption(f"The estimated cost for the request is: {cb.total_cost}$")
+                st.caption(
+                    f"The estimated cost for the request is: {cb.total_cost:.4f}$"
+                )
                 if st.session_state.save_responses:
                     save_response_as_file(
                         dir_name=f"./responses/{vid_metadata['channel']}",
