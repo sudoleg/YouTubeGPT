@@ -16,6 +16,8 @@ from .helpers import (
     save_response_as_file,
 )
 
+OEMBED_PROVIDER = "https://noembed.com/embed"
+
 
 class NoTranscriptFoundException(Exception):
     def __init__(self, url: str):
@@ -48,7 +50,7 @@ def get_video_metadata(url: str):
         )
 
     try:
-        response = api.get("https://noembed.com/embed", params={"url": url}, timeout=5)
+        response = api.get(OEMBED_PROVIDER, params={"url": url}, timeout=5)
     except RequestException as e:
         logging.warning("Can't retrieve metadata for provided video URL: %s", {str(e)})
         return None
