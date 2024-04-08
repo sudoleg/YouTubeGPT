@@ -10,7 +10,7 @@ from modules.helpers import save_response_as_file
 from modules.summary import TranscriptTooLongForModelException, get_transcript_summary
 from modules.youtube import (
     InvalidUrlException,
-    NoTranscriptFoundException,
+    NoTranscriptReceivedException,
     fetch_youtube_transcript,
     get_video_metadata,
 )
@@ -69,7 +69,7 @@ def display_sidebar():
     Thus the selected model can be accessed via st.session_state.model.
     """
     with st.sidebar:
-        st.header("(Advanced) settings", divider="rainbow")
+        st.header("(Advanced) settings", divider="gray")
         model = st.selectbox(
             "Select a model",
             get_available_models(),
@@ -136,13 +136,13 @@ def main():
                 e.log_error()
             except Exception as e:
                 logging.error("An unexpected error occurred %s", str(e))
-                # General error handling, could be network errors, JSON parsing errors, etc.
                 display_error_message(GENERAL_ERROR_MESSAGE)
             else:
-                st.subheader(
-                    f"'{vid_metadata['name']}' from {vid_metadata['channel']}.",
-                    divider="rainbow",
-                )
+                if vid_metadata:
+                    st.subheader(
+                        f"'{vid_metadata['name']}' from {vid_metadata['channel']}.",
+                        divider="gray",
+                    )
                 st.video(url)
 
     with col2:
@@ -177,7 +177,7 @@ def main():
             except InvalidUrlException as e:
                 display_error_message(e.message)
                 e.log_error()
-            except NoTranscriptFoundException as e:
+            except NoTranscriptReceivedException as e:
                 display_error_message(e.message)
                 e.log_error()
             except TranscriptTooLongForModelException as e:

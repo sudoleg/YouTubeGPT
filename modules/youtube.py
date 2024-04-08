@@ -19,7 +19,7 @@ from .helpers import (
 OEMBED_PROVIDER = "https://noembed.com/embed"
 
 
-class NoTranscriptFoundException(Exception):
+class NoTranscriptReceivedException(Exception):
     def __init__(self, url: str):
         # message should be a user-friendly error message
         self.message = "Unfortunately, no transcript was found for this video. Therefore a summary can't be provided :slightly_frowning_face:"
@@ -82,7 +82,7 @@ def fetch_youtube_transcript(url: str):
         )
     except CouldNotRetrieveTranscript as e:
         logging.error("Failed to retrieve transcript for URL: %s", str(e))
-        raise NoTranscriptFoundException(url)
+        raise NoTranscriptReceivedException(url)
     else:
         formatter = TextFormatter()
         transcript = formatter.format_transcript(transcript)
