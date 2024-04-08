@@ -17,6 +17,7 @@ prompt = ChatPromptTemplate.from_messages(
     ]
 )
 
+# info about OpenAI's GPTs context windows: https://platform.openai.com/docs/models
 CONTEXT_WINDOWS = {
     "gpt-3.5-turbo": {"total": 16385, "output": 4096},
     "gpt-4": {"total": 8192, "output": 4096},
@@ -36,23 +37,27 @@ class TranscriptTooLongForModelException(Exception):
 
 def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
     user_prompt = dedent(
-        f"""The heading should be a single short title for the video, consisting of maximum five words.
-        Summarize the provided video transcript briefly in whole sentences. Here is the transcript, delimited by ---
+        f"""Based on the provided transcript of the video, create a summary that accurately captures the main topics and arguments. The summray should be in whole sentences and contain no more than 300 words.
+        Additionaly, extract key insights from the video for contributing to better understanding, emphasizing the main points and providing actionable advise.
+        Here is the transcript, delimited by ---
         ---
         {transcript_text}
         ---
         Answer in markdown format strictly adhering to this schema:
 
-        ## <short title>
+        ## <short title for the video, consisting of maximum five words>
 
         <your summary>
+
+        ## Key insights
+
+        <unnumbered list of key insights>
         """
     )
 
     if "custom_prompt" in kwargs:
         user_prompt = dedent(
-            f"""
-            {kwargs['custom_prompt']} 
+            f"""{kwargs['custom_prompt']} 
             Here is the transcript, delimited by ---
             ---
             {transcript_text}
