@@ -30,7 +30,7 @@ No matter how you choose to run the app, you will first need to get an OpenAI AP
 docker build --tag=ytai:latest .
 # or pull from Docker Hub
 docker pull sudoleg/ytai:latest
-docker run -p 8501:8501 -v $(pwd):/app/responses -e OPENAI_API_KEY=<your-openai-api-key> --name yt-summarizer sudoleg/ytai:latest
+docker run -d -p 8501:8501 -v $(pwd):/app/responses -e OPENAI_API_KEY=<your-openai-api-key> --name yt-summarizer sudoleg/ytai:latest
 ```
 
 ### development in virtual environment
