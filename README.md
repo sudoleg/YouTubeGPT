@@ -4,22 +4,22 @@
 
 <h1 align="center">YTAI - Your YouTube AI</h1>
 
-## Features
+## Features :sparkles:
 
 YTAI summarizes YouTube videos and is not the first project to do that. However, it offers some features that other similar projects and AI summarizers on the internet don't:
 
-- **provide a custom prompt**
+- **provide a custom prompt** :writing_hand:
   - you can tailor the response to your needs by providing a custom prompt just use the default summarization
-- **automatically save summaries**
+- **automatically save summaries** :open_file_folder:
   - the summaries can be automatically saved in the directory where you run the app. The summaries will be available under `<YT-channel-name>/<video-title>.md`
-- **choose from different models**
+- **choose from different models** :robot:
   - currently available: GPTs from OpenAI
   - Claude is planned
   - by choosing a differnt model, you can summarize even longer videos and potentially get better responses
-- **experiment with settings**
+- **experiment with settings** :gear:
   - adjust the temperature of the model
-- **choose UI theme**
-  - go to the three dots in the upper right corner, select setting a choose either light, dark or my aesthetic custom theme
+- **choose UI theme** :paintbrush:
+  - go to the three dots in the upper right corner, select settings and choose either light, dark or my aesthetic custom theme
 
 ## Installation & usage
 
