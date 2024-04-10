@@ -10,7 +10,7 @@ from modules.helpers import save_response_as_file
 from modules.summary import TranscriptTooLongForModelException, get_transcript_summary
 from modules.youtube import (
     InvalidUrlException,
-    NoTranscriptFoundException,
+    NoTranscriptReceivedException,
     fetch_youtube_transcript,
     get_video_metadata,
 )
@@ -58,7 +58,7 @@ def display_error_message(message: str):
 
 
 def display_warning_message(message: str):
-    st.warning(message, icon=":warning:")
+    st.warning(message)
 
 
 def display_sidebar():
@@ -69,8 +69,8 @@ def display_sidebar():
     Thus the selected model can be accessed via st.session_state.model.
     """
     with st.sidebar:
-        st.header("(Advanced) settings", divider="rainbow")
-        st.selectbox(
+        st.header("(Advanced) settings", divider="gray")
+        model = st.selectbox(
             "Select a model",
             get_available_models(),
             key="model",
@@ -84,18 +84,40 @@ def display_sidebar():
             key="temperature",
             help=get_default_config_value("help_texts.temperature"),
         )
+        st.checkbox(
+            label="Save responses",
+            value=False,
+            help=get_default_config_value("help_texts.saving_responses"),
+            key="save_responses",
+        )
+        if model != get_default_config_value("default_model"):
+            display_warning_message(
+                ":warning: Make sure that you have at least Tier 1, as GPT-4 (turbo) is not available in the free tier. See https://platform.openai.com/docs/guides/rate-limits/usage-tiers"
+            )
+
+
+def check_api_key_availability():
+    """Checks whether the OPENAI_API_KEY environment variable is set and displays warning if not."""
+    if not OPENAI_API_KEY:
+        display_warning_message(
+            "It seems you haven't provided an API-Key. Make sure to do so according to the instructions: https://github.com/sudoleg/ytai?tab=readme-ov-file#installation--usage"
+        )
 
 
 def main():
     st.set_page_config(
-        "Video summarizer", layout="wide", initial_sidebar_state="collapsed"
+        page_title="YouTube AI", layout="wide", initial_sidebar_state="auto"
     )
     # it's recommended to explicitly set session_state vars initially
     if "model" not in st.session_state:
         st.session_state.model = get_default_config_value("default_model")
     if "temperature" not in st.session_state:
         st.session_state.temperature = get_default_config_value("temperature")
+    if "save_responses" not in st.session_state:
+        st.session_state.save_responses = False
+
     display_sidebar()
+    check_api_key_availability()
 
     # define the columns
     col1, col2 = st.columns([0.4, 0.6], gap="large")
@@ -124,13 +146,13 @@ def main():
                 e.log_error()
             except Exception as e:
                 logging.error("An unexpected error occurred %s", str(e))
-                # General error handling, could be network errors, JSON parsing errors, etc.
                 display_error_message(GENERAL_ERROR_MESSAGE)
             else:
-                st.subheader(
-                    f"'{vid_metadata['name']}' from {vid_metadata['channel']}.",
-                    divider="rainbow",
-                )
+                if vid_metadata:
+                    st.subheader(
+                        f"'{vid_metadata['name']}' from {vid_metadata['channel']}.",
+                        divider="gray",
+                    )
                 st.video(url)
 
     with col2:
@@ -152,17 +174,20 @@ def main():
                     else:
                         resp = get_transcript_summary(transcript, llm)
                 st.markdown(resp)
-                st.caption(f"The estimated cost for the request is: {cb.total_cost}$")
-                save_response_as_file(
-                    dir_name=f"./responses/{vid_metadata['channel']}",
-                    filename=f"{vid_metadata['name']}",
-                    file_content=resp,
-                    content_type="markdown",
+                st.caption(
+                    f"The estimated cost for the request is: {cb.total_cost:.4f}$"
                 )
+                if st.session_state.save_responses:
+                    save_response_as_file(
+                        dir_name=f"./responses/{vid_metadata['channel']}",
+                        filename=f"{vid_metadata['name']}",
+                        file_content=resp,
+                        content_type="markdown",
+                    )
             except InvalidUrlException as e:
                 display_error_message(e.message)
                 e.log_error()
-            except NoTranscriptFoundException as e:
+            except NoTranscriptReceivedException as e:
                 display_error_message(e.message)
                 e.log_error()
             except TranscriptTooLongForModelException as e:
