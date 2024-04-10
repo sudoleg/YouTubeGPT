@@ -96,6 +96,14 @@ def display_sidebar():
             )
 
 
+def check_api_key_availability():
+    """Checks whether the OPENAI_API_KEY environment variable is set and displays warning if not."""
+    if not OPENAI_API_KEY:
+        display_warning_message(
+            "It seems you haven't provided an API-Key. Make sure to do so according to the instructions: https://github.com/sudoleg/ytai?tab=readme-ov-file#installation--usage"
+        )
+
+
 def main():
     st.set_page_config(
         page_title="YouTube AI", layout="wide", initial_sidebar_state="auto"
@@ -107,7 +115,9 @@ def main():
         st.session_state.temperature = get_default_config_value("temperature")
     if "save_responses" not in st.session_state:
         st.session_state.save_responses = False
+
     display_sidebar()
+    check_api_key_availability()
 
     # define the columns
     col1, col2 = st.columns([0.4, 0.6], gap="large")
