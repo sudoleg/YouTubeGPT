@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from os import getenv
 
 import streamlit as st
@@ -69,7 +70,12 @@ def display_sidebar():
     Thus the selected model can be accessed via st.session_state.model.
     """
     with st.sidebar:
-        st.header("(Advanced) settings", divider="gray")
+        st.header("(Advanced) settings")
+        if not OPENAI_API_KEY:
+            openai_api_key = st.text_input(
+                "OpenAI API Key", key="openai_api_key", type="password"
+            )
+            os.environ["OPENAI_API_KEY"] = openai_api_key
         model = st.selectbox(
             "Select a model",
             get_available_models(),
@@ -94,13 +100,16 @@ def display_sidebar():
             display_warning_message(
                 ":warning: Make sure that you have at least Tier 1, as GPT-4 (turbo) is not available in the free tier. See https://platform.openai.com/docs/guides/rate-limits/usage-tiers"
             )
+        f"[View the source code]({get_default_config_value('github_repo_link')})"
 
 
 def check_api_key_availability():
     """Checks whether the OPENAI_API_KEY environment variable is set and displays warning if not."""
-    if not OPENAI_API_KEY:
+    if not OPENAI_API_KEY and st.session_state.openai_api_key == "":
         display_warning_message(
-            "It seems you haven't provided an API-Key. Make sure to do so according to the instructions: https://github.com/sudoleg/ytai?tab=readme-ov-file#installation--usage"
+            """It seems you haven't provided an API-Key yet. Make sure to do so by providing it in the settings (sidebar) 
+            or as an environment variable according to the [instructions](https://github.com/sudoleg/ytai?tab=readme-ov-file#installation--usage).
+            """
         )
 
 
