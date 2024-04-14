@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 from os import getenv
 
 import streamlit as st
@@ -72,10 +71,9 @@ def display_sidebar():
     with st.sidebar:
         st.header("(Advanced) settings")
         if not OPENAI_API_KEY:
-            openai_api_key = st.text_input(
-                "OpenAI API Key", key="openai_api_key", type="password"
-            )
-            os.environ["OPENAI_API_KEY"] = openai_api_key
+            st.text_input("OpenAI API Key", key="openai_api_key", type="password")
+        else:
+            st.session_state.openai_api_key = OPENAI_API_KEY
         model = st.selectbox(
             "Select a model",
             get_available_models(),
@@ -107,7 +105,7 @@ def check_api_key_availability():
     """Checks whether the OPENAI_API_KEY environment variable is set and displays warning if not."""
     if not OPENAI_API_KEY and st.session_state.openai_api_key == "":
         display_warning_message(
-            """It seems you haven't provided an API-Key yet. Make sure to do so by providing it in the settings (sidebar) 
+            """:warning: It seems you haven't provided an API-Key yet. Make sure to do so by providing it in the settings (sidebar) 
             or as an environment variable according to the [instructions](https://github.com/sudoleg/ytai?tab=readme-ov-file#installation--usage).
             """
         )
@@ -131,8 +129,7 @@ def main():
     # define the columns
     col1, col2 = st.columns([0.4, 0.6], gap="large")
 
-    input_form = col1.form(key="input_form", border=False, clear_on_submit=True)
-    with input_form:
+    with col1:
         url = st.text_input(
             "Enter URL of the YouTube video:",
             key="url_input",
@@ -142,12 +139,9 @@ def main():
             "Enter a custom prompt if you want:",
             help=get_default_config_value("help_texts.custom_prompt"),
         )
-        input_submitted = st.form_submit_button("Summarize!")
+        summarize_button = st.button("Summarize")
 
-    vid_metadata = None
-
-    with col1:
-        if input_submitted:
+        if url != "":
             try:
                 vid_metadata = get_video_metadata(url)
             except InvalidUrlException as e:
@@ -165,12 +159,12 @@ def main():
                 st.video(url)
 
     with col2:
-        if input_submitted:
+        if summarize_button:
             try:
                 transcript = fetch_youtube_transcript(url)
                 cb = OpenAICallbackHandler()
                 llm = ChatOpenAI(
-                    api_key=OPENAI_API_KEY,
+                    api_key=st.session_state.openai_api_key,
                     temperature=st.session_state.temperature,
                     model=st.session_state.model,
                     callbacks=[cb],
