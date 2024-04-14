@@ -100,7 +100,6 @@ def display_sidebar():
                 ":warning: Make sure that you have at least Tier 1, as GPT-4 (turbo) is not available in the free tier. See https://platform.openai.com/docs/guides/rate-limits/usage-tiers"
             )
         f"[View the source code]({get_default_config_value('github_repo_link')})"
-        f"[View the source code]({get_default_config_value('github_repo_link')})"
 
 
 def check_api_key_availability():
