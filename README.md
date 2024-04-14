@@ -15,7 +15,7 @@ YTAI summarizes YouTube videos and is not the first project to do that. However,
 - **choose from different models** :robot:
   - currently available: GPTs from OpenAI
   - Claude is planned
-  - by choosing a differnt model, you can summarize even longer videos and potentially get better responses
+  - by choosing a different model, you can summarize even longer videos and potentially get better responses
 - **experiment with settings** :gear:
   - adjust the temperature of the model
 - **choose UI theme** :paintbrush:
