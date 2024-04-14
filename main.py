@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 from os import getenv
 
 import streamlit as st
