@@ -26,13 +26,14 @@ CONTEXT_WINDOWS = {
 
 
 class TranscriptTooLongForModelException(Exception):
-    def __init__(self, message):
+    def __init__(self, message, model_name: str):
         self.message = message
+        self.model_name = model_name
         super().__init__(self.message)
 
     def log_error(self):
         # Assuming logging is configured globally
-        logging.error("Transcript too long.")
+        logging.error("Transcript too long for %s.", self.model_name, exc_info=True)
 
 
 def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
@@ -68,7 +69,7 @@ def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
     num_tokens_transcript = num_tokens_from_string(transcript_text, "cl100k_base")
 
     # if the number of transcript tokens exceeds 80% of the context window, an exception is raised
-    # here i assume that the size of the summary is around 1/5 of the original transcript
+    # here I assume that the size of the summary is around 1/5 of the original transcript
     # my assumption may be wrong. In this case, don't hesitate to start a discussion on github!
     # I would be happy to implement a better solution for the problem of exceeding context widndow
     if num_tokens_transcript >= CONTEXT_WINDOWS[llm.model_name]["total"] * 0.8:
@@ -77,7 +78,8 @@ def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
             f"Your transcript has {num_tokens_transcript} tokens, which is more than 80% of the context window. "
             "Assuming that the response is at least 1/5 of the original transcript, the request might fail or you'll get an incomplete summary. "
             "Consider choosing another model with larger context window. "
-            "You can get more information on context windows for different models here: https://platform.openai.com/docs/models"
+            "You can get more information on context windows for different models here: https://platform.openai.com/docs/models",
+            model_name=llm.model_name,
         )
 
     chain = prompt | llm | StrOutputParser()

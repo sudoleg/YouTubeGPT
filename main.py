@@ -17,7 +17,7 @@ from modules.youtube import (
 
 OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 PATH_TO_CONFIG = getenv("CONFIG_PATH", "./config.json")
-GENERAL_ERROR_MESSAGE = "An unexpected error occurred. If you are a developer, you can view the logs to see details about the error."
+GENERAL_ERROR_MESSAGE = "An unexpected error occurred. If you are a developer and run the app locally, you can view the logs to see details about the error."
 
 
 def get_default_config_value(key_path: str) -> str:
@@ -96,7 +96,10 @@ def display_sidebar():
         )
         if model != get_default_config_value("default_model"):
             display_warning_message(
-                ":warning: Make sure that you have at least Tier 1, as GPT-4 (turbo) is not available in the free tier. See https://platform.openai.com/docs/guides/rate-limits/usage-tiers"
+                """:warning: Make sure that you have at least Tier 1, as GPT-4 (turbo) is not available in the free tier.
+                See OpenAI's documentation about [usage tiers](https://platform.openai.com/docs/guides/rate-limits/usage-tiers).  
+                Also, beware of the potentially higher costs of other models.
+                """
             )
         f"[View the source code]({get_default_config_value('github_repo_link')})"
 
@@ -107,6 +110,8 @@ def check_api_key_availability():
         display_warning_message(
             """:warning: It seems you haven't provided an API-Key yet. Make sure to do so by providing it in the settings (sidebar) 
             or as an environment variable according to the [instructions](https://github.com/sudoleg/ytai?tab=readme-ov-file#installation--usage).
+            Also, make sure that you have **active credit grants** and that they are not expired! You can check it [here](https://platform.openai.com/usage),
+            it should be on the right side. 
             """
         )
 
@@ -197,9 +202,14 @@ def main():
                 display_warning_message(e.message)
                 e.log_error()
             except Exception as e:
-                logging.error("An unexpected error occurred %s", str(e))
+                logging.error("An unexpected error occurred: %s", str(e), exc_info=True)
                 display_error_message(GENERAL_ERROR_MESSAGE)
 
 
 if __name__ == "__main__":
+    logging.basicConfig(
+        format="%(asctime)s - %(message)s",
+        datefmt="%d-%b-%y %H:%M:%S",
+        level=logging.INFO,
+    )
     main()
