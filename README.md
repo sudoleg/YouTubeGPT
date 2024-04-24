@@ -16,7 +16,7 @@ YTAI summarizes YouTube videos and is not the first project to do that. However,
   - currently available: gpt-3.5-turbo, gpt-4 (turbo)
   - by choosing a different model, you can summarize even longer videos and potentially get better responses
 - **experiment with settings** :gear:
-  - adjust the temperature of the model
+  - adjust the temperature and top P of the model
 - **choose UI theme** :paintbrush:
   - go to the three dots in the upper right corner, select settings and choose either light, dark or my aesthetic custom theme
 

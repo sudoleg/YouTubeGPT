@@ -61,6 +61,14 @@ def display_warning_message(message: str):
     st.warning(message)
 
 
+def is_temperature_and_top_p_altered() -> bool:
+    if st.session_state.temperature != get_default_config_value(
+        "temperature"
+    ) and st.session_state.top_p != get_default_config_value("top_p"):
+        return True
+    return False
+
+
 def display_sidebar():
     """Function for displaying the sidebar and adjusting settings.
 
@@ -88,6 +96,18 @@ def display_sidebar():
             key="temperature",
             help=get_default_config_value("help_texts.temperature"),
         )
+        st.slider(
+            label="Adjust Top P",
+            min_value=0.0,
+            max_value=1.0,
+            step=0.1,
+            key="top_p",
+            help=get_default_config_value("help_texts.top_p"),
+        )
+        if is_temperature_and_top_p_altered():
+            display_warning_message(
+                "OpenAI generally recommends altering temperature or top_p but not both. See their [API reference](https://platform.openai.com/docs/api-reference/chat/create#chat-create-temperature)"
+            )
         st.checkbox(
             label="Save responses",
             value=False,
@@ -125,6 +145,8 @@ def main():
         st.session_state.model = get_default_config_value("default_model")
     if "temperature" not in st.session_state:
         st.session_state.temperature = get_default_config_value("temperature")
+    if "top_p" not in st.session_state:
+        st.session_state.top_p = get_default_config_value("top_p")
     if "save_responses" not in st.session_state:
         st.session_state.save_responses = False
 
@@ -173,6 +195,7 @@ def main():
                     temperature=st.session_state.temperature,
                     model=st.session_state.model,
                     callbacks=[cb],
+                    model_kwargs={"top_p": st.session_state.top_p},
                 )
                 with st.spinner("Summarizing video :gear: Hang on..."):
                     if custom_prompt:
