@@ -22,6 +22,8 @@ CONTEXT_WINDOWS = {
     "gpt-3.5-turbo": {"total": 16385, "output": 4096},
     "gpt-4": {"total": 8192, "output": 4096},
     "gpt-4-turbo": {"total": 128000, "output": 4096},
+    # https://community.openai.com/t/gpt-4o-max-tokens-output-response-length/748822
+    "gpt-4o": {"total": 128000, "output": 4096},
 }
 
 
