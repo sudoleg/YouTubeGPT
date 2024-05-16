@@ -13,7 +13,7 @@ YTAI summarizes YouTube videos and is not the first project to do that. However,
 - **automatically save summaries** :open_file_folder:
   - the summaries can be automatically saved in the directory where you run the app. The summaries will be available under `<YT-channel-name>/<video-title>.md`
 - **choose from different OpenAI models** :robot:
-  - currently available: gpt-3.5-turbo, gpt-4 (turbo)
+  - currently available: gpt-3.5-turbo, gpt-4 (turbo), gpt-4o
   - by choosing a different model, you can summarize even longer videos and potentially get better responses
 - **experiment with settings** :gear:
   - adjust the temperature and top P of the model
