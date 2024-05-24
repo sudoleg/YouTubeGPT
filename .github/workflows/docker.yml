@@ -28,10 +28,10 @@ jobs:
         id: docker_tags
         run: |
           if [ "${{ github.ref_name }}" == "main" ]; then
-            echo "tags=${{ secrets.DOCKER_USERNAME }}/my-image:latest" >> $GITHUB_ENV
+            echo "tags=${{ secrets.DOCKERHUB_USERNAME }}/my-image:latest" >> $GITHUB_ENV
           else
-            echo "tags=${{ secrets.DOCKER_USERNAME }}/my-image:${{ github.ref_name }}" >> $GITHUB_ENV
-            echo "tags=${{ secrets.DOCKER_USERNAME }}/my-image:${{ github.sha }}" >> $GITHUB_ENV
+            echo "tags=${{ secrets.DOCKERHUB_USERNAME }}/ytai:${{ github.ref_name }}" >> $GITHUB_ENV
+            echo "tags=${{ secrets.DOCKERHUB_USERNAME }}/ytai:${{ github.sha }}" >> $GITHUB_ENV
           fi
 
       - name: Build and Push Docker Image
