@@ -1,10 +1,9 @@
-name: Build Docker image
+name: Build and Tag Docker Image
 
 on:
   push:
     branches:
-      - "main"
-      - "docker"
+      - '**'  # Run on all branches
 
 jobs:
   docker:
@@ -25,10 +24,24 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Determine Docker Tags
+        id: docker_tags
+        run: |
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            echo "tags=${{ secrets.DOCKER_USERNAME }}/my-image:latest" >> $GITHUB_ENV
+          else
+            echo "tags=${{ secrets.DOCKER_USERNAME }}/my-image:${{ github.ref_name }}" >> $GITHUB_ENV
+            echo "tags=${{ secrets.DOCKER_USERNAME }}/my-image:${{ github.sha }}" >> $GITHUB_ENV
+          fi
+
+      - name: Build and Push Docker Image
         uses: docker/build-push-action@v5
         with:
           context: .
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: sudoleg/ytai:latest
+          tags: ${{ env.tags }}
+          labels: |
+            org.opencontainers.image.source=${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.created=${{ github.event.head_commit.timestamp }}
