@@ -5,6 +5,8 @@ video_meta/
 design/
 test/
 certs/
+*.ipynb
+transcripts/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
