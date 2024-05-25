@@ -4,6 +4,38 @@ import json
 import tiktoken
 
 
+def get_default_config_value(
+    key_path: str,
+    config_file_path: str = "./config.json",
+) -> str:
+    """
+    Retrieves a configuration value from a JSON file using a specified key path.
+
+    Args:
+        config_file_path (str): A string representing the relative path to the JSON config file.
+
+        key_path (str): A string representing the path to the desired value within the nested JSON structure,
+                        with each level separated by a '.' (e.g., "level1.level2.key").
+
+
+    Returns:
+        The value corresponding to the key path within the configuration file. If the key path does not exist,
+        a KeyError is raised.
+
+    Raises:
+        KeyError: If the specified key path is not found in the configuration.
+    """
+    with open(config_file_path, "r", encoding="utf-8") as config_file:
+        config = json.load(config_file)
+
+        keys = key_path.split(".")
+        value = config
+        for key in keys:
+            value = value[key]  # Navigate through each level
+
+        return value
+
+
 def extract_youtube_video_id(url: str):
     """
     Extracts the video ID from a given YouTube URL.

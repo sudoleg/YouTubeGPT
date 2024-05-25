@@ -1,4 +1,3 @@
-import json
 import logging
 from os import getenv
 
@@ -6,7 +5,7 @@ import streamlit as st
 from langchain_community.callbacks.openai_info import OpenAICallbackHandler
 from langchain_openai import ChatOpenAI
 
-from modules.helpers import save_response_as_file
+from modules.helpers import get_default_config_value, save_response_as_file
 from modules.summary import TranscriptTooLongForModelException, get_transcript_summary
 from modules.youtube import (
     InvalidUrlException,
@@ -16,49 +15,7 @@ from modules.youtube import (
 )
 
 OPENAI_API_KEY = getenv("OPENAI_API_KEY")
-PATH_TO_CONFIG = getenv("CONFIG_PATH", "./config.json")
 GENERAL_ERROR_MESSAGE = "An unexpected error occurred. If you are a developer and run the app locally, you can view the logs to see details about the error."
-
-
-def get_default_config_value(key_path: str) -> str:
-    """
-    Retrieves a configuration value from a JSON file using a specified key path.
-
-    Args:
-        key_path (str): A string representing the path to the desired value within the nested JSON structure,
-                        with each level separated by a '.' (e.g., "level1.level2.key").
-
-    Returns:
-        The value corresponding to the key path within the configuration file. If the key path does not exist,
-        a KeyError is raised.
-
-    Raises:
-        KeyError: If the specified key path is not found in the configuration.
-    """
-    with open(PATH_TO_CONFIG, "r", encoding="utf-8") as config_file:
-        config = json.load(config_file)
-
-        keys = key_path.split(".")
-        value = config
-        for key in keys:
-            value = value[key]  # Navigate through each level
-
-        return value
-
-
-def get_available_models() -> tuple[str]:
-    with open(PATH_TO_CONFIG, "r", encoding="utf-8") as config_file:
-        config = json.load(config_file)
-        models = config["available_models"]
-        return tuple(models)
-
-
-def display_error_message(message: str):
-    st.error(message)
-
-
-def display_warning_message(message: str):
-    st.warning(message)
 
 
 def is_temperature_and_top_p_altered() -> bool:
@@ -84,7 +41,7 @@ def display_sidebar():
             st.session_state.openai_api_key = OPENAI_API_KEY
         model = st.selectbox(
             "Select a model",
-            get_available_models(),
+            tuple(get_default_config_value("available_models")),
             key="model",
             help=get_default_config_value("help_texts.model"),
         )
@@ -105,7 +62,7 @@ def display_sidebar():
             help=get_default_config_value("help_texts.top_p"),
         )
         if is_temperature_and_top_p_altered():
-            display_warning_message(
+            st.warning(
                 "OpenAI generally recommends altering temperature or top_p but not both. See their [API reference](https://platform.openai.com/docs/api-reference/chat/create#chat-create-temperature)"
             )
         st.checkbox(
@@ -115,8 +72,8 @@ def display_sidebar():
             key="save_responses",
         )
         if model != get_default_config_value("default_model"):
-            display_warning_message(
-                """:warning: Make sure that you have at least Tier 1, as GPT-4 (turbo) is not available in the free tier.
+            st.warning(
+                """:warning: Make sure that you have at least Tier 1, as GPT-4 (turbo, 4o) is not available in the free tier.
                 See OpenAI's documentation about [usage tiers](https://platform.openai.com/docs/guides/rate-limits/usage-tiers).  
                 Also, beware of the potentially higher costs of other models.
                 """
@@ -127,7 +84,7 @@ def display_sidebar():
 def check_api_key_availability():
     """Checks whether the OPENAI_API_KEY environment variable is set and displays warning if not."""
     if not OPENAI_API_KEY and st.session_state.openai_api_key == "":
-        display_warning_message(
+        st.warning(
             """:warning: It seems you haven't provided an API-Key yet. Make sure to do so by providing it in the settings (sidebar) 
             or as an environment variable according to the [instructions](https://github.com/sudoleg/ytai?tab=readme-ov-file#installation--usage).
             Also, make sure that you have **active credit grants** and that they are not expired! You can check it [here](https://platform.openai.com/usage),
@@ -172,11 +129,11 @@ def main():
             try:
                 vid_metadata = get_video_metadata(url)
             except InvalidUrlException as e:
-                display_error_message(e.message)
+                st.error(e.message)
                 e.log_error()
             except Exception as e:
                 logging.error("An unexpected error occurred %s", str(e))
-                display_error_message(GENERAL_ERROR_MESSAGE)
+                st.error(GENERAL_ERROR_MESSAGE)
             else:
                 if vid_metadata:
                     st.subheader(
@@ -216,17 +173,17 @@ def main():
                         content_type="markdown",
                     )
             except InvalidUrlException as e:
-                display_error_message(e.message)
+                st.error(e.message)
                 e.log_error()
             except NoTranscriptReceivedException as e:
-                display_error_message(e.message)
+                st.error(e.message)
                 e.log_error()
             except TranscriptTooLongForModelException as e:
-                display_warning_message(e.message)
+                st.warning(e.message)
                 e.log_error()
             except Exception as e:
                 logging.error("An unexpected error occurred: %s", str(e), exc_info=True)
-                display_error_message(GENERAL_ERROR_MESSAGE)
+                st.error(GENERAL_ERROR_MESSAGE)
 
 
 if __name__ == "__main__":
