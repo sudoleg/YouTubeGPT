@@ -1,5 +1,4 @@
 import logging
-from textwrap import dedent
 
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
@@ -7,12 +6,11 @@ from langchain_openai import ChatOpenAI
 
 from .helpers import num_tokens_from_string
 
+SYSTEM_PROMPT = "You are a helpful assistant, skilled in processing video transcripts according to user's request. For example this could be summarization, question answering or providing key insights."
+
 prompt = ChatPromptTemplate.from_messages(
     [
-        (
-            "system",
-            "You are a helpful assistant, skilled in processing video transcripts according to user's request. For example this could be summarization, question answering or providing key insights.",
-        ),
+        ("system", SYSTEM_PROMPT),
         ("user", "{input}"),
     ]
 )
@@ -39,8 +37,7 @@ class TranscriptTooLongForModelException(Exception):
 
 
 def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
-    user_prompt = dedent(
-        f"""Based on the provided transcript of the video, create a summary that accurately captures the main topics and arguments. The summray should be in whole sentences and contain no more than 300 words.
+    user_prompt = f"""Based on the provided transcript of the video, create a summary that accurately captures the main topics and arguments. The summray should be in whole sentences and contain no more than 300 words.
         Additionaly, extract key insights from the video for contributing to better understanding, emphasizing the main points and providing actionable advise.
         Here is the transcript, delimited by ---
         ---
@@ -56,17 +53,14 @@ def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
 
         <unnumbered list of key insights>
         """
-    )
 
     if "custom_prompt" in kwargs:
-        user_prompt = dedent(
-            f"""{kwargs['custom_prompt']} 
+        user_prompt = f"""{kwargs['custom_prompt']}
             Here is the transcript, delimited by ---
             ---
             {transcript_text}
             ---
             """
-        )
 
     num_tokens_transcript = num_tokens_from_string(transcript_text, "cl100k_base")
 

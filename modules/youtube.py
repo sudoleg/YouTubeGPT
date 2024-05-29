@@ -85,8 +85,7 @@ def fetch_youtube_transcript(url: str):
         raise NoTranscriptReceivedException(url)
     else:
         formatter = TextFormatter()
-        transcript = formatter.format_transcript(transcript)
-        return transcript
+        return formatter.format_transcript(transcript)
 
 
 def analyze_transcripts(video_id: str):

@@ -123,5 +123,4 @@ def num_tokens_from_string(string: str, encoding_name: str) -> int:
     Learn more ebout encodings at https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken#encodings
     """
     encoding = tiktoken.get_encoding(encoding_name)
-    num_tokens = len(encoding.encode(string))
-    return num_tokens
+    return len(encoding.encode(string))
