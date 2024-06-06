@@ -112,13 +112,14 @@ def get_preffered_languages():
     return ["en-US", "en", "de"]
 
 
-def num_tokens_from_string(string: str, encoding_name: str) -> int:
+def num_tokens_from_string(string: str, encoding_name: str = "cl100k_base") -> int:
     """
     Returns the number of tokens in a text string.
 
     Args:
         string (str): The string to count tokens in.
-        encoding_name (str):
+        encoding_name (str): Encodings specify how text is converted into tokens. Different models use different encodings. Default is cl100k_base, which is used by gpt-3.5 and gpt-4 (turbo).
+
 
     Learn more ebout encodings at https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken#encodings
     """
