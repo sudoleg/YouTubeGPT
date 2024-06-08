@@ -7,6 +7,9 @@ test/
 certs/
 *.ipynb
 transcripts/
+/data/chroma/*
+!/data/chroma/.gitkeep
+*.sqlite3
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
