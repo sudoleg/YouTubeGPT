@@ -153,6 +153,7 @@ def main():
                     model=st.session_state.model,
                     callbacks=[cb],
                     model_kwargs={"top_p": st.session_state.top_p},
+                    max_tokens=2048,
                 )
                 with st.spinner("Summarizing video :gear: Hang on..."):
                     if custom_prompt:
