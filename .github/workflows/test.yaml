@@ -3,15 +3,14 @@ name: Test streamlit app
 
 on:
   push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+    branches:
+      - '**'
 
 permissions:
   contents: read
 
 jobs:
-  streamlit:
+  test_streamlit_app:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
