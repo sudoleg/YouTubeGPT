@@ -1,5 +1,5 @@
 # Base stage for shared environment setup
-FROM python:3.12-slim
+FROM python:3.12.3-slim
 
 # Set working directory
 WORKDIR /app
@@ -14,6 +14,7 @@ RUN pip3 install -r requirements.txt
 COPY . /app/
 
 # Streamlit's configuration options
+ENV PYTHONPATH="/app"
 ENV STREAMLIT_CLIENT_TOOLBAR_MODE="viewer"
 ENV STREAMLIT_SERVER_PORT=8501
 
