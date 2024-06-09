@@ -22,7 +22,6 @@ def test_initial_session_state():
 
 
 def test_checking_save_responses():
-    # at = AppTest.from_function(main).run()
     at = AppTest("main.py", default_timeout=60.0).run()
     assert at.session_state.save_responses is False
     assert at.checkbox(key="save_responses").value is False
