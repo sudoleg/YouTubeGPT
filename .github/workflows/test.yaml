@@ -1,0 +1,22 @@
+# .github/workflows/streamlit-app.yml
+name: Test streamlit app
+
+on:
+  push:
+    branches:
+      - '**'
+
+permissions:
+  contents: read
+
+jobs:
+  test_streamlit_app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.3"
+      - uses: streamlit/streamlit-app-action@v0.0.3
+        with:
+          app-path: main.py

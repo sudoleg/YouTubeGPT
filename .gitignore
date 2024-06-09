@@ -5,8 +5,7 @@ video_meta/
 design/
 test/
 certs/
-transcripts/
-transcripts_processed/
+transcripts*/
 /data/chroma/*
 !/data/chroma/.gitkeep
 *.sqlite3
