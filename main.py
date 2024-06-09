@@ -121,9 +121,10 @@ def main():
         )
         custom_prompt = st.text_area(
             "Enter a custom prompt if you want:",
+            key="custom_prompt_input",
             help=get_default_config_value("help_texts.custom_prompt"),
         )
-        summarize_button = st.button("Summarize")
+        summarize_button = st.button("Summarize", key="summarize_button")
 
         if url != "":
             try:
