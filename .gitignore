@@ -6,7 +6,7 @@ design/
 test/
 certs/
 *.ipynb
-transcripts/
+transcripts*/
 /data/chroma/*
 !/data/chroma/.gitkeep
 *.sqlite3
