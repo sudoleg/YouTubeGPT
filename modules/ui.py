@@ -98,9 +98,12 @@ def display_model_settings():
                 Also, beware of the potentially higher costs of other models.
                 """
             )
-        st.write(
-            f"[View the source code]({get_default_config_value('github_repo_link')})"
-        )
+
+
+def display_link_to_repo():
+    st.sidebar.write(
+        f"[View the source code]({get_default_config_value('github_repo_link')})"
+    )
 
 
 def display_video_ur_input():
@@ -110,3 +113,10 @@ def display_video_ur_input():
         key="url_input",
         help=get_default_config_value("help_texts.youtube_url"),
     )
+
+
+def display_nav_menu():
+    """Displays links to pages in sidebar."""
+    st.sidebar.page_link(page="main.py", label="Home")
+    st.sidebar.page_link(page="pages/summary.py", label="Summary")
+    st.sidebar.page_link(page="pages/chat.py", label="Chat")

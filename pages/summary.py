@@ -7,11 +7,13 @@ from langchain_openai import ChatOpenAI
 from modules.helpers import get_default_config_value, save_response_as_file
 from modules.summary import TranscriptTooLongForModelException, get_transcript_summary
 from modules.ui import (
-    display_model_settings,
-    display_missing_api_key_warning,
-    set_api_key_in_session_state,
-    display_video_ur_input,
     GENERAL_ERROR_MESSAGE,
+    display_link_to_repo,
+    display_missing_api_key_warning,
+    display_model_settings,
+    display_nav_menu,
+    display_video_ur_input,
+    set_api_key_in_session_state,
 )
 from modules.youtube import (
     InvalidUrlException,
@@ -23,6 +25,7 @@ from modules.youtube import (
 st.set_page_config("Summaries", layout="wide", initial_sidebar_state="auto")
 
 # --- sidebar with model settings and checkbox for saving responses ---
+display_nav_menu()
 display_model_settings()
 st.sidebar.checkbox(
     label="Save responses",
@@ -30,6 +33,7 @@ st.sidebar.checkbox(
     help=get_default_config_value(key_path="help_texts.saving_responses"),
     key="save_responses",
 )
+display_link_to_repo()
 # --- end ---
 
 display_missing_api_key_warning()

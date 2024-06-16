@@ -4,7 +4,9 @@ import streamlit as st
 
 from modules.helpers import read_file
 from modules.ui import (
+    display_link_to_repo,
     display_missing_api_key_warning,
+    display_nav_menu,
     set_api_key_in_session_state,
 )
 
@@ -15,8 +17,8 @@ def main():
     )
 
     # display sidebar with page links
-    st.sidebar.page_link(page="pages/summary.py", label="Summary")
-    st.sidebar.page_link(page="pages/chat.py", label="Chat")
+    display_nav_menu()
+    display_link_to_repo()
 
     set_api_key_in_session_state()
     display_missing_api_key_warning()
