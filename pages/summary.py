@@ -10,6 +10,8 @@ from modules.ui import (
     display_model_settings,
     display_missing_api_key_warning,
     set_api_key_in_session_state,
+    display_video_ur_input,
+    GENERAL_ERROR_MESSAGE,
 )
 from modules.youtube import (
     InvalidUrlException,
@@ -17,8 +19,6 @@ from modules.youtube import (
     fetch_youtube_transcript,
     get_video_metadata,
 )
-
-GENERAL_ERROR_MESSAGE = "An unexpected error occurred. If you are a developer and run the app locally, you can view the logs to see details about the error."
 
 st.set_page_config("Summaries", layout="wide", initial_sidebar_state="auto")
 
@@ -39,11 +39,7 @@ set_api_key_in_session_state()
 col1, col2 = st.columns([0.4, 0.6], gap="large")
 
 with col1:
-    url = st.text_input(
-        "Enter URL of the YouTube video:",
-        key="url_input",
-        help=get_default_config_value("help_texts.youtube_url"),
-    )
+    url = display_video_ur_input()
     custom_prompt = st.text_area(
         "Enter a custom prompt if you want:",
         key="custom_prompt_input",

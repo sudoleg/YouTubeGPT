@@ -101,3 +101,12 @@ def display_model_settings():
         st.write(
             f"[View the source code]({get_default_config_value('github_repo_link')})"
         )
+
+
+def display_video_ur_input():
+    """Displays an ionput field for the URL of the YouTube video."""
+    return st.text_input(
+        "Enter URL of the YouTube video:",
+        key="url_input",
+        help=get_default_config_value("help_texts.youtube_url"),
+    )
