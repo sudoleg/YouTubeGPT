@@ -1,5 +1,4 @@
 import logging
-from os import getenv
 
 import streamlit as st
 
@@ -8,9 +7,6 @@ from modules.ui import (
     display_missing_api_key_warning,
     set_api_key_in_session_state,
 )
-
-OPENAI_API_KEY = getenv("OPENAI_API_KEY")
-GENERAL_ERROR_MESSAGE = "An unexpected error occurred. If you are a developer and run the app locally, you can view the logs to see details about the error."
 
 
 def main():
