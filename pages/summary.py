@@ -1,5 +1,4 @@
 import logging
-from os import getenv
 
 import streamlit as st
 from langchain_community.callbacks.openai_info import OpenAICallbackHandler
@@ -7,7 +6,11 @@ from langchain_openai import ChatOpenAI
 
 from modules.helpers import get_default_config_value, save_response_as_file
 from modules.summary import TranscriptTooLongForModelException, get_transcript_summary
-from modules.ui import model_settings, check_api_key_availability
+from modules.ui import (
+    display_model_settings,
+    display_missing_api_key_warning,
+    set_api_key_in_session_state,
+)
 from modules.youtube import (
     InvalidUrlException,
     NoTranscriptReceivedException,
@@ -15,13 +18,22 @@ from modules.youtube import (
     get_video_metadata,
 )
 
-OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 GENERAL_ERROR_MESSAGE = "An unexpected error occurred. If you are a developer and run the app locally, you can view the logs to see details about the error."
 
 st.set_page_config("Summaries", layout="wide", initial_sidebar_state="auto")
 
-model_settings()
-check_api_key_availability()
+# --- sidebar with model settings and checkbox for saving responses ---
+display_model_settings()
+st.sidebar.checkbox(
+    label="Save responses",
+    value=False,
+    help=get_default_config_value(key_path="help_texts.saving_responses"),
+    key="save_responses",
+)
+# --- end ---
+
+display_missing_api_key_warning()
+set_api_key_in_session_state()
 
 # define the columns
 col1, col2 = st.columns([0.4, 0.6], gap="large")

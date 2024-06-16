@@ -4,7 +4,10 @@ from os import getenv
 import streamlit as st
 
 from modules.helpers import read_file
-from modules.ui import check_api_key_availability, is_api_key_set
+from modules.ui import (
+    display_missing_api_key_warning,
+    set_api_key_in_session_state,
+)
 
 OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 GENERAL_ERROR_MESSAGE = "An unexpected error occurred. If you are a developer and run the app locally, you can view the logs to see details about the error."
@@ -14,15 +17,13 @@ def main():
     st.set_page_config(
         page_title="YouTube AI", layout="wide", initial_sidebar_state="auto"
     )
+
+    # display sidebar with page links
     st.sidebar.page_link(page="pages/summary.py", label="Summary")
     st.sidebar.page_link(page="pages/chat.py", label="Chat")
 
-    check_api_key_availability()
-
-    if not is_api_key_set():
-        st.text_input("OpenAI API Key", key="openai_api_key", type="password")
-    else:
-        st.session_state.openai_api_key = OPENAI_API_KEY
+    set_api_key_in_session_state()
+    display_missing_api_key_warning()
 
     st.markdown(body=read_file(".assets/description.md"))
 

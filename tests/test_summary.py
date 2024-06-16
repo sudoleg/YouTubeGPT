@@ -12,8 +12,8 @@ from modules.youtube import (
 
 def test_initial_session_state():
     # Initialize the simulated app and execute the first script run
+    at = AppTest("pages/summary.py", default_timeout=60.0).run()
     os.environ["OPENAI_API_KEY"] = "sk-proj-xyz"
-    at = AppTest("main.py", default_timeout=60.0).run()
     assert at.session_state.model == "gpt-3.5-turbo"
     assert at.session_state.temperature == 1.0
     assert at.session_state.top_p == 1.0
@@ -22,7 +22,7 @@ def test_initial_session_state():
 
 
 def test_checking_save_responses():
-    at = AppTest("main.py", default_timeout=60.0).run()
+    at = AppTest("pages/summary.py", default_timeout=60.0).run()
     assert at.session_state.save_responses is False
     assert at.checkbox(key="save_responses").value is False
     at.checkbox(key="save_responses").check().run()

@@ -4,19 +4,19 @@ import streamlit as st
 
 from modules.helpers import get_default_config_value
 
-OPENAI_API_KEY = getenv("OPENAI_API_KEY")
 GENERAL_ERROR_MESSAGE = "An unexpected error occurred. If you are a developer and run the app locally, you can view the logs to see details about the error."
 
 
-def is_api_key_set():
-    if not OPENAI_API_KEY and st.session_state.openai_api_key == "":
+def is_api_key_set() -> bool:
+    """Checks whether the OpenAI API key is set as environment variable and in streamlit's session state."""
+    if (not getenv("OPENAI_API_KEY")) and st.session_state.openai_api_key == "":
         return False
     return True
 
 
-def check_api_key_availability():
-    """Checks whether the OPENAI_API_KEY environment variable is set and displays warning if not."""
-    if not OPENAI_API_KEY and st.session_state.openai_api_key == "":
+def display_missing_api_key_warning():
+    """Checks whether an API key is provided and displays warning if not."""
+    if not is_api_key_set():
         st.warning(
             """:warning: It seems you haven't provided an API-Key yet. Make sure to do so by providing it in the settings (sidebar) 
             or as an environment variable according to the [instructions](https://github.com/sudoleg/ytai?tab=readme-ov-file#installation--usage).
@@ -24,6 +24,17 @@ def check_api_key_availability():
             it should be on the right side. 
             """
         )
+
+
+def set_api_key_in_session_state():
+    """If the env-var OPENAI_API_KEY is set, it's value is assigned to openai_api_key property in streamlit's session state.
+    Otherwise an input field for the API key is diplayed.
+    """
+    OPENAI_API_KEY = getenv("OPENAI_API_KEY")
+    if not OPENAI_API_KEY:
+        st.text_input("OpenAI API Key", key="openai_api_key", type="password")
+    else:
+        st.session_state.openai_api_key = OPENAI_API_KEY
 
 
 def is_temperature_and_top_p_altered() -> bool:
@@ -42,11 +53,9 @@ def set_initial_session_state():
         st.session_state.temperature = get_default_config_value("temperature")
     if "top_p" not in st.session_state:
         st.session_state.top_p = get_default_config_value("top_p")
-    if "save_responses" not in st.session_state:
-        st.session_state.save_responses = False
 
 
-def model_settings():
+def display_model_settings():
     """Function for displaying the sidebar and adjusting settings.
 
     Every widget with a key is added to streamlits session state and can be accessed in the application.
@@ -82,14 +91,6 @@ def model_settings():
             st.warning(
                 "OpenAI generally recommends altering temperature or top_p but not both. See their [API reference](https://platform.openai.com/docs/api-reference/chat/create#chat-create-temperature)"
             )
-        st.checkbox(
-            label="Save responses",
-            value=False,
-            help=get_default_config_value(
-                config_file_path="./config.json", key_path="help_texts.saving_responses"
-            ),
-            key="save_responses",
-        )
         if model != get_default_config_value("default_model"):
             st.warning(
                 """:warning: Make sure that you have at least Tier 1, as GPT-4 (turbo, 4o) is not available in the free tier.
