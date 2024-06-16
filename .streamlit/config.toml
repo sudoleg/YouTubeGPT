@@ -1,3 +1,6 @@
+[client]
+showSidebarNavigation = false
+
 [browser]
 gatherUsageStats = false
 

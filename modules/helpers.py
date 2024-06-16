@@ -1,6 +1,8 @@
-import re
-import os
 import json
+import os
+import re
+from pathlib import Path
+
 import tiktoken
 
 
@@ -125,3 +127,7 @@ def num_tokens_from_string(string: str, encoding_name: str = "cl100k_base") -> i
     """
     encoding = tiktoken.get_encoding(encoding_name)
     return len(encoding.encode(string))
+
+
+def read_file(file_path: str):
+    return Path(file_path).read_text()
