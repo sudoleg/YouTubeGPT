@@ -23,7 +23,7 @@ def main():
     set_api_key_in_session_state()
     display_missing_api_key_warning()
 
-    st.markdown(body=read_file(".assets/description.md"))
+    st.markdown(body=read_file(".assets/home.md"))
 
 
 if __name__ == "__main__":
