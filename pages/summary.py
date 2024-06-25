@@ -12,7 +12,7 @@ from modules.ui import (
     display_missing_api_key_warning,
     display_model_settings,
     display_nav_menu,
-    display_video_ur_input,
+    display_video_url_input,
     set_api_key_in_session_state,
 )
 from modules.youtube import (
@@ -43,16 +43,16 @@ set_api_key_in_session_state()
 col1, col2 = st.columns([0.4, 0.6], gap="large")
 
 with col1:
-    url = display_video_ur_input()
+    url_input = display_video_url_input()
     custom_prompt = st.text_area(
         "Enter a custom prompt if you want:",
         key="custom_prompt_input",
         help=get_default_config_value("help_texts.custom_prompt"),
     )
     summarize_button = st.button("Summarize", key="summarize_button")
-    if url != "":
+    if url_input != "":
         try:
-            vid_metadata = get_video_metadata(url)
+            vid_metadata = get_video_metadata(url_input)
         except InvalidUrlException as e:
             st.error(e.message)
             e.log_error()
@@ -65,12 +65,12 @@ with col1:
                     f"'{vid_metadata['name']}' from {vid_metadata['channel']}.",
                     divider="gray",
                 )
-            st.video(url)
+            st.video(url_input)
 
 with col2:
     if summarize_button:
         try:
-            transcript = fetch_youtube_transcript(url)
+            transcript = fetch_youtube_transcript(url_input)
             cb = OpenAICallbackHandler()
             llm = ChatOpenAI(
                 api_key=st.session_state.openai_api_key,

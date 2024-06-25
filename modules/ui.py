@@ -66,7 +66,7 @@ def display_model_settings():
     with st.sidebar:
         st.header("Model settings")
         model = st.selectbox(
-            "Select a model",
+            "Select large language model",
             tuple(get_default_config_value("available_models")),
             key="model",
             help=get_default_config_value("help_texts.model"),
@@ -106,11 +106,14 @@ def display_link_to_repo():
     )
 
 
-def display_video_ur_input():
-    """Displays an ionput field for the URL of the YouTube video."""
+def display_video_url_input(
+    label: str = "Enter URL of the YouTube video:", disabled=False
+):
+    """Displays an input field for the URL of the YouTube video."""
     return st.text_input(
-        "Enter URL of the YouTube video:",
+        label=label,
         key="url_input",
+        disabled=disabled,
         help=get_default_config_value("help_texts.youtube_url"),
     )
 
