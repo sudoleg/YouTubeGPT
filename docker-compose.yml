@@ -3,7 +3,7 @@ networks:
     driver: bridge
 
 services:
-  vector-db:
+  chromadb:
     image: chromadb/chroma:0.5.3
     volumes:
       # Be aware that indexed data are located in "/chroma/chroma/"
@@ -24,6 +24,25 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    networks:
+      - net
+
+  ytai:
+    image: sudoleg/ytai:latest
+    container_name: ytai
+    depends_on:
+      - chromadb
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /Users/Shared/yt-summaries:/app/responses
+    environment:
+      # replace with your OpenAI API key or the name of the environment
+      # variable that stores it on your machine 
+      - OPENAI_API_KEY=${OPENAI_YTAI_API_KEY}
+    ports:
+      - "8501:8501"
     networks:
       - net
 
