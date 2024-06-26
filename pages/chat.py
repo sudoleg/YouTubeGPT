@@ -8,7 +8,12 @@ import streamlit as st
 from chromadb.config import Settings
 
 from modules.chat import process_transcript
-from modules.helpers import num_tokens_from_string, save_response_as_file, read_file
+from modules.helpers import (
+    num_tokens_from_string,
+    save_response_as_file,
+    read_file,
+    is_environment_prod,
+)
 from modules.persistance import SQL_DB, Transcript, Video, delete_video
 from modules.rag import (
     embed_excerpts,
@@ -56,7 +61,10 @@ SQL_DB.create_tables([Video, Transcript], safe=True)
 chroma_connection_established = False
 chroma_settings = Settings(allow_reset=True, anonymized_telemetry=False)
 try:
-    chroma_client = chromadb.HttpClient(settings=chroma_settings)
+    chroma_client = chromadb.HttpClient(
+        host="chromadb" if is_environment_prod() else "localhost",
+        settings=chroma_settings,
+    )
 except Exception as e:
     logging.error(e)
     st.warning(

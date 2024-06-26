@@ -2,20 +2,14 @@ import logging
 import uuid
 from typing import List, Literal
 
-import chromadb
 from chromadb import Collection
-from chromadb.config import Settings
-from langchain.embeddings.base import Embeddings
+from langchain.chat_models.base import BaseChatModel
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_core.prompts import PromptTemplate
-from langchain.chat_models.base import BaseChatModel
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.documents import Document
-from langchain_core.prompts import ChatPromptTemplate
-
 
 from modules.helpers import num_tokens_from_string
 
@@ -26,8 +20,9 @@ embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
 RAG_SYSTEM_PROMPT = """You are a helpful assistant, skilled in answering questions and providing information about a topic.
 
-You are going to reiceive excerpts from a video transcript as context. Furthermore a user will provide a question or a topic. If you receive a question, answer it.
-If you receive a topic, tell the user what is said about the topic. In either case, keep your answer ground in the facts of the context.
+You are going to reiceive excerpts from a video transcript as context. Furthermore a user will provide a question or a topic. 
+If you receive a question, give a detailed answer. If you receive a topic, tell the user what is said about the topic. 
+In either case, keep your answer ground in the facts of the context.
 If the context does not contain the facts to answer the question, apologize and say that you don't know the answer.
 """
 

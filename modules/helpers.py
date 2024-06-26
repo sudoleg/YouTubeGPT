@@ -131,3 +131,9 @@ def num_tokens_from_string(string: str, encoding_name: str = "cl100k_base") -> i
 
 def read_file(file_path: str):
     return Path(file_path).read_text()
+
+
+def is_environment_prod():
+    if os.getenv("ENVIRONMENT") == "production":
+        return True
+    return False
