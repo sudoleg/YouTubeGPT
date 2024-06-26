@@ -14,6 +14,8 @@ Or you could ask to list all the topics in the video and then ask specific quest
 
 The `Chat` part of the application is best suited when you have a longer video you have specific questions about. It is more efficient and less cost consuming, as only the relevant parts of the video are provided to the language model. Moreover, once you process a video, you can Q&A it whenever you want (as long as you don't remove the volume accidentally 😅).
 
+I've found that the chat function works especially well for videos with manual transcripts but it's also really good for videos with autogernerated transcripts. Personally, I use the chat feature for lengthy podcasts with timestamps, like podcasts from [Andrew Huberman](https://www.youtube.com/@hubermanlab), [Lex Fridman](https://www.youtube.com/@lexfridman) or [Chris Williamson](https://www.youtube.com/@ChrisWillx). You can just copy the title of the section/timestamp and get a good overview of the topics discussed.
+
 ## WIP: FAQ
 
 Some day, an FAQ section will be here...
