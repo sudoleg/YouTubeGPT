@@ -10,7 +10,7 @@ from modules.ui import (
     GENERAL_ERROR_MESSAGE,
     display_link_to_repo,
     display_missing_api_key_warning,
-    display_model_settings,
+    display_model_settings_sidebar,
     display_nav_menu,
     display_video_url_input,
     set_api_key_in_session_state,
@@ -26,7 +26,7 @@ st.set_page_config("Summaries", layout="wide", initial_sidebar_state="auto")
 
 # --- sidebar with model settings and checkbox for saving responses ---
 display_nav_menu()
-display_model_settings()
+display_model_settings_sidebar()
 st.sidebar.checkbox(
     label="Save responses",
     value=False,

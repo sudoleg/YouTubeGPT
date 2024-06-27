@@ -1,10 +1,10 @@
 import logging
 from datetime import datetime as dt
-from typing import Dict, List
 
 import chromadb
 import streamlit as st
 from chromadb.config import Settings
+from chromadb import Collection
 from langchain_chroma import Chroma
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
@@ -26,10 +26,11 @@ from modules.ui import (
     GENERAL_ERROR_MESSAGE,
     display_link_to_repo,
     display_missing_api_key_warning,
-    display_model_settings,
+    display_model_settings_sidebar,
     display_nav_menu,
     display_video_url_input,
     set_api_key_in_session_state,
+    display_yt_video_container,
 )
 from modules.youtube import (
     InvalidUrlException,
@@ -48,7 +49,7 @@ display_missing_api_key_warning()
 
 # --- sidebar with model settings ---
 display_nav_menu()
-display_model_settings()
+display_model_settings_sidebar()
 display_link_to_repo()
 # --- end ---
 
@@ -61,6 +62,7 @@ SQL_DB.create_tables([Video, Transcript], safe=True)
 # --- Chroma ---
 chroma_connection_established = False
 chroma_settings = Settings(allow_reset=True, anonymized_telemetry=False)
+collection: None | Collection = None
 try:
     chroma_client = chromadb.HttpClient(
         host="chromadb" if is_environment_prod() else "localhost",
@@ -73,10 +75,9 @@ except Exception as e:
     )
 else:
     chroma_connection_established = True
-collection = None
 # --- end ---
 
-# --- LLM ---
+# --- OpenAI models ---
 openai_chat_model = ChatOpenAI(
     api_key=st.session_state.openai_api_key,
     temperature=st.session_state.temperature,
@@ -84,9 +85,13 @@ openai_chat_model = ChatOpenAI(
     model_kwargs={"top_p": st.session_state.top_p},
     max_tokens=2048,
 )
+openai_embedding_model = OpenAIEmbeddings(
+    model="text-embedding-3-small",
+    api_key=st.session_state.openai_api_key,
+)
 # --- end ---
 
-
+# fetch saved videos from SQLite
 saved_videos = Video.select()
 
 # create columns
@@ -95,24 +100,6 @@ col1, col2 = st.columns([0.5, 0.5], gap="large")
 
 def is_video_selected():
     return True if selected_video_title else False
-
-
-def display_yt_video_container(url):
-    try:
-        vid_metadata = get_video_metadata(url)
-    except InvalidUrlException as e:
-        st.error(e.message)
-        e.log_error()
-    except Exception as e:
-        logging.error("An unexpected error occurred %s", str(e))
-        st.error(GENERAL_ERROR_MESSAGE)
-    else:
-        if vid_metadata:
-            st.subheader(
-                f"'{vid_metadata['name']}' from {vid_metadata['channel']}.",
-                divider="gray",
-            )
-        st.video(url)
 
 
 if chroma_connection_established:
@@ -133,15 +120,6 @@ if chroma_connection_established:
         if is_video_selected():
             saved_video = Video.get(Video.title == selected_video_title)
 
-        video_url = ""
-        if url_input != "":
-            video_url = url_input
-        elif is_video_selected():
-            video_url = saved_video.link
-
-        if video_url:
-            display_yt_video_container(video_url)
-
         process_button = st.button(
             "Process",
             key="process_button",
@@ -150,6 +128,11 @@ if chroma_connection_established:
         )
 
         if saved_video:
+            display_yt_video_container(
+                video_title=saved_video.title,
+                channel=saved_video.channel,
+                url=saved_video.link,
+            )
             delete_video_button = st.button(
                 label="Delete",
                 key="delete_video_button",
@@ -195,8 +178,12 @@ if chroma_connection_established:
                 text="Preparing your video :gear: This can take a little, hang on..."
             ):
                 try:
-                    # index video
                     video_metadata = get_video_metadata(url_input)
+                    display_yt_video_container(
+                        video_title=video_metadata["name"],
+                        channel=video_metadata["channel"],
+                        url=url_input,
+                    )
 
                     # 1. fetch transcript from youtube
                     saved_video = Video.create(
@@ -283,15 +270,10 @@ if chroma_connection_established:
 
 with col2:
     if collection and collection.count() > 0:
-        embeddings = OpenAIEmbeddings(
-            model="text-embedding-3-small",
-            api_key=st.session_state.openai_api_key,
-        )
-
         chroma_db = Chroma(
             client=chroma_client,
             collection_name=collection.name,
-            embedding_function=embeddings,
+            embedding_function=openai_embedding_model,
         )
 
         with st.expander(label=":information_source: Tips and important notes"):

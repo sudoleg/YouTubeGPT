@@ -45,7 +45,7 @@ def is_temperature_and_top_p_altered() -> bool:
     return False
 
 
-def display_model_settings():
+def display_model_settings_sidebar():
     """Function for displaying the sidebar and adjusting settings.
 
     Every widget with a key is added to streamlits session state and can be accessed in the application.
@@ -58,7 +58,7 @@ def display_model_settings():
     with st.sidebar:
         st.header("Model settings")
         model = st.selectbox(
-            "Select large language model",
+            "Select a large language model",
             tuple(get_default_config_value("available_models")),
             key="model",
             help=get_default_config_value("help_texts.model"),
@@ -110,6 +110,14 @@ def display_video_url_input(
         disabled=disabled,
         help=get_default_config_value("help_texts.youtube_url"),
     )
+
+
+def display_yt_video_container(video_title: str, channel: str, url: str):
+    st.subheader(
+        f"'{video_title}' from {channel}.",
+        divider="gray",
+    )
+    st.video(url)
 
 
 def display_nav_menu():
