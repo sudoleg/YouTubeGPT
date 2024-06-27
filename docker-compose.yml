@@ -36,6 +36,10 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
+      - ./data/app:/app/data/app
+      # replace the part before : with the path
+      # to the directory where you would like
+      # the summaries to be saved
       - /Users/Shared/yt-summaries:/app/responses
     environment:
       # replace with your OpenAI API key or the name of the environment
@@ -48,6 +52,4 @@ services:
 
 volumes:
   chroma-data:
-    driver: local
-  redis-data:
     driver: local

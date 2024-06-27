@@ -28,8 +28,11 @@ No matter how you choose to run the app, you will first need to get an OpenAI AP
 
 ### build & run with Docker (or docker-compose)
 
+1. make sure to provide an OpenAI API key (l. 43 in [docker-compose.yml](docker-compose.yml))
+2. adjust the path to save the summaries (l. 39 in [docker-compose.yml](docker-compose.yml))
+3. execute the following command:
+
 ```bash
-# first, make sure to provide an API key (l. 43 in docker-compose.yml)
 docker-compose up --build -d
 ```
 

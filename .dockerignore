@@ -8,3 +8,4 @@ test/
 video_meta/*
 docs/
 .git/
+data/*
