@@ -45,16 +45,6 @@ def is_temperature_and_top_p_altered() -> bool:
     return False
 
 
-def set_initial_session_state():
-    # it's recommended to explicitly set session_state vars initially
-    if "model" not in st.session_state:
-        st.session_state.model = get_default_config_value("default_model")
-    if "temperature" not in st.session_state:
-        st.session_state.temperature = get_default_config_value("temperature")
-    if "top_p" not in st.session_state:
-        st.session_state.top_p = get_default_config_value("top_p")
-
-
 def display_model_settings():
     """Function for displaying the sidebar and adjusting settings.
 
@@ -62,7 +52,9 @@ def display_model_settings():
     Here, the selectbox for model has the key 'model'.
     Thus the selected model can be accessed via st.session_state.model.
     """
-    set_initial_session_state()
+    if "model" not in st.session_state:
+        st.session_state.model = get_default_config_value("default_model")
+
     with st.sidebar:
         st.header("Model settings")
         model = st.selectbox(
@@ -77,14 +69,16 @@ def display_model_settings():
             max_value=2.0,
             step=0.1,
             key="temperature",
+            value=get_default_config_value("temperature"),
             help=get_default_config_value("help_texts.temperature"),
         )
-        st.sidebar.slider(
+        st.slider(
             label="Adjust Top P",
             min_value=0.0,
             max_value=1.0,
             step=0.1,
             key="top_p",
+            value=get_default_config_value("top_p"),
             help=get_default_config_value("help_texts.top_p"),
         )
         if is_temperature_and_top_p_altered():
