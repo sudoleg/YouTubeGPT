@@ -1,25 +1,26 @@
 import logging
 from datetime import datetime as dt
+from typing import Dict, List
 
 import chromadb
-from langchain_chroma import Chroma
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 import streamlit as st
 from chromadb.config import Settings
+from langchain_chroma import Chroma
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 from modules.chat import process_transcript
 from modules.helpers import (
-    num_tokens_from_string,
-    save_response_as_file,
-    read_file,
     is_environment_prod,
+    num_tokens_from_string,
+    read_file,
+    save_response_as_file,
 )
 from modules.persistance import SQL_DB, Transcript, Video, delete_video
 from modules.rag import (
     embed_excerpts,
-    split_text_recursively,
     find_relevant_documents,
     generate_response,
+    split_text_recursively,
 )
 from modules.ui import (
     GENERAL_ERROR_MESSAGE,
@@ -74,6 +75,17 @@ else:
     chroma_connection_established = True
 collection = None
 # --- end ---
+
+# --- LLM ---
+openai_chat_model = ChatOpenAI(
+    api_key=st.session_state.openai_api_key,
+    temperature=st.session_state.temperature,
+    model=st.session_state.model,
+    model_kwargs={"top_p": st.session_state.top_p},
+    max_tokens=2048,
+)
+# --- end ---
+
 
 saved_videos = Video.select()
 
@@ -224,6 +236,7 @@ if chroma_connection_established:
                         # 3. process transcript
                         processed_transcript = process_transcript(
                             transcript_excerpts=original_transcript_excerpts,
+                            llm=openai_chat_model,
                         )
                         save_response_as_file(
                             dir_name="transcripts_processed/",
@@ -270,16 +283,10 @@ if chroma_connection_established:
 
 with col2:
     if collection and collection.count() > 0:
-
-        openai_chat_model = ChatOpenAI(
+        embeddings = OpenAIEmbeddings(
+            model="text-embedding-3-small",
             api_key=st.session_state.openai_api_key,
-            temperature=st.session_state.temperature,
-            model=st.session_state.model,
-            model_kwargs={"top_p": st.session_state.top_p},
-            max_tokens=2048,
         )
-
-        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
         chroma_db = Chroma(
             client=chroma_client,
@@ -302,3 +309,9 @@ with col2:
                     question=prompt, llm=openai_chat_model, relevant_docs=relevant_docs
                 )
                 st.write(response)
+                with st.expander(
+                    label="Show chunks retrieved from vector DB and provided to the model as context"
+                ):
+                    for d in relevant_docs:
+                        st.write(d.page_content)
+                        st.divider()
