@@ -6,17 +6,14 @@ from chromadb import Collection
 from langchain.chat_models.base import BaseChatModel
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
+from langchain_core.embeddings import Embeddings
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
-from langchain_openai import OpenAIEmbeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from modules.helpers import num_tokens_from_string
 
 CHUNK_SIZE_FOR_UNPROCESSED_TRANSCRIPT = 512
-
-
-embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 
 RAG_SYSTEM_PROMPT = """You are a helpful assistant, skilled in answering questions and providing information about a topic.
 
@@ -64,7 +61,9 @@ def format_docs_for_context(docs):
     return "\n\n---\n\n".join(doc.page_content for doc in docs)
 
 
-def embed_excerpts(collection: Collection, excerpts: List[Document]):
+def embed_excerpts(
+    collection: Collection, excerpts: List[Document], embeddings: Embeddings
+):
     """If there are no embeddings in the database, each document in the list is embedded in the provided collection."""
     if collection.count() <= 0:
         for e in excerpts:

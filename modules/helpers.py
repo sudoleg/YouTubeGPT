@@ -1,9 +1,49 @@
 import json
+import logging
 import os
 import re
 from pathlib import Path
 
+import openai
+import streamlit as st
 import tiktoken
+
+
+def is_api_key_set() -> bool:
+    """Checks whether the OpenAI API key is set in streamlit's session state or as environment variable."""
+    if os.getenv("OPENAI_API_KEY") or "openai_api_key" in st.session_state:
+        return True
+    return False
+
+
+def is_api_key_valid(api_key: str):
+    """
+    Checks the validity of an OpenAI API key.
+
+    Args:
+        api_key (str): The OpenAI API key to be validated.
+
+    Returns:
+        bool: True if the API key is valid, False if the API key is invalid.
+    """
+    openai.api_key = api_key
+    try:
+        openai.models.list()
+    except openai.AuthenticationError as e:
+        logging.error(
+            "An authentication error occurred when checking API key validity: %s",
+            str(e),
+        )
+        return False
+    except Exception as e:
+        logging.error(
+            "An unexpected error occurred when checking API key validity: %s",
+            str(e),
+        )
+        return False
+    else:
+        logging.info("API key validation successful")
+        return True
 
 
 def get_default_config_value(

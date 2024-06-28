@@ -14,6 +14,7 @@ from modules.helpers import (
     num_tokens_from_string,
     read_file,
     save_response_as_file,
+    is_api_key_set,
 )
 from modules.persistance import SQL_DB, Transcript, Video, delete_video
 from modules.rag import (
@@ -25,12 +26,13 @@ from modules.rag import (
 from modules.ui import (
     GENERAL_ERROR_MESSAGE,
     display_link_to_repo,
-    display_missing_api_key_warning,
+    display_api_key_warning,
     display_model_settings_sidebar,
     display_nav_menu,
     display_video_url_input,
-    set_api_key_in_session_state,
     display_yt_video_container,
+    is_api_key_set,
+    is_api_key_valid,
 )
 from modules.youtube import (
     InvalidUrlException,
@@ -44,14 +46,14 @@ CHUNK_SIZE_FOR_UNPROCESSED_TRANSCRIPT = 512
 
 
 st.set_page_config("Chat", layout="wide", initial_sidebar_state="auto")
-set_api_key_in_session_state()
-display_missing_api_key_warning()
+display_api_key_warning()
 
 # --- sidebar with model settings ---
 display_nav_menu()
 display_model_settings_sidebar()
 display_link_to_repo()
 # --- end ---
+
 
 # --- SQLite stuff ---
 SQL_DB.connect(reuse_if_open=True)
@@ -78,17 +80,18 @@ else:
 # --- end ---
 
 # --- OpenAI models ---
-openai_chat_model = ChatOpenAI(
-    api_key=st.session_state.openai_api_key,
-    temperature=st.session_state.temperature,
-    model=st.session_state.model,
-    model_kwargs={"top_p": st.session_state.top_p},
-    max_tokens=2048,
-)
-openai_embedding_model = OpenAIEmbeddings(
-    model="text-embedding-3-small",
-    api_key=st.session_state.openai_api_key,
-)
+if is_api_key_set() and is_api_key_valid(st.session_state.openai_api_key):
+    openai_chat_model = ChatOpenAI(
+        api_key=st.session_state.openai_api_key,
+        temperature=st.session_state.temperature,
+        model=st.session_state.model,
+        model_kwargs={"top_p": st.session_state.top_p},
+        max_tokens=2048,
+    )
+    openai_embedding_model = OpenAIEmbeddings(
+        api_key=st.session_state.openai_api_key,
+        model="text-embedding-3-small",
+    )
 # --- end ---
 
 # fetch saved videos from SQLite
@@ -102,7 +105,11 @@ def is_video_selected():
     return True if selected_video_title else False
 
 
-if chroma_connection_established:
+if (
+    is_api_key_set()
+    and is_api_key_valid(st.session_state.openai_api_key)
+    and chroma_connection_established
+):
     with col1:
         selected_video_title = st.selectbox(
             label="Select from already processed videos",
@@ -243,7 +250,11 @@ if chroma_connection_established:
                                 ),
                             }
                         ).where(Transcript.video == saved_video).execute()
-                        embed_excerpts(collection, processed_transcript_excerpts)
+                        embed_excerpts(
+                            collection=collection,
+                            excerpts=processed_transcript_excerpts,
+                            embeddings=openai_embedding_model,
+                        )
                     else:
                         Transcript.update(
                             {
@@ -251,7 +262,11 @@ if chroma_connection_established:
                                 Transcript.chunk_size: chunk_size,
                             }
                         ).where(Transcript.video == saved_video).execute()
-                        embed_excerpts(collection, original_transcript_excerpts)
+                        embed_excerpts(
+                            collection=collection,
+                            excerpts=original_transcript_excerpts,
+                            embeddings=openai_embedding_model,
+                        )
                 except InvalidUrlException as e:
                     st.error(e.message)
                     e.log_error()
@@ -286,14 +301,23 @@ with col2:
 
         if prompt:
             with st.spinner("Generating answer..."):
-                relevant_docs = find_relevant_documents(query=prompt, db=chroma_db)
-                response = generate_response(
-                    question=prompt, llm=openai_chat_model, relevant_docs=relevant_docs
-                )
-                st.write(response)
-                with st.expander(
-                    label="Show chunks retrieved from vector DB and provided to the model as context"
-                ):
-                    for d in relevant_docs:
-                        st.write(d.page_content)
-                        st.divider()
+                try:
+                    relevant_docs = find_relevant_documents(query=prompt, db=chroma_db)
+                    response = generate_response(
+                        question=prompt,
+                        llm=openai_chat_model,
+                        relevant_docs=relevant_docs,
+                    )
+                except Exception as e:
+                    logging.error(
+                        "An unexpected error occurred: %s", str(e), exc_info=True
+                    )
+                    st.error(GENERAL_ERROR_MESSAGE)
+                else:
+                    st.write(response)
+                    with st.expander(
+                        label="Show chunks retrieved from index and provided to the model as context"
+                    ):
+                        for d in relevant_docs:
+                            st.write(d.page_content)
+                            st.divider()

@@ -1,4 +1,5 @@
 from os import getenv
+from modules.helpers import is_api_key_set, is_api_key_valid
 
 import streamlit as st
 
@@ -7,23 +8,20 @@ from modules.helpers import get_default_config_value
 GENERAL_ERROR_MESSAGE = "An unexpected error occurred. If you are a developer and run the app locally, you can view the logs to see details about the error."
 
 
-def is_api_key_set() -> bool:
-    """Checks whether the OpenAI API key is set as environment variable and in streamlit's session state."""
-    if (not getenv("OPENAI_API_KEY")) and st.session_state.openai_api_key == "":
-        return False
-    return True
-
-
-def display_missing_api_key_warning():
+def display_api_key_warning():
     """Checks whether an API key is provided and displays warning if not."""
     if not is_api_key_set():
         st.warning(
-            """:warning: It seems you haven't provided an API-Key yet. Make sure to do so by providing it in the settings (sidebar) 
+            """:warning: It seems you haven't provided an API key yet. Make sure to do so by providing it in the settings (sidebar) 
             or as an environment variable according to the [instructions](https://github.com/sudoleg/ytai?tab=readme-ov-file#installation--usage).
             Also, make sure that you have **active credit grants** and that they are not expired! You can check it [here](https://platform.openai.com/usage),
             it should be on the right side. 
             """
         )
+    elif "openai_api_key" in st.session_state and not is_api_key_valid(
+        st.session_state.openai_api_key
+    ):
+        st.warning("API key seems to be invalid.")
 
 
 def set_api_key_in_session_state():
@@ -32,7 +30,11 @@ def set_api_key_in_session_state():
     """
     OPENAI_API_KEY = getenv("OPENAI_API_KEY")
     if not OPENAI_API_KEY:
-        st.text_input("OpenAI API Key", key="openai_api_key", type="password")
+        st.text_input(
+            "Enter your OpenAI API key",
+            key="openai_api_key",
+            type="password",
+        )
     else:
         st.session_state.openai_api_key = OPENAI_API_KEY
 
@@ -56,6 +58,7 @@ def display_model_settings_sidebar():
         st.session_state.model = get_default_config_value("default_model")
 
     with st.sidebar:
+        set_api_key_in_session_state()
         st.header("Model settings")
         model = st.selectbox(
             "Select a large language model",
