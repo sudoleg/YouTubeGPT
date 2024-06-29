@@ -1,6 +1,5 @@
 import logging
 
-import chromadb
 from peewee import (
     BooleanField,
     CharField,
@@ -29,6 +28,11 @@ class Video(BaseModel):
     channel = CharField(null=True)
     saved_on = DateTimeField(null=True)
 
+    def chroma_collection_name(self):
+        """Returns the name of the associated chroma collection."""
+        transcript = Transcript.get(Transcript.video == self)
+        return transcript.chroma_collection_name
+
 
 class Transcript(BaseModel):
     """Model for transcripts of the YouTube videos. Represents a table in a relational SQL database."""
@@ -49,15 +53,19 @@ class Transcript(BaseModel):
 
 
 def delete_video(
-    video_title: str, chroma_client: chromadb.HttpClient, collection_name: str
+    video_title: str,
 ):
-    """Deletes the video and associated transcript from SQLite. Also removes the associated collection from ChromaDB."""
-
-    video = Video.get(Video.title == video_title)
-    transcript = Transcript.select().where(Transcript.video == video)
-    Transcript.delete_by_id(transcript)
-    logging.info("Removed transcript for video %s from SQLite.", video.yt_video_id)
-    Video.delete_by_id(video)
-    logging.info("Removed video %s from SQLite.", video.yt_video_id)
-    chroma_client.delete_collection(collection_name)
-    logging.info("Removed collection %s from ChromaDB.", collection_name)
+    """Deletes the video and associated transcript from SQLite."""
+    try:
+        video = Video.get(Video.title == video_title)
+        transcript = Transcript.select().where(Transcript.video == video)
+        Transcript.delete_by_id(transcript)
+        logging.info("Removed transcript for video %s from SQLite.", video.yt_video_id)
+        Video.delete_by_id(video)
+        logging.info("Removed video %s from SQLite.", video.yt_video_id)
+    except Exception as e:
+        logging.error(
+            "An error occured when deleting entries from SQLite for video %s: %s",
+            video.yt_video_id,
+            str(e),
+        )

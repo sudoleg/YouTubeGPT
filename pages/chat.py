@@ -2,19 +2,20 @@ import logging
 from datetime import datetime as dt
 
 import chromadb
+import randomname
 import streamlit as st
-from chromadb.config import Settings
 from chromadb import Collection
+from chromadb.config import Settings
 from langchain_chroma import Chroma
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 from modules.chat import process_transcript
 from modules.helpers import (
+    is_api_key_set,
     is_environment_prod,
     num_tokens_from_string,
     read_file,
     save_response_as_file,
-    is_api_key_set,
 )
 from modules.persistance import SQL_DB, Transcript, Video, delete_video
 from modules.rag import (
@@ -25,8 +26,8 @@ from modules.rag import (
 )
 from modules.ui import (
     GENERAL_ERROR_MESSAGE,
-    display_link_to_repo,
     display_api_key_warning,
+    display_link_to_repo,
     display_model_settings_sidebar,
     display_nav_menu,
     display_video_url_input,
@@ -156,15 +157,16 @@ if (
                 key="delete_video_button",
                 help="Deletes selected video. You won't be able to Q&A this video, unless you process it again!",
             )
-            collection = chroma_client.get_or_create_collection(
-                name=f"{saved_video.yt_video_id}"
+            collection = chroma_client.get_collection(
+                name=saved_video.chroma_collection_name()
             )
             if delete_video_button:
                 try:
+                    chroma_client.delete_collection(
+                        name=saved_video.chroma_collection_name(),
+                    )
                     delete_video(
                         video_title=selected_video_title,
-                        chroma_client=chroma_client,
-                        collection_name=f"{saved_video.yt_video_id}",
                     )
                 except Exception as e:
                     logging.error("An unexpected error occurred %s", str(e))
@@ -187,7 +189,7 @@ if (
             preprocess_checkbox = st.checkbox(
                 label="Experimental: enable transcript preprocessing",
                 key="preprocessing_checkbox",
-                help="By enabling this, the original transcript gets preprocessed. This can greatly improve the results, especially for videos with automatically generated transcripts. However, it results in slightly higher costs, as the whole transcript get's processed by gpt3.5-turbo. Also, the preprocessing will take a substantial amout of time.",
+                help="By enabling this, the original transcript gets preprocessed. This can greatly improve the results, especially for videos with automatically generated transcripts. However, it results in higher costs, as the whole transcript get's processed by gpt3.5-turbo. Also, the preprocessing will take a substantial amount of time.",
                 disabled=is_video_selected(),
             )
 
@@ -234,7 +236,7 @@ if (
                     )
 
                     collection = chroma_client.get_or_create_collection(
-                        name=f"{saved_video.yt_video_id}"
+                        name=randomname.get_name()
                     )
 
                     if preprocess_checkbox:
@@ -271,6 +273,7 @@ if (
                             {
                                 Transcript.preprocessed: False,
                                 Transcript.chunk_size: chunk_size,
+                                Transcript.chroma_collection_name: collection.name,
                             }
                         ).where(Transcript.video == saved_video).execute()
                         embed_excerpts(
