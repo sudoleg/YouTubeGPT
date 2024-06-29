@@ -11,6 +11,7 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 from modules.chat import process_transcript
 from modules.helpers import (
+    get_default_config_value,
     is_api_key_set,
     is_api_key_valid,
     is_environment_prod,
@@ -126,7 +127,7 @@ if (
             options=[video.title for video in saved_videos],
             index=None,
             key="selected_video",
-            help="Once you process a video, it gets saved in a database. You can chat with it at any time, without processing it again! Tip: you may also search for videos by typing (parts of) its title.",
+            help=get_default_config_value("help_texts.selected_video"),
         )
         url_input = display_video_url_input(
             label="Or enter the URL of a new video:", disabled=is_video_selected()
@@ -137,7 +138,7 @@ if (
             saved_video = Video.get(Video.title == selected_video_title)
 
         process_button = st.button(
-            "Process",
+            label="Process",
             key="process_button",
             help="This will process the transcript to enable Q&A on the contents.",
             disabled=is_video_selected(),
@@ -179,16 +180,15 @@ if (
                 label="Chunk size",
                 key="chunk_size",
                 min_value=128,
-                max_value=2048,
-                value=1024,
-                help="A larger chunk size increases the amount of context provided to the model to answer your question. However, it may be less relevant as with a small chunk size, as smaller chunks can encapsulate more semantic meaning.",
+                max_value=1024,
+                value=512,
+                help=get_default_config_value("help_texts.chunk_size"),
                 disabled=is_video_selected(),
             )
-
             preprocess_checkbox = st.checkbox(
                 label="Experimental: enable transcript preprocessing",
                 key="preprocessing_checkbox",
-                help="By enabling this, the original transcript gets preprocessed. This can greatly improve the results, especially for videos with automatically generated transcripts. However, it results in higher costs, as the whole transcript get's processed by gpt3.5-turbo. Also, the preprocessing will take a substantial amount of time.",
+                help=get_default_config_value("help_texts.preprocess_checkbox"),
                 disabled=is_video_selected(),
             )
 
