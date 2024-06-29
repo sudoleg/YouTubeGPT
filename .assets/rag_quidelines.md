@@ -1,10 +1,10 @@
 # Guidelines
 
-You can either provide a question or just a topic from the video. If you ask a question, try to be as specific as possible. Your question should adress a specific topic from the video.
+You can either provide a question or just a topic from the video. If you ask a question, try to be as specific as possible. Your question should adress a specific topic or a passage from the video.
 
 **Don't ask for a summary! This part of the application is not designed for that! Use the `Summary` part instead!**
 
-## General tips 
+## General tips
 
 - be specific
 - be concise
