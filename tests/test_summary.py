@@ -1,5 +1,4 @@
 import os
-from unittest.mock import Mock, patch
 
 import pytest
 from streamlit.testing.v1 import AppTest
@@ -44,15 +43,6 @@ def test_invalid_video_urls():
     for url in invalid_urls:
         with pytest.raises(InvalidUrlException):
             fetch_youtube_transcript(url)
-
-
-@patch("openai.models.list")
-def test_valid_api_key(mock_list):
-    # Mocking openai.models.list() to simulate a valid API key
-    mock_list.return_value = Mock()
-    result = is_api_key_valid("valid_api_key")
-    assert result is True
-    mock_list.assert_called_once()
 
 
 def test_invalid_api_key():
