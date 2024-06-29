@@ -106,11 +106,9 @@ def is_video_selected():
     return True if selected_video_title else False
 
 
-@st.experimental_dialog("Processing successful!")
-def refresh_page_after_indexing():
-    st.success(
-        "The video has been processed! Please refresh the page and choose it in the select-box above."
-    )
+@st.experimental_dialog("Action successful")
+def refresh_page(message: str):
+    st.info(message)
     refresh_page_button = st.button("Refresh page")
     if refresh_page_button:
         st.session_state.url_input = ""
@@ -172,8 +170,10 @@ if (
                     logging.error("An unexpected error occurred %s", str(e))
                     st.error(GENERAL_ERROR_MESSAGE)
                 finally:
-                    st.info(f"The video '{selected_video_title}' was deleted!")
                     collection = None
+                    refresh_page(
+                        message=f"The video '{selected_video_title}' was deleted!"
+                    )
 
         with st.expander("Advanced options"):
             chunk_size = st.number_input(
@@ -293,7 +293,9 @@ if (
                     )
                     st.error(GENERAL_ERROR_MESSAGE)
                 else:
-                    refresh_page_after_indexing()
+                    refresh_page(
+                        message="The video has been processed! Please refresh the page and choose it in the select-box above."
+                    )
 
 
 with col2:
