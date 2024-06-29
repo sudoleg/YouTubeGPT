@@ -8,6 +8,7 @@ from peewee import (
     IntegerField,
     Model,
     SqliteDatabase,
+    UUIDField,
 )
 
 SQL_DB = SqliteDatabase("data/app/videos.sqlite3")
@@ -27,6 +28,11 @@ class Video(BaseModel):
     link = CharField()
     channel = CharField(null=True)
     saved_on = DateTimeField(null=True)
+
+    def chroma_collection_id(self):
+        """Returns the id of the associated chroma collection."""
+        transcript = Transcript.get(Transcript.video == self)
+        return transcript.chroma_collection_id
 
     def chroma_collection_name(self):
         """Returns the name of the associated chroma collection."""
@@ -48,6 +54,8 @@ class Transcript(BaseModel):
     original_token_num = IntegerField(null=True)
     # if the transcript was preprocessed, number of token in the processed transcript
     processed_token_num = IntegerField(null=True)
+    # the id of the associated collection in chroma
+    chroma_collection_id = UUIDField(null=True)
     # the name of the associated collection in chroma
     chroma_collection_name = CharField(null=True)
 

@@ -156,7 +156,7 @@ if (
                 help="Deletes selected video. You won't be able to Q&A this video, unless you process it again!",
             )
             collection = chroma_client.get_collection(
-                name=saved_video.chroma_collection_name()
+                name=saved_video.chroma_collection_name(),
             )
             if delete_video_button:
                 try:
@@ -235,7 +235,12 @@ if (
                     )
 
                     collection = chroma_client.get_or_create_collection(
-                        name=randomname.get_name()
+                        name=randomname.get_name(),
+                        metadata={
+                            "yt_video_id": saved_video.yt_video_id,
+                            "yt_channel": saved_video.channel,
+                            "yt_video_title": saved_video.title,
+                        },
                     )
 
                     if preprocess_checkbox:
@@ -272,6 +277,7 @@ if (
                             {
                                 Transcript.preprocessed: False,
                                 Transcript.chunk_size: chunk_size,
+                                Transcript.chroma_collection_id: collection.id,
                                 Transcript.chroma_collection_name: collection.name,
                             }
                         ).where(Transcript.video == saved_video).execute()
