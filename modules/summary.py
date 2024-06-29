@@ -6,7 +6,9 @@ from langchain_openai import ChatOpenAI
 
 from .helpers import num_tokens_from_string
 
-SYSTEM_PROMPT = "You are a helpful assistant, skilled in processing video transcripts according to user's request. For example this could be summarization, question answering or providing key insights."
+SYSTEM_PROMPT = """You are a helpful assistant, skilled in processing video transcripts according to user's request. 
+For example this could be summarization, question answering or providing key insights.
+"""
 
 prompt = ChatPromptTemplate.from_messages(
     [
