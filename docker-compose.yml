@@ -9,7 +9,7 @@ services:
       # Be aware that indexed data are located in "/chroma/chroma/"
       # Default configuration for persist_directory in chromadb/config.py
       # Read more about deployments: https://docs.trychroma.com/deployment
-      - ./data/chroma:/chroma/chroma
+      - chroma:/chroma/chroma
     command: "--workers 1 --host 0.0.0.0 --port 8000 --proxy-headers --log-config chromadb/log_config.yml --timeout-keep-alive 30"
     environment:
       - IS_PERSISTENT=TRUE
@@ -36,11 +36,12 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./data/app:/app/data/app
       # replace the part before : with the path
       # to the directory where you would like
       # the summaries to be saved
       - /Users/Shared/yt-summaries:/app/responses
+      # leave as it is
+      - sqlite:/app/data/app
     environment:
       # replace with your OpenAI API key or the name of the environment
       # variable that stores it on your machine 
@@ -51,5 +52,7 @@ services:
       - net
 
 volumes:
-  chroma-data:
+  chroma:
+    driver: local
+  sqlite:
     driver: local
