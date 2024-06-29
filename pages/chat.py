@@ -12,6 +12,7 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from modules.chat import process_transcript
 from modules.helpers import (
     is_api_key_set,
+    is_api_key_valid,
     is_environment_prod,
     num_tokens_from_string,
     read_file,
@@ -32,8 +33,6 @@ from modules.ui import (
     display_nav_menu,
     display_video_url_input,
     display_yt_video_container,
-    is_api_key_set,
-    is_api_key_valid,
 )
 from modules.youtube import (
     InvalidUrlException,
