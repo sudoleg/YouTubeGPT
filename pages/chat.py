@@ -105,6 +105,17 @@ def is_video_selected():
     return True if selected_video_title else False
 
 
+@st.experimental_dialog("Processing successful!")
+def refresh_page_after_indexing():
+    st.success(
+        "The video has been processed! Please refresh the page and choose it in the select-box above."
+    )
+    refresh_page_button = st.button("Refresh page")
+    if refresh_page_button:
+        st.session_state.url_input = ""
+        st.rerun()
+
+
 if (
     is_api_key_set()
     and is_api_key_valid(st.session_state.openai_api_key)
@@ -278,9 +289,8 @@ if (
                         "An unexpected error occurred: %s", str(e), exc_info=True
                     )
                     st.error(GENERAL_ERROR_MESSAGE)
-            st.success(
-                "The video has been processed! You can refresh the page and choose it in the select-box above."
-            )
+                else:
+                    refresh_page_after_indexing()
 
 
 with col2:
