@@ -33,6 +33,9 @@ No matter how you choose to run the app, you will first need to get an OpenAI AP
 3. execute the following command:
 
 ```bash
+# pull from docker hub
+docker-compose up -d
+# or build locally
 docker-compose up --build -d
 ```
 
