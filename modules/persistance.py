@@ -11,7 +11,7 @@ from peewee import (
     UUIDField,
 )
 
-SQL_DB = SqliteDatabase("data/app/videos.sqlite3")
+SQL_DB = SqliteDatabase("data/videos.sqlite3")
 
 
 class BaseModel(Model):
