@@ -52,6 +52,13 @@ display_api_key_warning()
 # --- sidebar with model settings ---
 display_nav_menu()
 display_model_settings_sidebar()
+st.sidebar.info("Choose `text-embedding-3-large` if your video is **not** in English!")
+st.sidebar.selectbox(
+    label="Select an embedding model",
+    options=tuple(get_default_config_value("available_models.embeddings")),
+    key="embeddings_model",
+    help=get_default_config_value("help_texts.embeddings"),
+)
 display_link_to_repo()
 # --- end ---
 
@@ -90,8 +97,7 @@ if is_api_key_set() and is_api_key_valid(st.session_state.openai_api_key):
         max_tokens=2048,
     )
     openai_embedding_model = OpenAIEmbeddings(
-        api_key=st.session_state.openai_api_key,
-        model="text-embedding-3-small",
+        api_key=st.session_state.openai_api_key, model=st.session_state.embeddings_model
     )
 # --- end ---
 

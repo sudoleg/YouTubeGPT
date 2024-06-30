@@ -62,7 +62,7 @@ def display_model_settings_sidebar():
         st.header("Model settings")
         model = st.selectbox(
             "Select a large language model",
-            tuple(get_default_config_value("available_models")),
+            tuple(get_default_config_value("available_models.gpts")),
             key="model",
             help=get_default_config_value("help_texts.model"),
         )
