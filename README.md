@@ -49,16 +49,6 @@ docker build --tag=ytai:latest .
 docker run -d -p 8501:8501 -v $(pwd):/app/responses -e OPENAI_API_KEY=<your-openai-api-key> --name yt-summarizer sudoleg/ytai:latest
 ```
 
-### development in virtual environment
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-export OPENAI_API_KEY=<your-openai-api-key>
-streamlit run main.py
-```
-
 ## Contributing
 
 Feedback and contributions are welcome! This is a small side-project and it's very easy to get started! Here’s the gist to get your changes rolling:
@@ -71,6 +61,22 @@ Feedback and contributions are welcome! This is a small side-project and it's ve
 4. **Stay updated**: Keep your branch in sync with the main branch to avoid merge conflicts.
 5. **Pull Request**: Push your changes to your fork and submit a pull request (PR) to the main repository. Describe your changes and any relevant details.
 6. **Engage**: Respond to feedback on your PR to finalize your contribution.
+
+### development in virtual environment
+
+```bash
+# create and activate a virtual environment
+python -m venv .venv
+source .venv/bin/activate
+# install requirements
+pip install -r requirements.txt
+# you'll need an API key
+export OPENAI_API_KEY=<your-openai-api-key>
+# run chromadb (necessary for chat)
+docker-compose up -d chromadb
+# run app
+streamlit run main.py
+```
 
 ## Technologies used
 
