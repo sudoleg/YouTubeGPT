@@ -1,5 +1,4 @@
-# Base stage for shared environment setup
-FROM python:3.12.3-slim
+FROM python:3.12.4
 
 # Set working directory
 WORKDIR /app
@@ -8,7 +7,7 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip3 install -r requirements.txt
+RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
 
 # Copy application's code
 COPY . /app/
@@ -17,6 +16,7 @@ COPY . /app/
 ENV PYTHONPATH="/app"
 ENV STREAMLIT_CLIENT_TOOLBAR_MODE="viewer"
 ENV STREAMLIT_SERVER_PORT=8501
+ENV ENVIRONMENT=production
 
 # Expose port for the application
 EXPOSE 8501

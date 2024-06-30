@@ -5,11 +5,11 @@ video_meta/
 design/
 test/
 certs/
-*.ipynb
 transcripts*/
 /data/chroma/*
 !/data/chroma/.gitkeep
 *.sqlite3
+scripts/test.ipynb
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

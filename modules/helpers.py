@@ -1,7 +1,49 @@
-import re
-import os
 import json
+import logging
+import os
+import re
+from pathlib import Path
+
+import openai
+import streamlit as st
 import tiktoken
+
+
+def is_api_key_set() -> bool:
+    """Checks whether the OpenAI API key is set in streamlit's session state or as environment variable."""
+    if os.getenv("OPENAI_API_KEY") or "openai_api_key" in st.session_state:
+        return True
+    return False
+
+
+def is_api_key_valid(api_key: str):
+    """
+    Checks the validity of an OpenAI API key.
+
+    Args:
+        api_key (str): The OpenAI API key to be validated.
+
+    Returns:
+        bool: True if the API key is valid, False if the API key is invalid.
+    """
+    openai.api_key = api_key
+    try:
+        openai.models.list()
+    except openai.AuthenticationError as e:
+        logging.error(
+            "An authentication error occurred when checking API key validity: %s",
+            str(e),
+        )
+        return False
+    except Exception as e:
+        logging.error(
+            "An unexpected error occurred when checking API key validity: %s",
+            str(e),
+        )
+        return False
+    else:
+        logging.info("API key validation successful")
+        return True
 
 
 def get_default_config_value(
@@ -112,15 +154,26 @@ def get_preffered_languages():
     return ["en-US", "en", "de"]
 
 
-def num_tokens_from_string(string: str, encoding_name: str) -> int:
+def num_tokens_from_string(string: str, encoding_name: str = "cl100k_base") -> int:
     """
     Returns the number of tokens in a text string.
 
     Args:
         string (str): The string to count tokens in.
-        encoding_name (str):
+        encoding_name (str): Encodings specify how text is converted into tokens. Different models use different encodings. Default is cl100k_base, which is used by gpt-3.5 and gpt-4 (turbo).
+
 
     Learn more ebout encodings at https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken#encodings
     """
     encoding = tiktoken.get_encoding(encoding_name)
     return len(encoding.encode(string))
+
+
+def read_file(file_path: str):
+    return Path(file_path).read_text()
+
+
+def is_environment_prod():
+    if os.getenv("ENVIRONMENT") == "production":
+        return True
+    return False

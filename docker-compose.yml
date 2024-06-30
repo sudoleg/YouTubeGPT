@@ -1,0 +1,58 @@
+networks:
+  net:
+    driver: bridge
+
+services:
+  chromadb:
+    image: chromadb/chroma:0.5.3
+    volumes:
+      # Be aware that indexed data are located in "/chroma/chroma/"
+      # Default configuration for persist_directory in chromadb/config.py
+      # Read more about deployments: https://docs.trychroma.com/deployment
+      - chroma:/chroma/chroma
+    command: "--workers 1 --host 0.0.0.0 --port 8000 --proxy-headers --log-config chromadb/log_config.yml --timeout-keep-alive 30"
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ALLOW_RESET=TRUE
+    # possible values are: "no", always", "on-failure", "unless-stopped"
+    #restart: unless-stopped 
+    ports:
+      - "8000:8000"
+    healthcheck:
+      # Adjust below to match your container port
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - net
+
+  ytai:
+    image: sudoleg/ytai:latest
+    container_name: ytai
+    depends_on:
+      - chromadb
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # replace the part before : with the path
+      # to the directory where you would like
+      # the summaries to be saved
+      - /Users/Shared/yt-summaries:/app/responses
+      # leave as it is
+      - sqlite:/app/data/app
+    environment:
+      # replace with your OpenAI API key or the name of the environment
+      # variable that stores it on your machine 
+      - OPENAI_API_KEY=${OPENAI_YTAI_API_KEY}
+    ports:
+      - "8501:8501"
+    networks:
+      - net
+
+volumes:
+  chroma:
+    driver: local
+  sqlite:
+    driver: local

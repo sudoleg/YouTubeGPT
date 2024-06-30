@@ -6,12 +6,14 @@
 
 ## Features :sparkles:
 
-YTAI summarizes YouTube videos and is not the first project to do that. However, it offers some features that other similar projects and AI summarizers on the internet don't:
+YTAI lets you **summarize and chat (Q&A)** with YouTube videos. Its features include:
 
-- **provide a custom prompt** :writing_hand:
-  - you can tailor the response to your needs by providing a custom prompt or just use the default summarization
+- **provide a custom prompt for summaries** :writing_hand:
+  - you can tailor the summary to your needs by providing a custom prompt or just use the default summarization
 - **automatically save summaries** :open_file_folder:
   - the summaries can be automatically saved in the directory where you run the app. The summaries will be available under `<YT-channel-name>/<video-title>.md`
+- **create your own knowledge base**  :floppy_disk:
+  - once you process a video, you can chat with it at any time!
 - **choose from different OpenAI models** :robot:
   - currently available: gpt-3.5-turbo, gpt-4 (turbo), gpt-4o
   - by choosing a different model, you can summarize even longer videos and potentially get better responses
@@ -24,13 +26,23 @@ YTAI summarizes YouTube videos and is not the first project to do that. However,
 
 No matter how you choose to run the app, you will first need to get an OpenAI API-Key. This is very straightforward and free. Have a look at [their instructions](https://platform.openai.com/docs/quickstart/account-setup) to get started.
 
-### build & run with Docker
+### build & run with Docker (or docker-compose)
+
+1. make sure to provide an OpenAI API key (l. 43 in [docker-compose.yml](docker-compose.yml))
+2. adjust the path to save the summaries (l. 39 in [docker-compose.yml](docker-compose.yml))
+3. execute the following command:
 
 ```bash
-# build locally
-docker build --tag=ytai:latest .
-# or pull from Docker Hub
+docker-compose up --build -d
+```
+
+### if you are only interested in summaries
+
+```bash
+# pull from Docker Hub
 docker pull sudoleg/ytai:latest
+# or build locally
+docker build --tag=ytai:latest .
 docker run -d -p 8501:8501 -v $(pwd):/app/responses -e OPENAI_API_KEY=<your-openai-api-key> --name yt-summarizer sudoleg/ytai:latest
 ```
 
@@ -64,6 +76,7 @@ The project is built using some amazing libraries:
 - The project uses [YouTube Transcript API](https://github.com/jdepoix/youtube-transcript-api) for fetching transcripts.
 - [LangChain](https://github.com/langchain-ai/langchain) is used to create a prompt, submit it to an LLM and process it's response.
 - The UI is built using [Streamlit](https://github.com/streamlit/streamlit).
+- [ChromaDB](https://docs.trychroma.com/) is used as a vector store for embeddings.
 
 ## License
 
