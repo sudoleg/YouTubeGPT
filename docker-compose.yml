@@ -41,7 +41,7 @@ services:
       # the summaries to be saved
       - /Users/Shared/yt-summaries:/app/responses
       # leave as it is
-      - sqlite:/app/data
+      - ./data:/app/data
     environment:
       # replace with your OpenAI API key or the name of the environment
       # variable that stores it on your machine 
@@ -53,6 +53,4 @@ services:
 
 volumes:
   chroma:
-    driver: local
-  sqlite:
     driver: local
