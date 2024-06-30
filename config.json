@@ -2,12 +2,18 @@
     "app_title": "AI YouTube Video Summarizer",
     "github_repo_link": "https://github.com/sudoleg/ytai",
     "default_model": "gpt-3.5-turbo",
-    "available_models": [
-        "gpt-3.5-turbo",
-        "gpt-4",
-        "gpt-4-turbo",
-        "gpt-4o"
-    ],
+    "available_models": {
+        "embeddings": [
+            "text-embedding-3-small",
+            "text-embedding-3-large"
+        ],
+        "gpts": [
+            "gpt-3.5-turbo",
+            "gpt-4",
+            "gpt-4-turbo",
+            "gpt-4o"
+        ]
+    },
     "temperature": 1.0,
     "top_p": 1.0,
     "help_texts": {
@@ -19,6 +25,7 @@
         "saving_responses": "Whether to save responses in the directory, where you run the app. The responses will be saved under '<YT-channel-name>/<video-title>.md'.",
         "chunk_size": "A larger chunk size increases the amount of context provided to the model to answer your question. However, it may be less relevant than with a small chunk size, as smaller chunks can encapsulate more semantic meaning. I would reccommend to use a smaller chunk size for shorter and a larger one for longer videos (> 1h).",
         "preprocess_checkbox": "By enabling this, the original transcript gets preprocessed. This can greatly improve the results, especially for videos with automatically generated transcripts. However, it results in higher costs, as the whole transcript get's processed by gpt3.5-turbo. Also, the preprocessing will take a substantial amount of time.",
-        "selected_video": "Once you process a video, it gets saved in a database. You can chat with it at any time, without processing it again! Tip: you may also search for videos by typing (parts of) its title."
+        "selected_video": "Once you process a video, it gets saved in a database. You can chat with it at any time, without processing it again! Tip: you may also search for videos by typing (parts of) its title.",
+        "embeddings": "Embeddings are a numerical representation of text that can be used to measure the relatedness between two pieces of text. Embedding models create these numerical representations. Read more at https://platform.openai.com/docs/models/embeddings"
     }
 }

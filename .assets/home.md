@@ -1,8 +1,6 @@
 # YTAI - Your personal YouTube AI
 
-Get insights from YouTube videos with YTAI, an LLM-based app that allows you to summarize or even ask questions and receive answers about them! tailors YouTube video summaries to your needs, offering a custom prompt feature for summaries exactly how you want them.
-
-Check out the project on [GitHub](https://github.com/sudoleg/ytai) for more information! Also, if you like the app, I would be very happy about a star :star:
+Get insights from YouTube videos with YTAI, an LLM-based app that allows you to summarize or even ask questions and receive answers about them! Check out the project on [GitHub](https://github.com/sudoleg/ytai) for more information! Also, if you like the app, I would be very happy about a star :star:
 
 ## Summary
 

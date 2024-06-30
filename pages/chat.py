@@ -45,13 +45,19 @@ from modules.youtube import (
 
 CHUNK_SIZE_FOR_UNPROCESSED_TRANSCRIPT = 512
 
-
 st.set_page_config("Chat", layout="wide", initial_sidebar_state="auto")
 display_api_key_warning()
 
 # --- sidebar with model settings ---
 display_nav_menu()
 display_model_settings_sidebar()
+st.sidebar.info("Choose `text-embedding-3-large` if your video is **not** in English!")
+selected_embeddings_model = st.sidebar.selectbox(
+    label="Select an embedding model",
+    options=tuple(get_default_config_value("available_models.embeddings")),
+    key="embeddings_model",
+    help=get_default_config_value("help_texts.embeddings"),
+)
 display_link_to_repo()
 # --- end ---
 
@@ -91,7 +97,7 @@ if is_api_key_set() and is_api_key_valid(st.session_state.openai_api_key):
     )
     openai_embedding_model = OpenAIEmbeddings(
         api_key=st.session_state.openai_api_key,
-        model="text-embedding-3-small",
+        model=st.session_state.embeddings_model,
     )
 # --- end ---
 
@@ -237,9 +243,9 @@ if (
                     collection = chroma_client.get_or_create_collection(
                         name=randomname.get_name(),
                         metadata={
-                            "yt_video_id": saved_video.yt_video_id,
-                            "yt_channel": saved_video.channel,
                             "yt_video_title": saved_video.title,
+                            "chunk_size": chunk_size,
+                            "embeddings_model": selected_embeddings_model,
                         },
                     )
 
@@ -305,6 +311,15 @@ if (
 
 with col2:
     if collection and collection.count() > 0:
+
+        # the users input has to be embedded using the same embeddings model as was used for creating
+        # the embeddings for the transcript excerpts. Here we ensure that the embedding function passed
+        # as argument to the vector store is the same as was used for the embeddings
+        collection_embeddings_model = collection.metadata.get("embeddings_model")
+        if collection_embeddings_model != selected_embeddings_model:
+            openai_embedding_model.model = collection_embeddings_model
+
+        # init vector store
         chroma_db = Chroma(
             client=chroma_client,
             collection_name=collection.name,
@@ -322,6 +337,7 @@ with col2:
         if prompt:
             with st.spinner("Generating answer..."):
                 try:
+
                     relevant_docs = find_relevant_documents(query=prompt, db=chroma_db)
                     response = generate_response(
                         question=prompt,

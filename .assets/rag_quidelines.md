@@ -6,9 +6,9 @@ You can either provide a question or just a topic from the video. If you ask a q
 
 ## General tips
 
-- be specific
-- be concise
-- Don't include instructions, like 'explain in detail' or 'answer from a perspective of X' etc.
+- be concise and specific
+- don't combine questions unless they are closely related!
+- don't include instructions, like 'explain in detail' or 'answer from a perspective of X' etc.
 
 ## Important notice ❗
 
