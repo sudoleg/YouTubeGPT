@@ -237,9 +237,9 @@ if (
                     collection = chroma_client.get_or_create_collection(
                         name=randomname.get_name(),
                         metadata={
-                            "yt_video_id": saved_video.yt_video_id,
                             "yt_channel": saved_video.channel,
                             "yt_video_title": saved_video.title,
+                            "chunk_size": chunk_size,
                         },
                     )
 
