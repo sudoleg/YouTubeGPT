@@ -183,11 +183,11 @@ if (
                     )
 
         with st.expander("Advanced options"):
-            chunk_size = st.select_slider(
+            chunk_size = st.radio(
                 label="Chunk size",
                 key="chunk_size",
-                value=512,
                 options=[128, 256, 512, 1024],
+                index=2,
                 help=get_default_config_value("help_texts.chunk_size"),
                 disabled=is_video_selected(),
             )
@@ -311,7 +311,6 @@ if (
 
 with col2:
     if collection and collection.count() > 0:
-
         # the users input has to be embedded using the same embeddings model as was used for creating
         # the embeddings for the transcript excerpts. Here we ensure that the embedding function passed
         # as argument to the vector store is the same as was used for the embeddings
