@@ -182,12 +182,11 @@ if (
                     )
 
         with st.expander("Advanced options"):
-            chunk_size = st.number_input(
+            chunk_size = st.select_slider(
                 label="Chunk size",
                 key="chunk_size",
-                min_value=128,
-                max_value=1024,
-                value=512,
+                value=1024,
+                options=[128, 256, 512, 1024],
                 help=get_default_config_value("help_texts.chunk_size"),
                 disabled=is_video_selected(),
             )
@@ -337,7 +336,6 @@ with col2:
         if prompt:
             with st.spinner("Generating answer..."):
                 try:
-
                     relevant_docs = find_relevant_documents(query=prompt, db=chroma_db)
                     response = generate_response(
                         question=prompt,
