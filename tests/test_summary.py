@@ -59,6 +59,7 @@ def test_invalid_api_key():
 
 @pytest.fixture
 def mock_llm():
+    os.environ["OPENAI_API_KEY"] = "sk-proj-xyz"
     # Mock ChatOpenAI instance with the model name
     return ChatOpenAI()
 
