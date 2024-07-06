@@ -1,4 +1,6 @@
-# Some useful infos/resources regarding models
+# Documentation
+
+WIP
 
 - [Advice and answers from the OpenAI Team](https://help.openai.com/en/)
 
@@ -11,3 +13,7 @@
 
 - [OpenAI online tokenizer](https://platform.openai.com/tokenizer)
 - [third-party Tiktokenizer](https://tiktokenizer.vercel.app/)
+
+## Retrieval Augmented Generation (RAG)
+
+- [My thread about chunk sizes for RAG systems on Perplexity](https://www.perplexity.ai/search/larger-vs-smaller-chunk-sizes-F8pU0.fGTBGeXUrKsCKFzA)
