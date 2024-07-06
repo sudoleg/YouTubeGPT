@@ -8,7 +8,7 @@ You can either provide a question or just a topic from the video. If you ask a q
 
 - be concise and specific
 - don't combine questions unless they are closely related!
-- don't include instructions, like 'explain in detail' or 'answer from a perspective of X' etc.
+- it's fine to include some instructions like 'provide a list' or 'explain in detail'. However, I wouldn't include too much of them, as this can negatively impact the retrieval of relevant transcript parts
 
 ## Important notice ❗
 
