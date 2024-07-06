@@ -84,10 +84,7 @@ def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
 
     num_tokens_transcript = num_tokens_from_string(transcript_text, "cl100k_base")
 
-    # if the number of transcript tokens exceeds 80% of the context window, an exception is raised
-    # here I assume that the size of the summary is around 1/5 of the original transcript
-    # my assumption may be wrong. In this case, don't hesitate to start a discussion on github!
-    # I would be happy to implement a better solution for the problem of exceeding context widndow
+    # if the number of tokens in the transcript (plus the number of tokens in the prompt) exeed the model's context window, an exception is raised
     if num_tokens_transcript >= CONTEXT_WINDOWS[llm.model_name][
         "total"
     ] - num_tokens_from_string(user_prompt):
