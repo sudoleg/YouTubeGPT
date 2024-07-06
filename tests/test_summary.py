@@ -57,18 +57,17 @@ def test_invalid_api_key():
     assert result is False
 
 
-@pytest.fixture
-def mock_llm():
+def mock_llm() -> ChatOpenAI:
     os.environ["OPENAI_API_KEY"] = "sk-proj-xyz"
-    # Mock ChatOpenAI instance with the model name
     return ChatOpenAI()
 
 
-def test_transcript_too_long_exception(mock_llm):
+def test_transcript_too_long_exception():
     # Create a transcript that exceeds the context window
-    transcript_text = "word " * (CONTEXT_WINDOWS["gpt-3.5-turbo"]["total"] + 1)
+    transcript = "word " * CONTEXT_WINDOWS["gpt-3.5-turbo"]["total"]
 
-    with pytest.raises(TranscriptTooLongForModelException) as exc_info:
-        get_transcript_summary(transcript_text, mock_llm)
-
-    assert "Your transcript exceeds the context window" in str(exc_info.value)
+    with pytest.raises(
+        expected_exception=TranscriptTooLongForModelException,
+        match="Your transcript exceeds the context window of the chosen model",
+    ) as exc_info:
+        get_transcript_summary(transcript_text=transcript, llm=ChatOpenAI())

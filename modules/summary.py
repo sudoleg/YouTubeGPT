@@ -82,10 +82,8 @@ def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
             ---
             """
 
-    num_tokens_transcript = num_tokens_from_string(transcript_text, "cl100k_base")
-
     # if the number of tokens in the transcript (plus the number of tokens in the prompt) exeed the model's context window, an exception is raised
-    if num_tokens_transcript >= CONTEXT_WINDOWS[llm.model_name][
+    if num_tokens_from_string(string=transcript_text) > CONTEXT_WINDOWS[llm.model_name][
         "total"
     ] - num_tokens_from_string(user_prompt):
         raise TranscriptTooLongForModelException(
