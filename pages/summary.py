@@ -6,15 +6,15 @@ from langchain_openai import ChatOpenAI
 
 from modules.helpers import (
     get_default_config_value,
-    save_response_as_file,
     is_api_key_set,
     is_api_key_valid,
+    save_response_as_file,
 )
 from modules.summary import TranscriptTooLongForModelException, get_transcript_summary
 from modules.ui import (
     GENERAL_ERROR_MESSAGE,
-    display_link_to_repo,
     display_api_key_warning,
+    display_link_to_repo,
     display_model_settings_sidebar,
     display_nav_menu,
     display_video_url_input,
@@ -40,6 +40,12 @@ st.sidebar.checkbox(
 )
 display_link_to_repo()
 # --- end ---
+
+
+@st.experimental_dialog(title="Transcript too long", width="large")
+def display_dialog(message: str):
+    st.warning(message)
+
 
 if is_api_key_set and is_api_key_valid(st.session_state.openai_api_key):
 
@@ -109,7 +115,7 @@ if is_api_key_set and is_api_key_valid(st.session_state.openai_api_key):
                 st.error(e.message)
                 e.log_error()
             except TranscriptTooLongForModelException as e:
-                st.warning(e.message)
+                display_dialog(e.message)
                 e.log_error()
             except Exception as e:
                 logging.error("An unexpected error occurred: %s", str(e), exc_info=True)
