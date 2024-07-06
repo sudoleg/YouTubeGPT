@@ -14,12 +14,13 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from modules.helpers import num_tokens_from_string
 
 CHUNK_SIZE_FOR_UNPROCESSED_TRANSCRIPT = 512
+CHUNK_SIZE_TO_K_MAPPING = {1024: 3, 512: 5, 256: 10, 128: 20}
 
-RAG_SYSTEM_PROMPT = """You are a helpful assistant, skilled in answering questions and providing information about a topic.
+RAG_SYSTEM_PROMPT = """You are an expert in answering questions and providing information about a topic.
 
 You are going to reiceive excerpts from a video transcript as context. Furthermore a user will provide a question or a topic. 
 If you receive a question, give a detailed answer. If you receive a topic, tell the user what is said about the topic. 
-In either case, keep your answer ground in the facts of the context.
+In either case, keep your answer ground solely in the facts of the context.
 If the context does not contain the facts to answer the question, apologize and say that you don't know the answer.
 """
 
@@ -75,8 +76,20 @@ def embed_excerpts(
             )
 
 
-def find_relevant_documents(query: str, db: Chroma):
-    retriever = db.as_retriever(search_kwargs={"k": 3})
+def find_relevant_documents(query: str, db: Chroma, k: int = 3):
+    """
+    Retrieve relevant documents by performing a similarity search.
+
+    Args:
+        query (str): The search query.
+        db (Chroma): The database to search in.
+        k (int): The number of top relevant documents to retrieve. Default is 3.
+
+    Returns:
+        List[Document]: A list of the top k relevant documents.
+    """
+
+    retriever = db.as_retriever(search_kwargs={"k": k})
     return retriever.invoke(input=query)
 
 

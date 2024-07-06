@@ -21,6 +21,7 @@ from modules.helpers import (
 )
 from modules.persistance import SQL_DB, Transcript, Video, delete_video
 from modules.rag import (
+    CHUNK_SIZE_TO_K_MAPPING,
     embed_excerpts,
     find_relevant_documents,
     generate_response,
@@ -185,7 +186,7 @@ if (
             chunk_size = st.select_slider(
                 label="Chunk size",
                 key="chunk_size",
-                value=1024,
+                value=512,
                 options=[128, 256, 512, 1024],
                 help=get_default_config_value("help_texts.chunk_size"),
                 disabled=is_video_selected(),
@@ -336,7 +337,13 @@ with col2:
         if prompt:
             with st.spinner("Generating answer..."):
                 try:
-                    relevant_docs = find_relevant_documents(query=prompt, db=chroma_db)
+                    relevant_docs = find_relevant_documents(
+                        query=prompt,
+                        db=chroma_db,
+                        k=CHUNK_SIZE_TO_K_MAPPING.get(
+                            collection.metadata["chunk_size"]
+                        ),
+                    )
                     response = generate_response(
                         question=prompt,
                         llm=openai_chat_model,
