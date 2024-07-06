@@ -1,9 +1,15 @@
 import os
 
 import pytest
+from langchain_openai import ChatOpenAI
 from streamlit.testing.v1 import AppTest
 
 from modules.helpers import is_api_key_valid
+from modules.summary import (
+    CONTEXT_WINDOWS,
+    TranscriptTooLongForModelException,
+    get_transcript_summary,
+)
 from modules.youtube import (
     InvalidUrlException,
     fetch_youtube_transcript,
@@ -49,3 +55,21 @@ def test_invalid_api_key():
     # Mocking openai.models.list() to simulate an invalid API key
     result = is_api_key_valid("invalid_api_key")
     assert result is False
+
+
+@pytest.fixture
+def mock_llm():
+    os.environ["OPENAI_API_KEY"] = "sk-proj-xyz"
+    # Mock ChatOpenAI instance with the model name
+    return ChatOpenAI()
+
+
+def test_transcript_too_long_exception(mock_llm):
+    # Create a transcript that exceeds the context window
+    transcript = "word " * CONTEXT_WINDOWS["gpt-3.5-turbo"]["total"]
+
+    with pytest.raises(
+        expected_exception=TranscriptTooLongForModelException,
+        match="Your transcript exceeds the context window of the chosen model",
+    ) as exc_info:
+        get_transcript_summary(transcript_text=transcript, llm=mock_llm)
