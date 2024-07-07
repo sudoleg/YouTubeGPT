@@ -24,7 +24,7 @@ YTAI lets you **summarize and chat (Q&A)** with YouTube videos. Its features inc
 
 ## Installation & usage
 
-No matter how you choose to run the app, you will first need to get an OpenAI API-Key. This is very straightforward and free. Have a look at [their instructions](https://platform.openai.com/docs/quickstart/account-setup) to get started.
+No matter how you choose to run the app, you will first need to get an OpenAI API-Key. This is very straightforward and free. Have a look at [their instructions](https://platform.openai.com/docs/quickstart/account-setup) to get started.  
 
 ### build & run with Docker (or docker-compose)
 
@@ -48,6 +48,8 @@ docker pull sudoleg/ytai:latest
 docker build --tag=ytai:latest .
 docker run -d -p 8501:8501 -v $(pwd):/app/responses -e OPENAI_API_KEY=<your-openai-api-key> --name yt-summarizer sudoleg/ytai:latest
 ```
+
+> :information_source: For the best user-experience, you need to be in `Tier 1` [usage tier](https://platform.openai.com/docs/guides/rate-limits/usage-tiers), which requires a one-time payment of 5$. However it's worth it, since then, you'll have access to all models and higher rate limits.
 
 ## Contributing
 

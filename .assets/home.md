@@ -14,6 +14,8 @@ The `Chat` part of the application is best suited when you have a longer video y
 
 I've found that the chat function works especially well for videos with manual transcripts but it's also really good for videos with autogernerated ones. Personally, I use the chat feature for lengthy podcasts with timestamps, like podcasts from [Andrew Huberman](https://www.youtube.com/@hubermanlab), [Lex Fridman](https://www.youtube.com/@lexfridman) or [Chris Williamson](https://www.youtube.com/@ChrisWillx). You can just copy the title of the section/timestamp and get a good overview of the topics discussed.
 
+> ❗ Unfortunately, the `Chat` part is not available on streamlit cloud as it requires an instance of ChromaDB. However, you can set this up locally very easilly with Docker on your PC! Check out the [usage instructions](https://github.com/sudoleg/ytai?tab=readme-ov-file#installation--usage) on GitHub!
+
 ## WIP: FAQ
 
 Some day, an FAQ section will be here...
