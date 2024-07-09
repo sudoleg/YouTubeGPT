@@ -3,10 +3,13 @@ import logging
 import os
 import re
 from pathlib import Path
+from typing import Union
 
 import openai
 import streamlit as st
 import tiktoken
+from chromadb import HttpClient
+from chromadb.config import Settings
 
 
 def is_api_key_set() -> bool:
@@ -44,6 +47,36 @@ def is_api_key_valid(api_key: str):
     else:
         logging.info("API key validation successful")
         return True
+
+
+def is_environment_prod():
+    if os.getenv("ENVIRONMENT") == "production":
+        return True
+    return False
+
+
+def establish_chroma_connection() -> Union[HttpClient, None]:
+    """
+    Establishes and returns a connection to the Chroma database using HttpClient.
+
+    The connection settings include allowing reset and disabling anonymized telemetry.
+    The host is set to "chromadb" for production environments, otherwise "localhost".
+
+    Returns:
+        HttpClient: An instance of HttpClient if the connection is successful.
+        None: If an exception occurs during the connection attempt.
+    """
+    chroma_settings = Settings(allow_reset=True, anonymized_telemetry=False)
+    try:
+        chroma_client = HttpClient(
+            host="chromadb" if is_environment_prod() else "localhost",
+            settings=chroma_settings,
+        )
+    except Exception as e:
+        logging.error(e)
+        return None
+    else:
+        return chroma_client
 
 
 def get_default_config_value(
@@ -171,9 +204,3 @@ def num_tokens_from_string(string: str, encoding_name: str = "cl100k_base") -> i
 
 def read_file(file_path: str):
     return Path(file_path).read_text()
-
-
-def is_environment_prod():
-    if os.getenv("ENVIRONMENT") == "production":
-        return True
-    return False
