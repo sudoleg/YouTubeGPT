@@ -3,7 +3,7 @@ from modules.helpers import is_api_key_set, is_api_key_valid
 
 import streamlit as st
 
-from modules.helpers import get_default_config_value, establish_chroma_connection
+from modules.helpers import get_default_config_value
 
 GENERAL_ERROR_MESSAGE = "An unexpected error occurred. If you are a developer and run the app locally, you can view the logs to see details about the error."
 
@@ -127,5 +127,4 @@ def display_nav_menu():
     """Displays links to pages in sidebar."""
     st.sidebar.page_link(page="main.py", label="Home")
     st.sidebar.page_link(page="pages/summary.py", label="Summary")
-    if establish_chroma_connection():
-        st.sidebar.page_link(page="pages/chat.py", label="Chat")
+    st.sidebar.page_link(page="pages/chat.py", label="Chat")

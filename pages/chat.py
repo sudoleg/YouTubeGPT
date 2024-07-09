@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime as dt
 
+import chromadb
 import randomname
 import streamlit as st
 from chromadb import Collection
@@ -10,10 +11,10 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 from modules.chat import process_transcript
 from modules.helpers import (
-    establish_chroma_connection,
     get_default_config_value,
     is_api_key_set,
     is_api_key_valid,
+    is_environment_prod,
     num_tokens_from_string,
     read_file,
     save_response_as_file,
@@ -72,8 +73,13 @@ SQL_DB.create_tables([Video, Transcript], safe=True)
 chroma_connection_established = False
 chroma_settings = Settings(allow_reset=True, anonymized_telemetry=False)
 collection: None | Collection = None
-chroma_client = establish_chroma_connection()
-if not chroma_client:
+try:
+    chroma_client = chromadb.HttpClient(
+        host="chromadb" if is_environment_prod() else "localhost",
+        settings=chroma_settings,
+    )
+except Exception as e:
+    logging.error(e)
     st.warning(
         "Connection to ChromaDB could not be established! You need to have a ChromaDB instance up and running locally on port 8000!"
     )
