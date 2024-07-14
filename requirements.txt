@@ -7,6 +7,6 @@ watchdog==4.0.1
 pytest==8.2.2
 peewee==3.17.5
 python-dotenv==1.0.1
-chromadb==0.5.3
+chromadb==0.5.4
 langchain-chroma==0.1.2
 randomname==0.2.1
