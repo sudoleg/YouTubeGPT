@@ -18,6 +18,7 @@ from modules.ui import (
     display_model_settings_sidebar,
     display_nav_menu,
     display_video_url_input,
+    set_api_key_in_session_state,
 )
 from modules.youtube import (
     InvalidUrlException,
@@ -29,15 +30,9 @@ from modules.youtube import (
 st.set_page_config("Summaries", layout="wide", initial_sidebar_state="auto")
 display_api_key_warning()
 
-# --- sidebar with model settings and checkbox for saving responses ---
+# --- part of the sidebar which doesn't require an api key ---
 display_nav_menu()
-display_model_settings_sidebar()
-st.sidebar.checkbox(
-    label="Save responses",
-    value=False,
-    help=get_default_config_value(key_path="help_texts.saving_responses"),
-    key="save_responses",
-)
+set_api_key_in_session_state()
 display_link_to_repo()
 # --- end ---
 
@@ -48,6 +43,16 @@ def display_dialog(message: str):
 
 
 if is_api_key_set and is_api_key_valid(st.session_state.openai_api_key):
+
+    # --- rest of the sidebar, which requires an api key to be set ---
+    display_model_settings_sidebar()
+    st.sidebar.checkbox(
+        label="Save responses",
+        value=False,
+        help=get_default_config_value(key_path="help_texts.saving_responses"),
+        key="save_responses",
+    )
+    # --- end ---
 
     # define the columns
     col1, col2 = st.columns([0.4, 0.6], gap="large")

@@ -3,6 +3,7 @@ import logging
 import os
 import re
 from pathlib import Path
+from typing import List, Literal
 
 import openai
 import streamlit as st
@@ -44,6 +45,42 @@ def is_api_key_valid(api_key: str):
     else:
         logging.info("API key validation successful")
         return True
+
+
+def get_available_models(
+    model_type: Literal["gpts", "embeddings"], api_key: str = ""
+) -> List[str]:
+    """
+    Retrieve a list of available model IDs from OpenAI's API filtered by model type.
+
+    Args:
+        model_type (Literal["gpts", "embeddings"]): The type of models to retrieve.
+        api_key (str, optional): The API key for authenticating with OpenAI. Defaults to an empty string.
+
+    Returns:
+        List[str]: A list of available model IDs filtered by the specified model type.
+        Returns an empty list if an authentication error or any other exception occurs.
+    """
+    openai.api_key = api_key
+    selectable_model_ids = list(
+        get_default_config_value(f"available_models.{model_type}")
+    )
+    try:
+        available_model_ids = sorted([model.id for model in openai.models.list()])
+    except openai.AuthenticationError as e:
+        logging.error(
+            "An authentication error occurred when fetching available models: %s",
+            str(e),
+        )
+        return []
+    except Exception as e:
+        logging.error(
+            "An unexpected error occurred when fetching available models: %s",
+            str(e),
+        )
+        return []
+    else:
+        return filter(lambda m: m in selectable_model_ids, available_model_ids)
 
 
 def get_default_config_value(

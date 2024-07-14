@@ -10,6 +10,7 @@ transcripts*/
 !/data/chroma/.gitkeep
 *.sqlite3
 scripts/test.ipynb
+secrets.toml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

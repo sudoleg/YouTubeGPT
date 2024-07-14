@@ -1,5 +1,5 @@
 from os import getenv
-from modules.helpers import is_api_key_set, is_api_key_valid
+from modules.helpers import is_api_key_set, is_api_key_valid, get_available_models
 
 import streamlit as st
 
@@ -30,7 +30,7 @@ def set_api_key_in_session_state():
     """
     OPENAI_API_KEY = getenv("OPENAI_API_KEY")
     if not OPENAI_API_KEY:
-        st.text_input(
+        st.sidebar.text_input(
             "Enter your OpenAI API key",
             key="openai_api_key",
             type="password",
@@ -50,19 +50,20 @@ def is_temperature_and_top_p_altered() -> bool:
 def display_model_settings_sidebar():
     """Function for displaying the sidebar and adjusting settings.
 
-    Every widget with a key is added to streamlits session state and can be accessed in the application.
-    Here, the selectbox for model has the key 'model'.
+    Every widget with a key is added to streamlit's session state and can be accessed in the application.
+    For example here, the selectbox for model has the key 'model'.
     Thus the selected model can be accessed via st.session_state.model.
     """
     if "model" not in st.session_state:
         st.session_state.model = get_default_config_value("default_model")
 
     with st.sidebar:
-        set_api_key_in_session_state()
         st.header("Model settings")
         model = st.selectbox(
-            "Select a large language model",
-            tuple(get_default_config_value("available_models.gpts")),
+            label="Select a large language model",
+            options=get_available_models(
+                model_type="gpts", api_key=st.session_state.openai_api_key
+            ),
             key="model",
             help=get_default_config_value("help_texts.model"),
         )
@@ -90,10 +91,8 @@ def display_model_settings_sidebar():
             )
         if model != get_default_config_value("default_model"):
             st.warning(
-                """:warning: Make sure that you have at least Tier 1, as GPT-4 (turbo, 4o) is not available in the free tier.
-                See OpenAI's documentation about [usage tiers](https://platform.openai.com/docs/guides/rate-limits/usage-tiers).  
-                Also, beware of the potentially higher costs of other models.
-                """
+                """:warning: More advanced models (like gpt-4 and gpt-4o) have better reasoning capabilities and larger context windows. However, they likely won't make
+                a big difference for short videos and simple tasks, like plain summarization. Also, beware of the higher costs of other [flagship models](https://platform.openai.com/docs/models/flagship-models)."""
             )
 
 

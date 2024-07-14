@@ -9,3 +9,4 @@ video_meta/*
 docs/
 .git/
 data/*
+.streamlit/secrets.toml

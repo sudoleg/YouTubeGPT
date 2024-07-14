@@ -18,6 +18,7 @@ from modules.helpers import (
     num_tokens_from_string,
     read_file,
     save_response_as_file,
+    get_available_models,
 )
 from modules.persistance import SQL_DB, Transcript, Video, delete_video
 from modules.rag import (
@@ -35,6 +36,7 @@ from modules.ui import (
     display_nav_menu,
     display_video_url_input,
     display_yt_video_container,
+    set_api_key_in_session_state,
 )
 from modules.youtube import (
     InvalidUrlException,
@@ -49,23 +51,15 @@ CHUNK_SIZE_FOR_UNPROCESSED_TRANSCRIPT = 512
 st.set_page_config("Chat", layout="wide", initial_sidebar_state="auto")
 display_api_key_warning()
 
-# --- sidebar with model settings ---
+# --- part of the sidebar which doesn't require an api key ---
 display_nav_menu()
-display_model_settings_sidebar()
-st.sidebar.info("Choose `text-embedding-3-large` if your video is **not** in English!")
-selected_embeddings_model = st.sidebar.selectbox(
-    label="Select an embedding model",
-    options=tuple(get_default_config_value("available_models.embeddings")),
-    key="embeddings_model",
-    help=get_default_config_value("help_texts.embeddings"),
-)
+set_api_key_in_session_state()
 display_link_to_repo()
 # --- end ---
 
-
 # --- SQLite stuff ---
 SQL_DB.connect(reuse_if_open=True)
-# create tables if they don't exist
+# create tables if they don't already exist
 SQL_DB.create_tables([Video, Transcript], safe=True)
 # --- end ---
 
@@ -87,27 +81,6 @@ else:
     chroma_connection_established = True
 # --- end ---
 
-# --- OpenAI models ---
-if is_api_key_set() and is_api_key_valid(st.session_state.openai_api_key):
-    openai_chat_model = ChatOpenAI(
-        api_key=st.session_state.openai_api_key,
-        temperature=st.session_state.temperature,
-        model=st.session_state.model,
-        model_kwargs={"top_p": st.session_state.top_p},
-        max_tokens=2048,
-    )
-    openai_embedding_model = OpenAIEmbeddings(
-        api_key=st.session_state.openai_api_key,
-        model=st.session_state.embeddings_model,
-    )
-# --- end ---
-
-# fetch saved videos from SQLite
-saved_videos = Video.select()
-
-# create columns
-col1, col2 = st.columns([0.5, 0.5], gap="large")
-
 
 def is_video_selected():
     return True if selected_video_title else False
@@ -127,6 +100,41 @@ if (
     and is_api_key_valid(st.session_state.openai_api_key)
     and chroma_connection_established
 ):
+    # --- rest of the sidebar, which requires a set api key ---
+    display_model_settings_sidebar()
+    st.sidebar.info(
+        "Choose **text-embedding-3-large** if your video is **not** in English!"
+    )
+    selected_embeddings_model = st.sidebar.selectbox(
+        label="Select an embedding model",
+        options=get_available_models(
+            api_key=st.session_state.openai_api_key, model_type="embeddings"
+        ),
+        key="embeddings_model",
+        help=get_default_config_value(key_path="help_texts.embeddings"),
+    )
+    # --- end ---
+
+    # --- initialize OpenAI models ---
+    openai_chat_model = ChatOpenAI(
+        api_key=st.session_state.openai_api_key,
+        temperature=st.session_state.temperature,
+        model=st.session_state.model,
+        model_kwargs={"top_p": st.session_state.top_p},
+        max_tokens=2048,
+    )
+    openai_embedding_model = OpenAIEmbeddings(
+        api_key=st.session_state.openai_api_key,
+        model=st.session_state.embeddings_model,
+    )
+    # --- end ---
+
+    # fetch saved videos from SQLite
+    saved_videos = Video.select()
+
+    # create columns
+    col1, col2 = st.columns([0.5, 0.5], gap="large")
+
     with col1:
         selected_video_title = st.selectbox(
             label="Select from already processed videos",
@@ -308,56 +316,55 @@ if (
                         message="The video has been processed! Please refresh the page and choose it in the select-box above."
                     )
 
+    with col2:
+        if collection and collection.count() > 0:
+            # the users input has to be embedded using the same embeddings model as was used for creating
+            # the embeddings for the transcript excerpts. Here we ensure that the embedding function passed
+            # as argument to the vector store is the same as was used for the embeddings
+            collection_embeddings_model = collection.metadata.get("embeddings_model")
+            if collection_embeddings_model != selected_embeddings_model:
+                openai_embedding_model.model = collection_embeddings_model
 
-with col2:
-    if collection and collection.count() > 0:
-        # the users input has to be embedded using the same embeddings model as was used for creating
-        # the embeddings for the transcript excerpts. Here we ensure that the embedding function passed
-        # as argument to the vector store is the same as was used for the embeddings
-        collection_embeddings_model = collection.metadata.get("embeddings_model")
-        if collection_embeddings_model != selected_embeddings_model:
-            openai_embedding_model.model = collection_embeddings_model
+            # init vector store
+            chroma_db = Chroma(
+                client=chroma_client,
+                collection_name=collection.name,
+                embedding_function=openai_embedding_model,
+            )
 
-        # init vector store
-        chroma_db = Chroma(
-            client=chroma_client,
-            collection_name=collection.name,
-            embedding_function=openai_embedding_model,
-        )
+            with st.expander(label=":information_source: Tips and important notes"):
+                st.markdown(read_file(".assets/rag_quidelines.md"))
 
-        with st.expander(label=":information_source: Tips and important notes"):
-            st.markdown(read_file(".assets/rag_quidelines.md"))
+            prompt = st.chat_input(
+                placeholder="Ask a question or provide a topic covered in the video",
+                key="user_prompt",
+            )
 
-        prompt = st.chat_input(
-            placeholder="Ask a question or provide a topic covered in the video",
-            key="user_prompt",
-        )
-
-        if prompt:
-            with st.spinner("Generating answer..."):
-                try:
-                    relevant_docs = find_relevant_documents(
-                        query=prompt,
-                        db=chroma_db,
-                        k=CHUNK_SIZE_TO_K_MAPPING.get(
-                            collection.metadata["chunk_size"]
-                        ),
-                    )
-                    response = generate_response(
-                        question=prompt,
-                        llm=openai_chat_model,
-                        relevant_docs=relevant_docs,
-                    )
-                except Exception as e:
-                    logging.error(
-                        "An unexpected error occurred: %s", str(e), exc_info=True
-                    )
-                    st.error(GENERAL_ERROR_MESSAGE)
-                else:
-                    st.write(response)
-                    with st.expander(
-                        label="Show chunks retrieved from index and provided to the model as context"
-                    ):
-                        for d in relevant_docs:
-                            st.write(d.page_content)
-                            st.divider()
+            if prompt:
+                with st.spinner("Generating answer..."):
+                    try:
+                        relevant_docs = find_relevant_documents(
+                            query=prompt,
+                            db=chroma_db,
+                            k=CHUNK_SIZE_TO_K_MAPPING.get(
+                                collection.metadata["chunk_size"]
+                            ),
+                        )
+                        response = generate_response(
+                            question=prompt,
+                            llm=openai_chat_model,
+                            relevant_docs=relevant_docs,
+                        )
+                    except Exception as e:
+                        logging.error(
+                            "An unexpected error occurred: %s", str(e), exc_info=True
+                        )
+                        st.error(GENERAL_ERROR_MESSAGE)
+                    else:
+                        st.write(response)
+                        with st.expander(
+                            label="Show chunks retrieved from index and provided to the model as context"
+                        ):
+                            for d in relevant_docs:
+                                st.write(d.page_content)
+                                st.divider()
