@@ -55,7 +55,7 @@ def display_model_settings_sidebar():
     Thus the selected model can be accessed via st.session_state.model.
     """
     if "model" not in st.session_state:
-        st.session_state.model = get_default_config_value("default_model")
+        st.session_state.model = get_default_config_value("default_model.gpt")
 
     with st.sidebar:
         st.header("Model settings")
@@ -89,7 +89,7 @@ def display_model_settings_sidebar():
             st.warning(
                 "OpenAI generally recommends altering temperature or top_p but not both. See their [API reference](https://platform.openai.com/docs/api-reference/chat/create#chat-create-temperature)"
             )
-        if model != get_default_config_value("default_model"):
+        if model != get_default_config_value("default_model.gpt"):
             st.warning(
                 """:warning: More advanced models (like gpt-4 and gpt-4o) have better reasoning capabilities and larger context windows. However, they likely won't make
                 a big difference for short videos and simple tasks, like plain summarization. Also, beware of the higher costs of other [flagship models](https://platform.openai.com/docs/models/flagship-models)."""

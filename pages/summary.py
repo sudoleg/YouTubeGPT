@@ -91,8 +91,8 @@ if is_api_key_set and is_api_key_valid(st.session_state.openai_api_key):
                     api_key=st.session_state.openai_api_key,
                     temperature=st.session_state.temperature,
                     model=st.session_state.model,
+                    top_p=st.session_state.top_p,
                     callbacks=[cb],
-                    model_kwargs={"top_p": st.session_state.top_p},
                     max_tokens=2048,
                 )
                 with st.spinner("Summarizing video :gear: Hang on..."):

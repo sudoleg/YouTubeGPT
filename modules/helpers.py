@@ -66,7 +66,7 @@ def get_available_models(
         get_default_config_value(f"available_models.{model_type}")
     )
     try:
-        available_model_ids = sorted([model.id for model in openai.models.list()])
+        available_model_ids = [model.id for model in openai.models.list()]
     except openai.AuthenticationError as e:
         logging.error(
             "An authentication error occurred when fetching available models: %s",
@@ -80,7 +80,7 @@ def get_available_models(
         )
         return []
     else:
-        return filter(lambda m: m in selectable_model_ids, available_model_ids)
+        return filter(lambda m: m in available_model_ids, selectable_model_ids)
 
 
 def get_default_config_value(
