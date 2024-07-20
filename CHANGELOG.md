@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.2.0](https://github.com/sudoleg/ytai/compare/v2.1.0...v2.2.0) (2024-07-20)
+
+
+### Features
+
+* add gpt4o-mini, closes [#86](https://github.com/sudoleg/ytai/issues/86) ([558bd3c](https://github.com/sudoleg/ytai/commit/558bd3c05bd46d60bd351b012d838236de87a6d5))
+* display only the models that are available to the user ([c02c245](https://github.com/sudoleg/ytai/commit/c02c245b67b4c976fc8d01b793fda00f58963354))
+
 ## [2.1.0](https://github.com/sudoleg/ytai/compare/v2.0.0...v2.1.0) (2024-06-30)
 
 
