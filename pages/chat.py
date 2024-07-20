@@ -120,7 +120,7 @@ if (
         api_key=st.session_state.openai_api_key,
         temperature=st.session_state.temperature,
         model=st.session_state.model,
-        model_kwargs={"top_p": st.session_state.top_p},
+        top_p=st.session_state.top_p,
         max_tokens=2048,
     )
     openai_embedding_model = OpenAIEmbeddings(
