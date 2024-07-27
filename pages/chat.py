@@ -86,7 +86,7 @@ def is_video_selected():
     return True if selected_video_title else False
 
 
-@st.experimental_dialog("Action successful")
+@st.dialog("Action successful")
 def refresh_page(message: str):
     st.info(message)
     refresh_page_button = st.button("Refresh page")

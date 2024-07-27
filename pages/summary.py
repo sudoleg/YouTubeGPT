@@ -37,7 +37,7 @@ display_link_to_repo()
 # --- end ---
 
 
-@st.experimental_dialog(title="Transcript too long", width="large")
+@st.dialog(title="Transcript too long", width="large")
 def display_dialog(message: str):
     st.warning(message)
 
