@@ -45,7 +45,7 @@ docker-compose up --build -d
 # pull from Docker Hub
 docker pull sudoleg/ytai:latest
 # or build locally
-docker build --tag=ytai:latest .
+docker build --tag=sudoleg/ytai:latest .
 docker run -d -p 8501:8501 \
     -v $(pwd):/app/responses \
     -e OPENAI_API_KEY=<your-openai-api-key> \
