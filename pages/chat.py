@@ -54,7 +54,7 @@ display_api_key_warning()
 # --- part of the sidebar which doesn't require an api key ---
 display_nav_menu()
 set_api_key_in_session_state()
-display_link_to_repo()
+display_link_to_repo("chat")
 # --- end ---
 
 # --- SQLite stuff ---
@@ -86,7 +86,7 @@ def is_video_selected():
     return True if selected_video_title else False
 
 
-@st.experimental_dialog("Action successful")
+@st.dialog("Action successful")
 def refresh_page(message: str):
     st.info(message)
     refresh_page_button = st.button("Refresh page")

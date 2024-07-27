@@ -96,9 +96,9 @@ def display_model_settings_sidebar():
             )
 
 
-def display_link_to_repo():
+def display_link_to_repo(view: str = "main"):
     st.sidebar.write(
-        f"[View the source code]({get_default_config_value('github_repo_link')})"
+        f"[View the source code]({get_default_config_value(f"github_repo_links.{view}")})"
     )
 
 

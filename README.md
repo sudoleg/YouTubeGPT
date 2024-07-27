@@ -15,7 +15,7 @@ YTAI lets you **summarize and chat (Q&A)** with YouTube videos. Its features inc
 - **create your own knowledge base**  :floppy_disk:
   - once you process a video, you can chat with it at any time!
 - **choose from different OpenAI models** :robot:
-  - currently available: gpt-3.5-turbo, gpt-4 (turbo), gpt-4o
+  - currently available: gpt-3.5-turbo, gpt-4 (turbo), gpt-4o (mini)
   - by choosing a different model, you can summarize even longer videos and potentially get better responses
 - **experiment with settings** :gear:
   - adjust the temperature and top P of the model
@@ -46,7 +46,10 @@ docker-compose up --build -d
 docker pull sudoleg/ytai:latest
 # or build locally
 docker build --tag=ytai:latest .
-docker run -d -p 8501:8501 -v $(pwd):/app/responses -e OPENAI_API_KEY=<your-openai-api-key> --name yt-summarizer sudoleg/ytai:latest
+docker run -d -p 8501:8501 \
+    -v $(pwd):/app/responses \
+    -e OPENAI_API_KEY=<your-openai-api-key> \
+    --name youtube-ai sudoleg/ytai:latest
 ```
 
 > :information_source: For the best user-experience, you need to be in `Tier 1` [usage tier](https://platform.openai.com/docs/guides/rate-limits/usage-tiers), which requires a one-time payment of 5$. However it's worth it, since then, you'll have access to all models and higher rate limits.
