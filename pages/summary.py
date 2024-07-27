@@ -33,7 +33,7 @@ display_api_key_warning()
 # --- part of the sidebar which doesn't require an api key ---
 display_nav_menu()
 set_api_key_in_session_state()
-display_link_to_repo()
+display_link_to_repo("summary")
 # --- end ---
 
 
