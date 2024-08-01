@@ -185,6 +185,9 @@ def save_response_as_file(
         else:
             file.write(file_content)
 
+    # Log the full path of the saved file
+    logging.info("File saved at: %s", file_path)
+
 
 def get_preffered_languages():
     # TODO: return from configuration object or config.json
