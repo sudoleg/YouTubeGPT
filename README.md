@@ -2,11 +2,11 @@
   <img src=".assets/yt-summarizer-logo.png" alt="Logo" width="250">
 </p>
 
-<h1 align="center">YTAI - Your YouTube AI</h1>
+<h1 align="center">YouTubeGPT- Your YouTube AI</h1>
 
 ## Features :sparkles:
 
-YTAI lets you **summarize and chat (Q&A)** with YouTube videos. Its features include:
+YouTubeGPT lets you **summarize and chat (Q&A)** with YouTube videos. Its features include:
 
 - **provide a custom prompt for summaries** :writing_hand:
   - you can tailor the summary to your needs by providing a custom prompt or just use the default summarization
@@ -43,13 +43,13 @@ docker-compose up --build -d
 
 ```bash
 # pull from Docker Hub
-docker pull sudoleg/ytai:latest
+docker pull sudoleg/yotube-gpt:latest
 # or build locally
-docker build --tag=sudoleg/ytai:latest .
+docker build --tag=sudoleg/yotube-gpt:latest .
 docker run -d -p 8501:8501 \
     -v $(pwd):/app/responses \
     -e OPENAI_API_KEY=<your-openai-api-key> \
-    --name youtube-ai sudoleg/ytai:latest
+    --name youtube-ai sudoleg/yotube-gpt:latest
 ```
 
 > :information_source: For the best user-experience, you need to be in `Tier 1` [usage tier](https://platform.openai.com/docs/guides/rate-limits/usage-tiers), which requires a one-time payment of 5$. However it's worth it, since then, you'll have access to all models and higher rate limits.

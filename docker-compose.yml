@@ -5,6 +5,7 @@ networks:
 services:
   chromadb:
     image: chromadb/chroma:0.5.5
+    container_name: chroma-db
     volumes:
       # Be aware that indexed data are located in "/chroma/chroma/"
       # Default configuration for persist_directory in chromadb/config.py
@@ -28,8 +29,8 @@ services:
       - net
 
   ytai:
-    image: sudoleg/ytai:latest
-    container_name: ytai
+    image: sudoleg/yotube-gpt:latest
+    container_name: youtube-gpt
     depends_on:
       - chromadb
     build:
@@ -44,7 +45,7 @@ services:
       - ./data:/app/data
     environment:
       # replace with your OpenAI API key or the name of the environment
-      # variable that stores it on your machine 
+      # variable that stores it on your PC 
       - OPENAI_API_KEY=${OPENAI_YTAI_API_KEY}
     ports:
       - "8501:8501"
