@@ -12,8 +12,10 @@ YouTubeGPT lets you **summarize and chat (Q&A)** with YouTube videos. Its featur
   - you can tailor the summary to your needs by providing a custom prompt or just use the default summarization
 - **automatically save summaries** :open_file_folder:
   - the summaries can be automatically saved in the directory where you run the app. The summaries will be available under `<YT-channel-name>/<video-title>.md`
+- **get answers to questions about the video content** :question:
+  - part of the application is designed and optimized specifically for question answering tasks (Q&A)
 - **create your own knowledge base**  :floppy_disk:
-  - once you process a video, you can chat with it at any time!
+  - once a video is processed, you can chat with it at any time!
 - **choose from different OpenAI models** :robot:
   - currently available: gpt-3.5-turbo, gpt-4 (turbo), gpt-4o (mini)
   - by choosing a different model, you can summarize even longer videos and potentially get better responses
@@ -54,9 +56,11 @@ docker run -d -p 8501:8501 \
 
 > :information_source: For the best user-experience, you need to be in `Tier 1` [usage tier](https://platform.openai.com/docs/guides/rate-limits/usage-tiers), which requires a one-time payment of 5$. However it's worth it, since then, you'll have access to all models and higher rate limits.
 
-## Contributing
+## Contributing & Support :handshake:
 
-Feedback and contributions are welcome! This is a small side-project and it's very easy to get started! Here’s the gist to get your changes rolling:
+I’m working on adding more features and am open to feedback and contributions. Don't hesitate to create an issue or a pull request. Also, if you are enjoying the app or find it useful, please consider giving the repository a star :star:
+
+This is a small side-project and it's easy to get started! If you want to contribute, here’s the gist to get your changes rolling:
 
 1. **Fork & clone**: Fork the repo and clone your fork to start.
 2. **Pick an issue or suggest One**: Choose an open issue to work on, or suggest a new feature or bug fix by creating an issue for discussion.
