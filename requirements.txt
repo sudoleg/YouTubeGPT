@@ -10,3 +10,5 @@ python-dotenv==1.0.1
 chromadb==0.5.5
 langchain-chroma==0.1.2
 randomname==0.2.1
+openai-whisper==20231117
+pytubefix==6.8.1
