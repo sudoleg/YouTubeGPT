@@ -11,6 +11,9 @@ transcripts*/
 *.sqlite3
 scripts/test.ipynb
 secrets.toml
+transcript_audios/
+transcribed/
+.DS_Store
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

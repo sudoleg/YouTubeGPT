@@ -10,3 +10,7 @@ docs/
 .git/
 data/*
 .streamlit/secrets.toml
+secrets.toml
+transcript_audios/
+transcribed/
+.DS_Store
