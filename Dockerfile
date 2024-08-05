@@ -4,7 +4,7 @@ FROM python:3.12.4
 WORKDIR /app
 
 # Install system dependencies
-RUN apt update && apt install ffmpeg
+RUN apt-get update && apt-get install ffmpeg
 
 # Copy just the requirements.txt first to leverage Docker cache
 COPY requirements.txt .
