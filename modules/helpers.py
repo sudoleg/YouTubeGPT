@@ -201,6 +201,8 @@ def num_tokens_from_string(string: str, model: str) -> int:
     Args:
         string (str): The string to count tokens in.
         model (str): Name of the model.
+
+    See https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken
     """
     encoding_name = tiktoken.encoding_name_for_model(model_name=model)
     encoding = tiktoken.get_encoding(encoding_name)
