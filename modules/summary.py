@@ -85,9 +85,11 @@ def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
             """
 
     # if the number of tokens in the transcript (plus the number of tokens in the prompt) exeed the model's context window, an exception is raised
-    if num_tokens_from_string(string=transcript_text) > CONTEXT_WINDOWS[llm.model_name][
-        "total"
-    ] - num_tokens_from_string(user_prompt):
+    if num_tokens_from_string(
+        string=transcript_text, model=llm.model_name
+    ) > CONTEXT_WINDOWS[llm.model_name]["total"] - num_tokens_from_string(
+        string=user_prompt, model=llm.model_name
+    ):
         raise TranscriptTooLongForModelException(
             message=f"Your transcript exceeds the context window of the chosen model ({llm.model_name}), which is {CONTEXT_WINDOWS[llm.model_name]['total']} tokens. "
             "Consider the following options:\n"
