@@ -230,7 +230,10 @@ if (
 
                     saved_transcript = Transcript.create(
                         video=saved_video,
-                        original_token_num=num_tokens_from_string(original_transcript),
+                        original_token_num=num_tokens_from_string(
+                            string=original_transcript,
+                            model=openai_chat_model.model_name,
+                        ),
                     )
 
                     # 2. split the original transcript
@@ -277,7 +280,8 @@ if (
                                 Transcript.preprocessed: True,
                                 Transcript.chunk_size: chunk_size,
                                 Transcript.processed_token_num: num_tokens_from_string(
-                                    processed_transcript
+                                    string=processed_transcript,
+                                    model=openai_chat_model.model_name,
                                 ),
                             }
                         ).where(Transcript.video == saved_video).execute()
