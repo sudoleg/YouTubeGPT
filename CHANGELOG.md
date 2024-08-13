@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/sudoleg/YouTubeGPT/compare/v2.2.0...v2.2.1) (2024-08-13)
+
+
+### Bug Fixes
+
+* **helpers:** provide default value for model param in func for token counting ([af395ba](https://github.com/sudoleg/YouTubeGPT/commit/af395baabcc416eb0fa20748bedfb16113c2962d))
+
 ## [2.2.0](https://github.com/sudoleg/ytai/compare/v2.1.0...v2.2.0) (2024-07-20)
 
 
