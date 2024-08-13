@@ -194,13 +194,13 @@ def get_preffered_languages():
     return ["en-US", "en", "de"]
 
 
-def num_tokens_from_string(string: str, model: str) -> int:
+def num_tokens_from_string(string: str, model: str = "gpt-4o-mini") -> int:
     """
     Returns the number of tokens in a text string.
 
     Args:
         string (str): The string to count tokens in.
-        model (str): Name of the model.
+        model (str): Name of the model. Default is 'gpt-4o-mini'
 
     See https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken
     """
