@@ -14,6 +14,11 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from modules.helpers import num_tokens_from_string
 
 CHUNK_SIZE_FOR_UNPROCESSED_TRANSCRIPT = 512
+
+# to provide the LLM with roughly equal amount of input regardless of the chunk size (chosen by the user)
+# we define a mapping. So if the user chose to embed chunks with 256 tokens, the model is
+# provided with 10 chunks instead of only 3 (like for chunk size of 1024 tokens).
+# Thus, the overall amount of input is roughly the same for all chunk sizes (3072 or 2560 tokens)
 CHUNK_SIZE_TO_K_MAPPING = {1024: 3, 512: 5, 256: 10, 128: 20}
 
 RAG_SYSTEM_PROMPT = """You are an expert in answering questions and providing information about a topic.
@@ -53,7 +58,9 @@ def split_text_recursively(
     )
     splits = text_splitter.create_documents([transcript_text])
     logging.info(
-        f"Split transcript into {len(splits)} chunks with a provided chunk size of {chunk_size} tokens."
+        "Split transcript into %d chunks with a provided chunk size of %d tokens.",
+        len(splits),
+        chunk_size,
     )
     return splits
 
