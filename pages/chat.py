@@ -200,7 +200,7 @@ if (
                 disabled=is_video_selected(),
             )
             transcription_checkbox = st.checkbox(
-                label="Experimental: enable advanced transcription",
+                label="Enable advanced transcription",
                 key="preprocessing_checkbox",
                 help=get_default_config_value("help_texts.preprocess_checkbox"),
                 disabled=is_video_selected(),
