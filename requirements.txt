@@ -2,7 +2,7 @@ youtube-transcript-api==0.6.2
 langchain-community==0.2.16
 langchain-openai==0.1.23
 langchain-text-splitters==0.2.4
-streamlit==1.37.1
+streamlit==1.38.0
 watchdog==4.0.2
 pytest==8.3.2
 peewee==3.17.6
