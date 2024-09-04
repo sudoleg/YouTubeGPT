@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/sudoleg/YouTubeGPT/compare/v2.2.1...v2.3.0) (2024-09-04)
+
+
+### Features
+
+* enable (advanced) transcription using whisper ([1d679f7](https://github.com/sudoleg/YouTubeGPT/commit/1d679f7fd17064fbd659fafda5813ce58abd7724))
+
 ## [2.2.1](https://github.com/sudoleg/YouTubeGPT/compare/v2.2.0...v2.2.1) (2024-08-13)
 
 
