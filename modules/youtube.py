@@ -70,6 +70,8 @@ def get_video_metadata(url: str):
 
 
 def fetch_youtube_transcript(url: str):
+    """Fetches the transcript of a YouTube video. Returns transcript text."""
+
     video_id = extract_youtube_video_id(url)
     if video_id is None:
         raise InvalidUrlException(

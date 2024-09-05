@@ -9,8 +9,8 @@ from chromadb.config import Settings
 from langchain_chroma import Chroma
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
-from modules.chat import process_transcript
 from modules.helpers import (
+    get_available_models,
     get_default_config_value,
     is_api_key_set,
     is_api_key_valid,
@@ -18,7 +18,6 @@ from modules.helpers import (
     num_tokens_from_string,
     read_file,
     save_response_as_file,
-    get_available_models,
 )
 from modules.persistance import SQL_DB, Transcript, Video, delete_video
 from modules.rag import (
@@ -28,6 +27,7 @@ from modules.rag import (
     generate_response,
     split_text_recursively,
 )
+from modules.transcription import download_mp3, generate_transcript
 from modules.ui import (
     GENERAL_ERROR_MESSAGE,
     display_api_key_warning,
@@ -199,8 +199,8 @@ if (
                 help=get_default_config_value("help_texts.chunk_size"),
                 disabled=is_video_selected(),
             )
-            preprocess_checkbox = st.checkbox(
-                label="Experimental: enable transcript preprocessing",
+            transcription_checkbox = st.checkbox(
+                label="Enable advanced transcription",
                 key="preprocessing_checkbox",
                 help=get_default_config_value("help_texts.preprocess_checkbox"),
                 disabled=is_video_selected(),
@@ -230,22 +230,10 @@ if (
 
                     saved_transcript = Transcript.create(
                         video=saved_video,
-                        original_token_num=num_tokens_from_string(original_transcript),
-                    )
-
-                    # 2. split the original transcript
-                    # if preprocessing is enabled/checked, the chunk size is 512
-                    # else the chunk size is determined by the provided value,
-                    # which also dafaults to 512
-                    original_transcript_excerpts = split_text_recursively(
-                        original_transcript,
-                        chunk_size=(
-                            CHUNK_SIZE_FOR_UNPROCESSED_TRANSCRIPT
-                            if preprocess_checkbox
-                            else chunk_size
+                        original_token_num=num_tokens_from_string(
+                            string=original_transcript,
+                            model=openai_chat_model.model_name,
                         ),
-                        chunk_overlap=32,
-                        len_func="tokens",
                     )
 
                     collection = chroma_client.get_or_create_collection(
@@ -257,49 +245,46 @@ if (
                         },
                     )
 
-                    if preprocess_checkbox:
-                        # 3. process transcript
-                        processed_transcript = process_transcript(
-                            transcript_excerpts=original_transcript_excerpts,
-                            llm=openai_chat_model,
+                    # 2. create excerpts. Either
+                    #   - from original transcript
+                    #   - or from whisper transcription if transcription checkbox is checked
+                    if transcription_checkbox:
+                        download = download_mp3(
+                            video_id=saved_video.yt_video_id,
+                            download_folder_path="data/audio",
                         )
+                        whisper_transcript = generate_transcript(file_path=download)
                         save_response_as_file(
-                            dir_name="transcripts_processed/",
+                            dir_name="data/transcripts",
                             filename=saved_video.title,
-                            file_content=processed_transcript,
+                            file_content=whisper_transcript,
                         )
-                        processed_transcript_excerpts = split_text_recursively(
-                            processed_transcript,
+                        transcript_excerpts = split_text_recursively(
+                            transcript_text=whisper_transcript,
                             chunk_size=chunk_size,
-                        )
-                        Transcript.update(
-                            {
-                                Transcript.preprocessed: True,
-                                Transcript.chunk_size: chunk_size,
-                                Transcript.processed_token_num: num_tokens_from_string(
-                                    processed_transcript
-                                ),
-                            }
-                        ).where(Transcript.video == saved_video).execute()
-                        embed_excerpts(
-                            collection=collection,
-                            excerpts=processed_transcript_excerpts,
-                            embeddings=openai_embedding_model,
+                            len_func="tokens",
                         )
                     else:
-                        Transcript.update(
-                            {
-                                Transcript.preprocessed: False,
-                                Transcript.chunk_size: chunk_size,
-                                Transcript.chroma_collection_id: collection.id,
-                                Transcript.chroma_collection_name: collection.name,
-                            }
-                        ).where(Transcript.video == saved_video).execute()
-                        embed_excerpts(
-                            collection=collection,
-                            excerpts=original_transcript_excerpts,
-                            embeddings=openai_embedding_model,
+                        transcript_excerpts = split_text_recursively(
+                            transcript_text=original_transcript,
+                            chunk_size=chunk_size,
+                            len_func="tokens",
                         )
+
+                    # 3. embed/index transcript excerpts
+                    Transcript.update(
+                        {
+                            Transcript.preprocessed: transcription_checkbox,
+                            Transcript.chunk_size: chunk_size,
+                            Transcript.chroma_collection_id: collection.id,
+                            Transcript.chroma_collection_name: collection.name,
+                        }
+                    ).where(Transcript.video == saved_video).execute()
+                    embed_excerpts(
+                        collection=collection,
+                        excerpts=transcript_excerpts,
+                        embeddings=openai_embedding_model,
+                    )
                 except InvalidUrlException as e:
                     st.error(e.message)
                     e.log_error()
