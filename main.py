@@ -20,10 +20,6 @@ def main():
             """It looks like you haven't set the API Key as an environment variable. 
                 Don't worry, you can set it in the sidebar when you go to either one of the pages :)"""
         )
-    else:
-        st.success("API Key set!")
-        if not is_api_key_valid(st.session_state.openai_api_key):
-            st.warning("It looks like you have provided an invalid API Key!")
 
     st.markdown(body=read_file(".assets/home.md"))
 
