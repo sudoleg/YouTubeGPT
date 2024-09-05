@@ -30,7 +30,6 @@ def is_api_key_valid(api_key: str):
 
     api_key_valid = os.getenv("OPENAI_API_KEY_VALID")
     if api_key_valid:
-        print(api_key_valid)
         return True
 
     openai.api_key = api_key
@@ -58,22 +57,31 @@ def get_available_models(
     model_type: Literal["gpts", "embeddings"], api_key: str = ""
 ) -> List[str]:
     """
-    Retrieve a list of available model IDs from OpenAI's API filtered by model type.
+    Retrieve a filtered list of available model IDs from OpenAI's API or environment variables, based on the specified model type.
 
     Args:
-        model_type (Literal["gpts", "embeddings"]): The type of models to retrieve.
+        model_type (Literal["gpts", "embeddings"]): The type of models to retrieve, such as 'gpts' or 'embeddings'.
         api_key (str, optional): The API key for authenticating with OpenAI. Defaults to an empty string.
 
     Returns:
-        List[str]: A list of available model IDs filtered by the specified model type.
-        Returns an empty list if an authentication error or any other exception occurs.
+        List[str]: A filtered list of available model IDs matching the specified model type. The list is derived either from the environment variable `AVAILABLE_MODEL_IDS` if set, or from a call to OpenAI's API.
+        If an authentication error or any other exception occurs during the API call, an empty list is returned.
     """
     openai.api_key = api_key
     selectable_model_ids = list(
         get_default_config_value(f"available_models.{model_type}")
     )
+
+    # AVAILABLE_MODEL_IDS env var stores all the model IDs available to the user as a list (separated by a comma)
+    # the env var is set programatically below
+    available_model_ids = os.getenv("AVAILABLE_MODEL_IDS")
+    if available_model_ids:
+        return filter(
+            lambda m: m in available_model_ids.split(","), selectable_model_ids
+        )
+
     try:
-        available_model_ids = [model.id for model in openai.models.list()]
+        available_model_ids: list = [model.id for model in openai.models.list()]
     except openai.AuthenticationError as e:
         logging.error(
             "An authentication error occurred when fetching available models: %s",
@@ -87,6 +95,9 @@ def get_available_models(
         )
         return []
     else:
+        # set the AVAILABLE_MODEL_IDS env var, so that the list of available models
+        # doesn't have to be fetched every time
+        os.environ["AVAILABLE_MODEL_IDS"] = ",".join(available_model_ids)
         return filter(lambda m: m in available_model_ids, selectable_model_ids)
 
 
