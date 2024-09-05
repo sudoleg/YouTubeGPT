@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/sudoleg/YouTubeGPT/compare/v2.3.0...v2.3.1) (2024-09-05)
+
+
+### Performance Improvements
+
+* introduce an env var to store models available to a user ([df85861](https://github.com/sudoleg/YouTubeGPT/commit/df858613650a78f52b40c114de729b34b39be40a))
+
 ## [2.3.0](https://github.com/sudoleg/YouTubeGPT/compare/v2.2.1...v2.3.0) (2024-09-04)
 
 
