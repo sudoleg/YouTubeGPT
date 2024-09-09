@@ -17,6 +17,7 @@ def is_api_key_set() -> bool:
     return False
 
 
+@st.cache_data
 def is_api_key_valid(api_key: str):
     """
     Checks the validity of an OpenAI API key.
@@ -27,10 +28,6 @@ def is_api_key_valid(api_key: str):
     Returns:
         bool: True if the API key is valid, False if the API key is invalid.
     """
-
-    api_key_valid = os.getenv("OPENAI_API_KEY_VALID")
-    if api_key_valid:
-        return True
 
     openai.api_key = api_key
     try:
@@ -49,7 +46,6 @@ def is_api_key_valid(api_key: str):
         return False
     else:
         logging.info("API key validation successful")
-        os.environ["OPENAI_API_KEY_VALID"] = "yes"
         return True
 
 
