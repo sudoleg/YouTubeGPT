@@ -4,7 +4,7 @@ networks:
 
 services:
   chromadb:
-    image: chromadb/chroma:0.5.7
+    image: chromadb/chroma:0.5.9
     container_name: chroma-db
     volumes:
       # Be aware that indexed data are located in "/chroma/chroma/"
