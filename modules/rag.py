@@ -3,7 +3,7 @@ import uuid
 from typing import List, Literal
 
 from chromadb import Collection
-from langchain.chat_models.base import BaseChatModel
+from langchain_core.language_models import BaseChatModel
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
