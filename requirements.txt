@@ -4,7 +4,7 @@ langchain-community==0.3.0
 langchain-openai==0.2.0
 langchain-text-splitters==0.3.0
 streamlit==1.38.0
-watchdog==4.0.2
+watchdog==5.0.3
 pytest==8.3.3
 peewee==3.17.6
 python-dotenv==1.0.1
