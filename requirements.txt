@@ -11,6 +11,6 @@ python-dotenv==1.0.1
 chromadb==0.5.11
 langchain-chroma==0.1.4
 randomname==0.2.1
-tiktoken==0.7.0
+tiktoken==0.8.0
 openai-whisper==20240930
 pytubefix==7.2.2
