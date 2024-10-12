@@ -1,6 +1,6 @@
 from typing import List
 
-from langchain.chat_models.base import BaseChatModel
+from langchain_core.language_models import BaseChatModel
 from langchain_core.documents import Document
 from langchain_core.prompts.chat import HumanMessagePromptTemplate, SystemMessage
 
