@@ -6,7 +6,7 @@ langchain-text-splitters==0.3.0
 streamlit==1.38.0
 watchdog==4.0.2
 pytest==8.3.3
-peewee==3.17.6
+peewee==3.17.7
 python-dotenv==1.0.1
 chromadb==0.5.13
 langchain-chroma==0.1.4
