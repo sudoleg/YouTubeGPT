@@ -19,7 +19,14 @@ from modules.helpers import (
     read_file,
     save_response_as_file,
 )
-from modules.persistance import SQL_DB, Transcript, Video, delete_video
+from modules.persistance import (
+    SQL_DB,
+    LibraryEntry,
+    Transcript,
+    Video,
+    delete_video,
+    save_library_entry,
+)
 from modules.rag import (
     CHUNK_SIZE_TO_K_MAPPING,
     embed_excerpts,
@@ -60,7 +67,7 @@ display_link_to_repo("chat")
 # --- SQLite stuff ---
 SQL_DB.connect(reuse_if_open=True)
 # create tables if they don't already exist
-SQL_DB.create_tables([Video, Transcript], safe=True)
+SQL_DB.create_tables([Video, Transcript, LibraryEntry], safe=True)
 # --- end ---
 
 # --- Chroma ---
@@ -93,6 +100,26 @@ def refresh_page(message: str):
     if refresh_page_button:
         st.session_state.url_input = ""
         st.rerun()
+
+
+# variable for holding the Video object
+saved_video: None | Video = None
+
+
+def save_response_to_lib():
+    """Wrapper func for saving responses to the library."""
+    try:
+        save_library_entry(
+            entry_type="A",
+            question_text=st.session_state.user_prompt,
+            response_text=st.session_state.response,
+            video=saved_video,
+        )
+    except Exception as e:
+        st.error("Saving failed! If you are a developer, see logs for details!")
+        logging.error("Error when saving library entry: %s", e)
+    else:
+        st.success("Saved answer to library successfully!")
 
 
 if (
@@ -129,7 +156,7 @@ if (
     )
     # --- end ---
 
-    # fetch saved videos from SQLite
+    # fetch all saved videos from SQLite
     saved_videos = Video.select()
 
     # create columns
@@ -139,7 +166,10 @@ if (
         selected_video_title = st.selectbox(
             label="Select from already processed videos",
             placeholder="Choose a video",
-            options=[video.title for video in saved_videos],
+            # only videos with an associated transcript can be selected
+            options=[
+                video.title for video in saved_videos if video.transcripts.count() != 0
+            ],
             index=None,
             key="selected_video",
             help=get_default_config_value("help_texts.selected_video"),
@@ -148,7 +178,6 @@ if (
             label="Or enter the URL of a new video:", disabled=is_video_selected()
         )
 
-        saved_video = None
         if is_video_selected():
             saved_video = Video.get(Video.title == selected_video_title)
 
@@ -218,7 +247,7 @@ if (
                         url=url_input,
                     )
 
-                    # 1. fetch transcript from youtube
+                    # 1. save video in the database
                     saved_video = Video.create(
                         yt_video_id=extract_youtube_video_id(url_input),
                         link=url_input,
@@ -226,8 +255,10 @@ if (
                         channel=video_metadata["channel"],
                         saved_on=dt.now(),
                     )
+                    # 2. fetch transcript from youtube
                     original_transcript = fetch_youtube_transcript(url_input)
 
+                    # 3. save transcript, ormore precisely, information about it, in the database
                     saved_transcript = Transcript.create(
                         video=saved_video,
                         original_token_num=num_tokens_from_string(
@@ -236,6 +267,7 @@ if (
                         ),
                     )
 
+                    # 4. get an already existing or create a new collection in ChromaDB
                     collection = chroma_client.get_or_create_collection(
                         name=randomname.get_name(),
                         metadata={
@@ -245,7 +277,7 @@ if (
                         },
                     )
 
-                    # 2. create excerpts. Either
+                    # 5. create excerpts. Either
                     #   - from original transcript
                     #   - or from whisper transcription if transcription checkbox is checked
                     if transcription_checkbox:
@@ -271,7 +303,7 @@ if (
                             len_func="tokens",
                         )
 
-                    # 3. embed/index transcript excerpts
+                    # 6. embed/index transcript excerpts
                     Transcript.update(
                         {
                             Transcript.preprocessed: transcription_checkbox,
@@ -322,10 +354,10 @@ if (
 
             prompt = st.chat_input(
                 placeholder="Ask a question or provide a topic covered in the video",
-                key="user_prompt",
             )
 
             if prompt:
+                st.session_state.user_prompt = prompt
                 with st.spinner("Generating answer..."):
                     try:
                         relevant_docs = find_relevant_documents(
@@ -340,13 +372,19 @@ if (
                             llm=openai_chat_model,
                             relevant_docs=relevant_docs,
                         )
+                        st.session_state.response = response
                     except Exception as e:
                         logging.error(
                             "An unexpected error occurred: %s", str(e), exc_info=True
                         )
                         st.error(GENERAL_ERROR_MESSAGE)
                     else:
-                        st.write(response)
+                        st.write(st.session_state.response)
+                        st.button(
+                            label="Save this response to your library",
+                            on_click=save_response_to_lib,
+                            help="Unfortunately, the response disappears in this view after saving it to the library. However, it will be visible on the 'Library' page!",
+                        )
                         with st.expander(
                             label="Show chunks retrieved from index and provided to the model as context"
                         ):
