@@ -3,7 +3,7 @@ langchain-core==0.3.13
 langchain-community==0.3.3
 langchain-openai==0.2.4
 langchain-text-splitters==0.3.1
-streamlit==1.38.0
+streamlit==1.39.0
 watchdog==4.0.2
 pytest==8.3.3
 peewee==3.17.7
