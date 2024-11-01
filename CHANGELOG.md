@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.0](https://github.com/sudoleg/YouTubeGPT/compare/v2.3.1...v2.4.0) (2024-11-01)
+
+
+### Features
+
+* add library feature, closes [#145](https://github.com/sudoleg/YouTubeGPT/issues/145) ([e6ec639](https://github.com/sudoleg/YouTubeGPT/commit/e6ec6396545cba98ba00cec34486f0fd816a962a))
+
 ## [2.3.1](https://github.com/sudoleg/YouTubeGPT/compare/v2.3.0...v2.3.1) (2024-09-05)
 
 
