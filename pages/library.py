@@ -14,14 +14,7 @@ SQL_DB.create_tables([LibraryEntry], safe=True)
 # --- end ---
 
 tab_summaries, tab_answers = st.tabs(["Summaries", "Answers"])
-
-
 saved_videos = Video.select()
-
-
-saved_lib_entries_summaries = (
-    LibraryEntry.select().where(LibraryEntry.entry_type == "S").execute()
-)
 
 
 def execute_entry_deletion(entry: LibraryEntry):
@@ -31,6 +24,27 @@ def execute_entry_deletion(entry: LibraryEntry):
 
 
 with tab_summaries:
+    selected_channel = st.selectbox(
+        label="Filter by channel",
+        placeholder="choose a channel or start typing",
+        # only videos with an associated transcript can be selected
+        options=set([video.channel for video in saved_videos]),
+        index=None,
+        key="selected_channel",
+    )
+
+    if selected_channel:
+        saved_lib_entries_summaries = (
+            LibraryEntry.select()
+            .join(Video)
+            .where(LibraryEntry.entry_type == "S", Video.channel == selected_channel)
+            .execute()
+        )
+    else:
+        saved_lib_entries_summaries = (
+            LibraryEntry.select().where(LibraryEntry.entry_type == "S").execute()
+        )
+
     if saved_lib_entries_summaries:
         st.header("Saved summaries")
         for i, entry in enumerate(saved_lib_entries_summaries, 0):
