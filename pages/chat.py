@@ -17,7 +17,6 @@ from modules.helpers import (
     is_environment_prod,
     num_tokens_from_string,
     read_file,
-    save_response_as_file,
 )
 from modules.persistance import (
     SQL_DB,
@@ -286,11 +285,6 @@ if (
                             download_folder_path="data/audio",
                         )
                         whisper_transcript = generate_transcript(file_path=download)
-                        save_response_as_file(
-                            dir_name="data/transcripts",
-                            filename=saved_video.title,
-                            file_content=whisper_transcript,
-                        )
                         transcript_excerpts = split_text_recursively(
                             transcript_text=whisper_transcript,
                             chunk_size=chunk_size,
