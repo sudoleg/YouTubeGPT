@@ -1,15 +1,18 @@
 import logging
+from datetime import datetime as dt
 
 import streamlit as st
 from langchain_community.callbacks.openai_info import OpenAICallbackHandler
 from langchain_openai import ChatOpenAI
 
 from modules.helpers import (
+    extract_youtube_video_id,
     get_default_config_value,
     is_api_key_set,
     is_api_key_valid,
     save_response_as_file,
 )
+from modules.persistance import SQL_DB, LibraryEntry, Video, save_library_entry
 from modules.summary import TranscriptTooLongForModelException, get_transcript_summary
 from modules.ui import (
     GENERAL_ERROR_MESSAGE,
@@ -27,6 +30,12 @@ from modules.youtube import (
     get_video_metadata,
 )
 
+# --- SQLite stuff ---
+SQL_DB.connect(reuse_if_open=True)
+# create tables if they don't already exist
+SQL_DB.create_tables([Video, LibraryEntry], safe=True)
+# --- end ---
+
 st.set_page_config("Summaries", layout="wide", initial_sidebar_state="auto")
 display_api_key_warning()
 
@@ -35,6 +44,25 @@ display_nav_menu()
 set_api_key_in_session_state()
 display_link_to_repo("summary")
 # --- end ---
+
+# variable for holding the Video object
+saved_video: None | Video = None
+
+
+def save_summary_to_lib():
+    """Wrapper func for saving summaries to the library."""
+    try:
+        save_library_entry(
+            entry_type="S",
+            question_text=None,
+            response_text=st.session_state.summary,
+            video=saved_video,
+        )
+    except Exception as e:
+        st.error("Saving failed! If you are a developer, see logs for details!")
+        logging.error("Error when saving library entry: %s", e)
+    else:
+        st.success("Saved summary to library successfully!")
 
 
 @st.dialog(title="Transcript too long", width="large")
@@ -85,6 +113,13 @@ if is_api_key_set and is_api_key_valid(st.session_state.openai_api_key):
     with col2:
         if summarize_button:
             try:
+                saved_video = Video.create(
+                    yt_video_id=extract_youtube_video_id(url_input),
+                    link=url_input,
+                    title=vid_metadata["name"],
+                    channel=vid_metadata["channel"],
+                    saved_on=dt.now(),
+                )
                 transcript = fetch_youtube_transcript(url_input)
                 cb = OpenAICallbackHandler()
                 llm = ChatOpenAI(
@@ -102,7 +137,12 @@ if is_api_key_set and is_api_key_valid(st.session_state.openai_api_key):
                         )
                     else:
                         resp = get_transcript_summary(transcript, llm)
-                st.markdown(resp)
+                    st.session_state.summary = resp
+                st.markdown(st.session_state.summary)
+
+                # button for saving summary to library
+                st.button(label="Save summary to library", on_click=save_summary_to_lib)
+
                 st.caption(
                     f"The estimated cost for the request is: {cb.total_cost:.4f}$"
                 )

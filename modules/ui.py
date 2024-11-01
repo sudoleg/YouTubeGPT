@@ -127,3 +127,4 @@ def display_nav_menu():
     st.sidebar.page_link(page="main.py", label="Home")
     st.sidebar.page_link(page="pages/summary.py", label="Summary")
     st.sidebar.page_link(page="pages/chat.py", label="Chat")
+    st.sidebar.page_link(page="pages/library.py", label="Library")

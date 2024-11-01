@@ -1,4 +1,5 @@
 import logging
+from typing import Literal
 
 from peewee import (
     BooleanField,
@@ -8,6 +9,7 @@ from peewee import (
     IntegerField,
     Model,
     SqliteDatabase,
+    TextField,
     UUIDField,
 )
 
@@ -77,3 +79,43 @@ def delete_video(
             video.yt_video_id,
             str(e),
         )
+
+
+class LibraryEntry(BaseModel):
+    """Model for saved responses and summaries. Represents a table in a relational SQL database."""
+
+    ENTRY_TYPE_CHOICES = (
+        ("S", "Summary"),
+        ("A", "Answer"),
+    )
+
+    entry_type = CharField(max_length=1, choices=ENTRY_TYPE_CHOICES)
+    video = ForeignKeyField(Video, backref="lib_entries")
+    question = TextField(null=True)
+    text = TextField(null=False)
+
+
+def save_library_entry(
+    entry_type: Literal["S", "A"], question_text: str, response_text: str, video: Video
+):
+    """Saves a summary or answer entry to the library.
+
+    Args:
+        entry_type (str): Type of entry to save, "S" for summary or "A" for answer.
+        question_text (str): Text of the question (used only if entry_type is "A").
+        response_text (str): Text of the response or summary.
+        video (Video): The video object associated with the entry.
+    """
+    if entry_type == "S":
+        LibraryEntry.create(entry_type="S", video=video, text=response_text)
+    else:
+        LibraryEntry.create(
+            entry_type="A", video=video, question=question_text, text=response_text
+        )
+    logging.info("Saved library entry for video '%s'", video.title)
+
+
+def delete_library_entry(lib_entry: LibraryEntry):
+    """Deletes a library entry."""
+    LibraryEntry.delete_by_id(lib_entry)
+    logging.info("Deleted library entry for video '%s'", lib_entry.video.title)
