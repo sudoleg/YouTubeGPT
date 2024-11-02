@@ -70,7 +70,7 @@ def display_dialog(message: str):
     st.warning(message)
 
 
-if is_api_key_set and is_api_key_valid(st.session_state.openai_api_key):
+if is_api_key_set() and is_api_key_valid(st.session_state.openai_api_key):
 
     # --- rest of the sidebar, which requires an api key to be set ---
     display_model_settings_sidebar()
