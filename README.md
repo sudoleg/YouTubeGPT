@@ -10,12 +10,11 @@ YouTubeGPT lets you **summarize and chat (Q&A)** with YouTube videos. Its featur
 
 - **provide a custom prompt for summaries** :writing_hand: [**VIEW DEMO**](https://youtu.be/rJqx3qvebws)
   - you can tailor the summary to your needs by providing a custom prompt or just use the default summarization
-- **automatically save summaries** :open_file_folder:
-  - the summaries can be automatically saved in the directory where you run the app. The summaries will be available under `<YT-channel-name>/<video-title>.md`
 - **get answers to questions about the video content** :question: [**VIEW DEMO**](https://youtu.be/rI8NogvHplE)
   - part of the application is designed and optimized specifically for question answering tasks (Q&A)
-- **create your own knowledge base**  :floppy_disk:
-  - once a video is processed, you can chat with it at any time!
+- **create your own library/knowledge base** :open_file_folder:
+  - the summaries and answers can be saved to a library accessible at a separate page!
+  - additionally, summaries can be automatically saved in the directory where you run the app. The summaries will be available under `<YT-channel-name>/<video-title>.md`
 - **choose from different OpenAI models** :robot:
   - currently available: gpt-3.5-turbo, gpt-4 (turbo), gpt-4o (mini)
   - by choosing a different model, you can summarize even longer videos and potentially get better responses

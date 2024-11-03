@@ -13,7 +13,6 @@ from youtube_transcript_api.formatters import TextFormatter
 from .helpers import (
     extract_youtube_video_id,
     get_preffered_languages,
-    save_response_as_file,
 )
 
 OEMBED_PROVIDER = "https://noembed.com/embed"
@@ -56,12 +55,6 @@ def get_video_metadata(url: str):
         return None
     else:
         json_response = json.loads(response.text)
-        save_response_as_file(
-            dir_name="./video_meta",
-            filename=f"{json_response['title']}",
-            file_content=json_response,
-            content_type="json",
-        )
         return {
             "name": json_response["title"],
             "channel": json_response["author_name"],

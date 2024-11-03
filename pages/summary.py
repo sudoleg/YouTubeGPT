@@ -45,13 +45,22 @@ set_api_key_in_session_state()
 display_link_to_repo("summary")
 # --- end ---
 
-# variable for holding the Video object
-saved_video: None | Video = None
+
+@st.dialog(title="Transcript too long", width="large")
+def display_dialog(message: str):
+    st.warning(message)
 
 
 def save_summary_to_lib():
     """Wrapper func for saving summaries to the library."""
     try:
+        saved_video = Video.create(
+            yt_video_id=extract_youtube_video_id(url_input),
+            link=url_input,
+            title=vid_metadata["name"],
+            channel=vid_metadata["channel"],
+            saved_on=dt.now(),
+        )
         save_library_entry(
             entry_type="S",
             question_text=None,
@@ -65,12 +74,7 @@ def save_summary_to_lib():
         st.success("Saved summary to library successfully!")
 
 
-@st.dialog(title="Transcript too long", width="large")
-def display_dialog(message: str):
-    st.warning(message)
-
-
-if is_api_key_set and is_api_key_valid(st.session_state.openai_api_key):
+if is_api_key_set() and is_api_key_valid(st.session_state.openai_api_key):
 
     # --- rest of the sidebar, which requires an api key to be set ---
     display_model_settings_sidebar()
@@ -113,13 +117,6 @@ if is_api_key_set and is_api_key_valid(st.session_state.openai_api_key):
     with col2:
         if summarize_button:
             try:
-                saved_video = Video.create(
-                    yt_video_id=extract_youtube_video_id(url_input),
-                    link=url_input,
-                    title=vid_metadata["name"],
-                    channel=vid_metadata["channel"],
-                    saved_on=dt.now(),
-                )
                 transcript = fetch_youtube_transcript(url_input)
                 cb = OpenAICallbackHandler()
                 llm = ChatOpenAI(
@@ -133,10 +130,14 @@ if is_api_key_set and is_api_key_valid(st.session_state.openai_api_key):
                 with st.spinner("Summarizing video :gear: Hang on..."):
                     if custom_prompt:
                         resp = get_transcript_summary(
-                            transcript, llm, custom_prompt=custom_prompt
+                            transcript_text=transcript,
+                            llm=llm,
+                            custom_prompt=custom_prompt,
                         )
                     else:
-                        resp = get_transcript_summary(transcript, llm)
+                        resp = get_transcript_summary(
+                            transcript_text=transcript, llm=llm
+                        )
                     st.session_state.summary = resp
                 st.markdown(st.session_state.summary)
 

@@ -117,5 +117,9 @@ def save_library_entry(
 
 def delete_library_entry(lib_entry: LibraryEntry):
     """Deletes a library entry."""
-    LibraryEntry.delete_by_id(lib_entry)
-    logging.info("Deleted library entry for video '%s'", lib_entry.video.title)
+    try:
+        LibraryEntry.delete_by_id(lib_entry)
+    except Exception as e:
+        logging.error("An error occured during the deletion of a library entry: %s", e)
+    else:
+        logging.info("Deleted library entry for video '%s'", lib_entry.video.title)
