@@ -28,7 +28,7 @@ with tab_summaries:
         label="Filter by channel",
         placeholder="choose a channel or start typing",
         # only videos with an associated transcript can be selected
-        options=set([video.channel for video in saved_videos]),
+        options={video.channel for video in saved_videos},
         index=None,
         key="selected_channel",
     )
