@@ -1,5 +1,23 @@
 # Changelog
 
+## [2.5.0](https://github.com/sudoleg/YouTubeGPT/compare/v2.4.0...v2.5.0) (2024-11-03)
+
+
+### Features
+
+* **library:** enable filtering of answers by video ([ecd30e5](https://github.com/sudoleg/YouTubeGPT/commit/ecd30e5244b9fb7e9eabf3c256d96a8625bf356f))
+* **library:** enable filtering of summaries by channel ([e00f81e](https://github.com/sudoleg/YouTubeGPT/commit/e00f81eabe3ef13956f50997a9cd2ce0dce59dbf))
+
+
+### Bug Fixes
+
+* **summary:** invalid method call ([d2ea52d](https://github.com/sudoleg/YouTubeGPT/commit/d2ea52db381d775ac5b48daff09669009bac4301))
+
+
+### Performance Improvements
+
+* remove redundant method usages ([ee8e163](https://github.com/sudoleg/YouTubeGPT/commit/ee8e1637f8def15bc4aae28ccf78b1934991b586))
+
 ## [2.4.0](https://github.com/sudoleg/YouTubeGPT/compare/v2.3.1...v2.4.0) (2024-11-01)
 
 
