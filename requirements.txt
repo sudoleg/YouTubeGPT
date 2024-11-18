@@ -1,4 +1,4 @@
-youtube-transcript-api==0.6.2
+youtube-transcript-api==0.6.3
 langchain-core==0.3.19
 langchain-community==0.3.7
 langchain-openai==0.2.8
