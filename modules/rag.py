@@ -58,7 +58,8 @@ def split_text_recursively(
     )
     splits = text_splitter.create_documents([transcript_text])
     logging.info(
-        "Split transcript into %d chunks with a provided chunk size of %d tokens.",
+        "Split transcript by %s into %d chunks with a provided chunk size of %d.",
+        len_func,
         len(splits),
         chunk_size,
     )
