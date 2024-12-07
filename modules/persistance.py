@@ -90,6 +90,7 @@ class LibraryEntry(BaseModel):
     )
 
     entry_type = CharField(max_length=1, choices=ENTRY_TYPE_CHOICES)
+    # backref creates a lib_entries attribute on Video objects
     video = ForeignKeyField(Video, backref="lib_entries")
     question = TextField(null=True)
     text = TextField(null=False)
