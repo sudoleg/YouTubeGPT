@@ -64,9 +64,11 @@ with tab_answers:
     selected_video_title = st.selectbox(
         label="Filter by video",
         placeholder="choose a video or start typing",
-        # only videos with an associated transcript can be selected
+        # only videos with an associated transcript and library entries can be selected
         options=[
-            video.title for video in saved_videos if video.transcripts.count() != 0
+            video.title
+            for video in saved_videos
+            if (video.transcripts.count() != 0 and video.lib_entries.count() != 0)
         ],
         index=None,
         key="selected_video",

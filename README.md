@@ -27,7 +27,7 @@ YouTubeGPT lets you **summarize and chat (Q&A)** with YouTube videos. Its featur
 
 No matter how you choose to run the app, you will first need to get an OpenAI API-Key. This is very straightforward and free. Have a look at [their instructions](https://platform.openai.com/docs/quickstart/account-setup) to get started.  
 
-### build & run with Docker (or docker-compose)
+### Run with Docker
 
 1. make sure to provide an OpenAI API key (l. 43 in [docker-compose.yml](docker-compose.yml))
 2. adjust the path to save the summaries (l. 39 in [docker-compose.yml](docker-compose.yml))
@@ -40,7 +40,9 @@ docker-compose up -d
 docker-compose up --build -d
 ```
 
-### if you are only interested in summaries
+The app will be accessible in the browser under <http://localhost:8501>.
+
+### If you are only interested in summaries
 
 ```bash
 # pull from Docker Hub
@@ -70,7 +72,7 @@ This is a small side-project and it's easy to get started! If you want to contri
 5. **Pull Request**: Push your changes to your fork and submit a pull request (PR) to the main repository. Describe your changes and any relevant details.
 6. **Engage**: Respond to feedback on your PR to finalize your contribution.
 
-### development in virtual environment
+### Development in virtual environment
 
 ```bash
 # create and activate a virtual environment
@@ -85,6 +87,8 @@ docker-compose up -d chromadb
 # run app
 streamlit run main.py
 ```
+
+The app will be accessible in the browser under <http://localhost:8501> and the ChromaDB API under <http://localhost:8000/docs>.
 
 ## Technologies used
 
