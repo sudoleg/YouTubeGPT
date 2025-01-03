@@ -13,4 +13,4 @@ langchain-chroma==0.1.4
 randomname==0.2.1
 tiktoken==0.8.0
 openai-whisper==20240930
-pytubefix==8.8.5
+pytubefix==8.10.0
