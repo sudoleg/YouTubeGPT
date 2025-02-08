@@ -1,6 +1,6 @@
 import streamlit as st
 
-from modules.persistance import SQL_DB, LibraryEntry, delete_library_entry, Video
+from modules.persistance import SQL_DB, LibraryEntry, Video, delete_library_entry
 from modules.ui import display_nav_menu
 
 st.set_page_config("Library", layout="wide", initial_sidebar_state="auto")
