@@ -37,6 +37,7 @@ from modules.transcription import download_mp3, generate_transcript
 from modules.ui import (
     GENERAL_ERROR_MESSAGE,
     display_api_key_warning,
+    display_download_button,
     display_link_to_repo,
     display_model_settings_sidebar,
     display_nav_menu,
@@ -378,6 +379,10 @@ if (
                             label="Save this response to your library",
                             on_click=save_response_to_lib,
                             help="Unfortunately, the response disappears in this view after saving it to the library. However, it will be visible on the 'Library' page!",
+                        )
+                        display_download_button(
+                            data="# " + prompt + "\n\n" + st.session_state.response,
+                            file_name=prompt,
                         )
                         with st.expander(
                             label="Show chunks retrieved from index and provided to the model as context"
