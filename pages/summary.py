@@ -17,6 +17,7 @@ from modules.summary import TranscriptTooLongForModelException, get_transcript_s
 from modules.ui import (
     GENERAL_ERROR_MESSAGE,
     display_api_key_warning,
+    display_download_button,
     display_link_to_repo,
     display_model_settings_sidebar,
     display_nav_menu,
@@ -143,6 +144,9 @@ if is_api_key_set() and is_api_key_valid(st.session_state.openai_api_key):
 
                 # button for saving summary to library
                 st.button(label="Save summary to library", on_click=save_summary_to_lib)
+
+                # button for saving summary to file
+                display_download_button(data=resp, file_name=vid_metadata["name"])
 
                 st.caption(
                     f"The estimated cost for the request is: {cb.total_cost:.4f}$"

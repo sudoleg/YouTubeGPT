@@ -1,7 +1,7 @@
 import streamlit as st
 
 from modules.persistance import SQL_DB, LibraryEntry, Video, delete_library_entry
-from modules.ui import display_nav_menu
+from modules.ui import display_download_button, display_nav_menu
 
 st.set_page_config("Library", layout="wide", initial_sidebar_state="auto")
 display_nav_menu()
@@ -50,14 +50,7 @@ with tab_summaries:
             st.caption(f"{entry.video.title} - {entry.video.channel}")
             with st.expander("Show"):
                 st.write(entry.text)
-            st.download_button(
-                label="Download",
-                data=entry.text,
-                file_name=f"{entry.video.title}.md",
-                mime="text/markdown",
-                icon=":material/download:",
-                help="Download the summary as a markdown file",
-            )
+            display_download_button(data=entry.text, file_name=entry.video.title)
             if st.button(
                 label="Delete entry",
                 key=f"delete_summary_{i}",
@@ -103,13 +96,9 @@ with tab_answers:
             st.subheader(entry.question)
             with st.expander("Show"):
                 st.write(entry.text)
-            st.download_button(
-                label="Download",
-                data=entry.text,
-                file_name=f"{entry.question}.md",
-                mime="text/markdown",
-                icon=":material/download:",
-                help="Download the answer as a markdown file",
+            display_download_button(
+                data="# " + entry.question + "\n\n" + entry.text,
+                file_name=entry.question,
             )
             if st.button(
                 label="Delete entry",
