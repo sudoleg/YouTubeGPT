@@ -11,24 +11,21 @@ services:
       # Default configuration for persist_directory in chromadb/config.py
       # Read more about deployments: https://docs.trychroma.com/deployment
       - chroma:/chroma/chroma
-    command: "--workers 1 --host 0.0.0.0 --port 8000 --proxy-headers --log-config chromadb/log_config.yml --timeout-keep-alive 30"
     environment:
       - IS_PERSISTENT=TRUE
       - ALLOW_RESET=TRUE
-    # possible values are: "no", always", "on-failure", "unless-stopped"
-    #restart: unless-stopped 
     ports:
       - "8000:8000"
     healthcheck:
       # Adjust below to match your container port
-      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/v1/heartbeat" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/v2/heartbeat" ]
       interval: 30s
       timeout: 10s
       retries: 3
     networks:
       - net
 
-  ytai:
+  youtubegpt:
     image: sudoleg/yotube-gpt:latest
     container_name: youtube-gpt
     depends_on:

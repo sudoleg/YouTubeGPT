@@ -21,17 +21,16 @@ CHUNK_SIZE_FOR_UNPROCESSED_TRANSCRIPT = 512
 # Thus, the overall amount of input is roughly the same for all chunk sizes (3072 or 2560 tokens)
 CHUNK_SIZE_TO_K_MAPPING = {1024: 3, 512: 5, 256: 10, 128: 20}
 
-RAG_SYSTEM_PROMPT = """You are an expert in answering questions and providing information about a topic.
-
-You are going to reiceive excerpts from a video transcript as context. Furthermore a user will provide a question or a topic. 
-If you receive a question, give a detailed answer. If you receive a topic, tell the user what is said about the topic. 
-In either case, keep your answer ground solely in the facts of the context.
+RAG_SYSTEM_PROMPT = """You are going to receive excerpts from a video transcript as context. Furthermore, a user will provide a question or a topic.
+If you receive a question, give a detailed answer. If you receive a topic, summarize the information on this topic.
+In either case, keep your response ground solely in the facts of the context.
 If the context does not contain the facts to answer the question, apologize and say that you don't know the answer.
 """
 
 rag_user_prompt = PromptTemplate.from_template(
     """Context: {context}
----          
+---
+        
 Here is the users question/topic: {question}
 """
 )

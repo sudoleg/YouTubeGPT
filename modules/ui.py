@@ -128,3 +128,14 @@ def display_nav_menu():
     st.sidebar.page_link(page="pages/summary.py", label="Summary")
     st.sidebar.page_link(page="pages/chat.py", label="Chat")
     st.sidebar.page_link(page="pages/library.py", label="Library")
+
+
+def display_download_button(data: str, file_name: str):
+    st.download_button(
+        label="Download",
+        data=data,
+        file_name=f"{file_name}.md",
+        mime="text/markdown",
+        icon=":material/download:",
+        help="Download as markdown",
+    )
