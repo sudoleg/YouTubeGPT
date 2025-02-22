@@ -145,13 +145,6 @@ if is_api_key_set() and is_api_key_valid(st.session_state.openai_api_key):
                 st.caption(
                     f"The estimated cost for the request is: {cb.total_cost:.4f}$"
                 )
-                if st.session_state.save_responses:
-                    save_response_as_file(
-                        dir_name=f"./responses/{vid_metadata['channel']}",
-                        filename=f"{vid_metadata['name']}",
-                        file_content=resp,
-                        content_type="markdown",
-                    )
             except InvalidUrlException as e:
                 st.error(e.message)
                 e.log_error()
