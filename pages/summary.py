@@ -79,12 +79,6 @@ if is_api_key_set() and is_api_key_valid(st.session_state.openai_api_key):
 
     # --- rest of the sidebar, which requires an api key to be set ---
     display_model_settings_sidebar()
-    st.sidebar.checkbox(
-        label="Save responses",
-        value=False,
-        help=get_default_config_value(key_path="help_texts.saving_responses"),
-        key="save_responses",
-    )
     # --- end ---
 
     # define the columns
