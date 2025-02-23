@@ -1,9 +1,13 @@
 from os import getenv
-from modules.helpers import is_api_key_set, is_api_key_valid, get_available_models
 
 import streamlit as st
 
-from modules.helpers import get_default_config_value
+from modules.helpers import (
+    get_available_models,
+    get_default_config_value,
+    is_api_key_set,
+    is_api_key_valid,
+)
 
 GENERAL_ERROR_MESSAGE = "An unexpected error occurred. If you are a developer and run the app locally, you can view the logs to see details about the error."
 
@@ -97,9 +101,8 @@ def display_model_settings_sidebar():
 
 
 def display_link_to_repo(view: str = "main"):
-    st.sidebar.write(
-        f"[View the source code]({get_default_config_value(f"github_repo_links.{view}")})"
-    )
+    gh_link = get_default_config_value(f"github_repo_links.{view}")
+    st.sidebar.write(f"[View the source code]({gh_link})")
 
 
 def display_video_url_input(
