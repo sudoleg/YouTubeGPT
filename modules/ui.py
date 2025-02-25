@@ -133,9 +133,13 @@ def display_nav_menu():
     st.sidebar.page_link(page="pages/library.py", label="Library")
 
 
-def display_download_button(data: str, file_name: str):
+def display_download_button(
+    data: str,
+    file_name: str,
+    label="Download",
+):
     st.download_button(
-        label="Download",
+        label=label,
         data=data,
         file_name=f"{file_name}.md",
         mime="text/markdown",
