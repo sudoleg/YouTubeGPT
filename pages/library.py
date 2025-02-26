@@ -46,7 +46,13 @@ with tab_summaries:
         label="Filter by channel",
         placeholder="choose a channel or start typing",
         # only videos with an associated transcript can be selected
-        options={video.channel for video in saved_videos},
+        options={
+            video.channel
+            for video in Video.select()
+            .join(LibraryEntry)
+            .where(LibraryEntry.entry_type == "S")
+            .execute()
+        },
         index=None,
         key="selected_channel",
     )
