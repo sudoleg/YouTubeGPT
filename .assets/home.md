@@ -4,18 +4,16 @@ Get insights from YouTube videos with YouTubeGPT, an LLM-based app that allows y
 
 ## Summary
 
-If you have a relatively short video (<30 minutes), you can use the `Summary` part of the application. It allows you to provide **a custom prompt** to tailor the summary to your needs. As the video is short anyways, you could, for example, provide your questions here. Moreover, you can save your responses (if you are running the app locally).
-
-Or you could ask to list all the topics in the video and then ask specific questions about them using the other part of the application (see below) 😉
+If you have a relatively short video (<45 minutes), you can use the `Summary` part of the application. It allows you to provide **a custom prompt** to tailor the summary to your needs. As the video is short anyways, you could, for example, provide your questions here. Or you could ask to list all the topics in the video and then ask specific questions about them using the other part of the application (see below) 😉
 
 ## Q&A - Chat
 
 The `Chat` part of the application is best suited when you have a longer video you have specific questions about. It is more efficient and less cost consuming, as only the relevant parts of the video are provided to the language model. Moreover, once you process a video, you can Q&A it whenever you want (as long as you don't remove the volume accidentally 😅).
 
-I've found that the chat function works especially well for videos with manual transcripts but it's also really good for videos with autogernerated ones. Personally, I use the chat feature for lengthy podcasts with timestamps, like podcasts from [Andrew Huberman](https://www.youtube.com/@hubermanlab), [Lex Fridman](https://www.youtube.com/@lexfridman) or [Chris Williamson](https://www.youtube.com/@ChrisWillx). You can just copy the title of the section/timestamp and get a good overview of the topics discussed.
+Personally, I use the chat feature for lengthy podcasts with timestamps, like podcasts from [Andrew Huberman](https://www.youtube.com/@hubermanlab), [Lex Fridman](https://www.youtube.com/@lexfridman) or [Chris Williamson](https://www.youtube.com/@ChrisWillx). You can just copy the title of the section/timestamp and get a good overview of the topics discussed.
 
 > ❗ Unfortunately, the `Chat` part is not available on streamlit cloud as it requires an instance of ChromaDB. However, you can set this up locally very easilly with Docker on your PC! Check out the [usage instructions](https://github.com/sudoleg/YouTubeGPT?tab=readme-ov-file#installation--usage) on GitHub!
 
-## WIP: FAQ
+## Library
 
-Some day, an FAQ section will be here...
+The summaries and answers can be saved to a library, which is accessible on a separate page. Thus, you can review them at any time. Moreover, you can filter and export your library items as Markdown files.
