@@ -95,6 +95,9 @@ class LibraryEntry(BaseModel):
     question = TextField(null=True)
     text = TextField(null=False)
 
+    def get_video_title(self):
+        return self.video.title
+
 
 def save_library_entry(
     entry_type: Literal["S", "A"], question_text: str, response_text: str, video: Video

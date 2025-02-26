@@ -1,8 +1,9 @@
+from typing import List, Literal
+
 import streamlit as st
 
-from modules.persistance import SQL_DB, LibraryEntry, delete_library_entry, Video
-from modules.ui import display_nav_menu
-
+from modules.persistance import SQL_DB, LibraryEntry, Video, delete_library_entry
+from modules.ui import display_download_button, display_nav_menu
 
 st.set_page_config("Library", layout="wide", initial_sidebar_state="auto")
 display_nav_menu()
@@ -23,12 +24,35 @@ def execute_entry_deletion(entry: LibraryEntry):
     st.rerun()
 
 
+def prepare_entries_for_export(
+    entries: List[LibraryEntry], entry_type: Literal["S", "A"]
+) -> str:
+    """Prepare library entries for export."""
+    if entry_type == "S":
+        return "\n\n".join(
+            [
+                f"## {entry.get_video_title()}\n\n{entry.text}\n\n---"
+                for entry in entries
+            ]
+        )
+    else:
+        return "\n\n".join(
+            [f"# {entry.question}\n\n{entry.text}\n\n---" for entry in entries]
+        )
+
+
 with tab_summaries:
     selected_channel = st.selectbox(
         label="Filter by channel",
         placeholder="choose a channel or start typing",
         # only videos with an associated transcript can be selected
-        options={video.channel for video in saved_videos},
+        options={
+            video.channel
+            for video in Video.select()
+            .join(LibraryEntry)
+            .where(LibraryEntry.entry_type == "S")
+            .execute()
+        },
         index=None,
         key="selected_channel",
     )
@@ -46,19 +70,30 @@ with tab_summaries:
         )
 
     if saved_lib_entries_summaries:
+        if selected_channel:
+            display_download_button(
+                data=prepare_entries_for_export(
+                    saved_lib_entries_summaries, entry_type="S"
+                ),
+                file_name=f"Summaries from {selected_channel}",
+                label=f"Download all summaries from {selected_channel}",
+            )
         st.header("Saved summaries")
         for i, entry in enumerate(saved_lib_entries_summaries, 0):
             st.caption(f"{entry.video.title} - {entry.video.channel}")
             with st.expander("Show"):
                 st.write(entry.text)
+            display_download_button(data=entry.text, file_name=entry.video.title)
             if st.button(
                 label="Delete entry",
                 key=f"delete_summary_{i}",
+                icon=":material/delete_forever:",
             ):
                 execute_entry_deletion(entry)
             st.divider()
     else:
         st.info("You don't have any saved summaries yet!")
+
 
 with tab_answers:
     selected_video_title = st.selectbox(
@@ -84,6 +119,11 @@ with tab_answers:
             )
             .execute()
         )
+        display_download_button(
+            data=prepare_entries_for_export(saved_lib_entries_answers, entry_type="A"),
+            file_name=f"Answers from {selected_video_title}",
+            label=f"Download all answers from '{selected_video_title}'",
+        )
     else:
         saved_lib_entries_answers = (
             LibraryEntry.select().where(LibraryEntry.entry_type == "A").execute()
@@ -95,6 +135,10 @@ with tab_answers:
             st.subheader(entry.question)
             with st.expander("Show"):
                 st.write(entry.text)
+            display_download_button(
+                data="# " + entry.question + "\n\n" + entry.text,
+                file_name=entry.question,
+            )
             if st.button(
                 label="Delete entry",
                 key=f"delete_answer_{j}",

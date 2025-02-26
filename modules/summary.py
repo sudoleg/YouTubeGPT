@@ -6,8 +6,12 @@ from langchain_openai import ChatOpenAI
 
 from .helpers import num_tokens_from_string
 
-SYSTEM_PROMPT = """You are an expert in processing video transcripts according to user's request. 
-For example this could be summarization, question answering or providing key insights.
+SYSTEM_PROMPT = """
+You are going to receive a transcript from a YouTube video. Your task is to process the transcript according to a user's request.
+
+Here are some guidelines for your responses:
+    - answer in markdown format
+    - don't use first level headings
 """
 
 prompt = ChatPromptTemplate.from_messages(
@@ -59,13 +63,19 @@ def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
         str: The summary/answer in markdown format.
     """
 
-    user_prompt = f"""Based on the provided transcript of the video, create a summary that accurately captures the main topics and arguments. The summary should be in whole sentences and contain no more than 300 words.
+    user_prompt = f"""
+        Generate a concise and coherent summary that accurately captures the key points, main topics, and essential information of the video.
+        Focus on clarity, relevance, and brevity, ensuring the summary is easy to understand and provides a clear overview of the video’s content.
+        The summary should be in whole sentences and contain no more than 300 words.
         Additionaly, extract key insights from the video for contributing to better understanding, emphasizing the main points and providing actionable advise.
+
         Here is the transcript, delimited by ---
+
         ---
         {transcript_text}
         ---
-        Answer in markdown format strictly adhering to this schema:
+
+        Your response should strictly adhere to this schema:
 
         ## <short title for the video, consisting of maximum five words>
 
