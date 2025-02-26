@@ -8,20 +8,31 @@
 
 YouTubeGPT lets you **summarize and chat (Q&A)** with YouTube videos. Its features include:
 
-- **provide a custom prompt for summaries** :writing_hand: [**VIEW DEMO**](https://youtu.be/rJqx3qvebws)
-  - you can tailor the summary to your needs by providing a custom prompt or just use the default summarization
-- **get answers to questions about the video content** :question: [**VIEW DEMO**](https://youtu.be/rI8NogvHplE)
-  - part of the application is designed and optimized specifically for question answering tasks (Q&A)
-- **create your own library/knowledge base** :open_file_folder:
-  - the summaries and answers can be saved to a library accessible at a separate page!
-  - additionally, summaries and answers can be exported/downloaded as Markdown files!
-- **choose from different OpenAI models** :robot:
-  - currently available: gpt-3.5-turbo, gpt-4 (turbo), gpt-4o (mini)
-  - by choosing a different model, you can summarize even longer videos and potentially get better responses
-- **experiment with settings** :gear:
-  - adjust the temperature and top P of the model
-- **choose UI theme** :paintbrush:
-  - go to the three dots in the upper right corner, select settings and choose either light, dark or my aesthetic custom theme
+### :writing_hand: Provide a custom prompt for summaries  [**VIEW DEMO**](https://youtu.be/rJqx3qvebws)
+
+- you can tailor the summary to your needs by providing a custom prompt or just use the default summarization
+
+### :question: Get answers to questions about the video content [**VIEW DEMO**](https://youtu.be/rI8NogvHplE)
+
+- part of the application is designed and optimized specifically for question answering tasks (Q&A)
+  
+### :open_file_folder: Create and export your own library
+
+- the summaries and answers can be saved to a library accessible at a separate page!
+- additionally, summaries and answers can be exported/downloaded as Markdown files!
+
+### :robot: Choose from different OpenAI models
+
+- currently available: gpt-3.5-turbo, gpt-4 (turbo), gpt-4o (mini)
+- by choosing a different model, you can summarize even longer videos and potentially get better responses
+
+### :gear: Experiment with settings
+
+- adjust the temperature and top P of the model
+  
+### :paintbrush: Choose UI theme
+
+- go to the three dots in the upper right corner, select settings and choose either light, dark or my aesthetic custom theme
 
 ## Installation & usage
 
