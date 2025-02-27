@@ -1,5 +1,19 @@
 # Changelog
 
+## [2.6.0](https://github.com/sudoleg/YouTubeGPT/compare/v2.5.0...v2.6.0) (2025-02-27)
+
+
+### Features
+
+* **export:** ref [#267](https://github.com/sudoleg/YouTubeGPT/issues/267), add custom export functionality for answers related to specific video ([4ff407e](https://github.com/sudoleg/YouTubeGPT/commit/4ff407e5a6cd3cd47d4226ce65f87e0daa5e0150))
+* **library:** [#267](https://github.com/sudoleg/YouTubeGPT/issues/267), enable downloading of library entries as markdown files ([2b0883e](https://github.com/sudoleg/YouTubeGPT/commit/2b0883e3007c0419cab8c912d2d8a421742f43a0))
+* ref [#267](https://github.com/sudoleg/YouTubeGPT/issues/267), enable export of all library entries for a specific channel/video ([5eb97c9](https://github.com/sudoleg/YouTubeGPT/commit/5eb97c99a6fc5fce2dbf86d45103c109a1ac9d33))
+
+
+### Bug Fixes
+
+* **ui:** unmatched f-string ([08921a0](https://github.com/sudoleg/YouTubeGPT/commit/08921a04408dd77711be1d93c105804ef898747a))
+
 ## [2.5.0](https://github.com/sudoleg/YouTubeGPT/compare/v2.4.0...v2.5.0) (2024-11-03)
 
 
