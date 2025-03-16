@@ -3,17 +3,10 @@ import logging
 
 from requests import api
 from requests.exceptions import RequestException
-from youtube_transcript_api import (
-    CouldNotRetrieveTranscript,
-    Transcript,
-    YouTubeTranscriptApi,
-)
+from youtube_transcript_api import CouldNotRetrieveTranscript, YouTubeTranscriptApi
 from youtube_transcript_api.formatters import TextFormatter
 
-from .helpers import (
-    extract_youtube_video_id,
-    get_preffered_languages,
-)
+from .helpers import extract_youtube_video_id, get_preffered_languages
 
 OEMBED_PROVIDER = "https://noembed.com/embed"
 
@@ -72,30 +65,11 @@ def fetch_youtube_transcript(url: str):
         )
 
     try:
-        transcript = YouTubeTranscriptApi.get_transcript(
+        transcript = YouTubeTranscriptApi().fetch(
             video_id, languages=get_preffered_languages()
         )
     except CouldNotRetrieveTranscript as e:
         logging.error("Failed to retrieve transcript for URL: %s", str(e))
         raise NoTranscriptReceivedException(url)
     else:
-        formatter = TextFormatter()
-        return formatter.format_transcript(transcript)
-
-
-def analyze_transcripts(video_id: str):
-    try:
-        transcript_list: list[Transcript] = YouTubeTranscriptApi.list_transcripts(
-            video_id
-        )
-    except Exception as e:
-        print("An error occured when fetching transcripts: " + e)
-        return
-    else:
-        for t in transcript_list:
-            if t.is_generated:
-                print(
-                    f"found auto-generated transcript in {t.language} ({t.language_code})!"
-                )
-            else:
-                print(f"found manual transcript in {t.language} ({t.language_code})!")
+        return TextFormatter().format_transcript(transcript)
