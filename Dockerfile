@@ -1,18 +1,32 @@
-FROM python:3.12.9-slim
+FROM python:3.12.9-slim as builder
+
+# Install system dependencies
+RUN apt-get update && apt-get install --no-install-recommends -y \
+    ffmpeg && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y ffmpeg
+# Install Python dependencies
+RUN python -m venv /opt/venv
+
+ENV PATH="/opt/venv/bin:${PATH}"
+ENV PIP_ROOT_USER_ACTION=ignore
 
 # Copy just the requirements.txt first to leverage Docker cache
 COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
+RUN pip3 install --upgrade pip && \
+    pip3 install -r requirements.txt
 
-# Copy application's code
+FROM python:3.12.9-alpine as production
+
+COPY --from=builder /opt/venv /opt/venv
+
+ENV PATH="/opt/venv/bin:${PATH}"
+
+# Copy application's code and dependencies
 COPY . /app/
 
 # Streamlit's configuration options
