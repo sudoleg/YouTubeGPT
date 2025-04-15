@@ -40,9 +40,8 @@ No matter how you choose to run the app, you will first need to get an OpenAI AP
 
 ### Run with Docker
 
-1. make sure to provide an OpenAI API key (l. 43 in [docker-compose.yml](docker-compose.yml))
-2. adjust the path to save the summaries (l. 39 in [docker-compose.yml](docker-compose.yml))
-3. execute the following command:
+1. set the `OPENAI_API_KEY` environment variable either in [docker-compose.yml](docker-compose.yml) or by running `export OPENAI_API_KEY=<your-actual-key>` in your terminal
+2. execute the following command:
 
 ```bash
 # pull from docker hub
@@ -52,19 +51,6 @@ docker-compose up --build -d
 ```
 
 The app will be accessible in the browser under <http://localhost:8501>.
-
-### If you are only interested in summaries
-
-```bash
-# pull from Docker Hub
-docker pull sudoleg/yotube-gpt:latest
-# or build locally
-docker build --tag=sudoleg/yotube-gpt:latest .
-docker run -d -p 8501:8501 \
-    -v $(pwd):/app/responses \
-    -e OPENAI_API_KEY=<your-openai-api-key> \
-    --name youtube-ai sudoleg/yotube-gpt:latest
-```
 
 > :information_source: For the best user-experience, you need to be in `Tier 1` [usage tier](https://platform.openai.com/docs/guides/rate-limits/usage-tiers), which requires a one-time payment of 5$. However it's worth it, since then, you'll have access to all models and higher rate limits.
 
