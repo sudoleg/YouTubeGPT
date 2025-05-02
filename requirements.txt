@@ -1,5 +1,5 @@
 youtube-transcript-api==1.0.3
-langchain-core==0.3.57
+langchain-core==0.3.58
 langchain-community==0.3.23
 langchain-openai==0.3.15
 langchain-text-splitters==0.3.8
