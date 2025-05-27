@@ -73,7 +73,7 @@ SQL_DB.create_tables([Video, Transcript, LibraryEntry], safe=True)
 # --- Chroma ---
 chroma_connection_established = False
 chroma_settings = Settings(allow_reset=True, anonymized_telemetry=False)
-collection: None | Collection = None
+collection: Collection = None
 try:
     chroma_client = chromadb.HttpClient(
         host="chromadb" if is_environment_prod() else "localhost",
@@ -103,7 +103,7 @@ def refresh_page(message: str):
 
 
 # variable for holding the Video object
-saved_video: None | Video = None
+saved_video = None
 
 
 def save_response_to_lib():

@@ -10,7 +10,6 @@ from modules.helpers import (
     get_default_config_value,
     is_api_key_set,
     is_api_key_valid,
-    save_response_as_file,
 )
 from modules.persistance import SQL_DB, LibraryEntry, Video, save_library_entry
 from modules.summary import TranscriptTooLongForModelException, get_transcript_summary
