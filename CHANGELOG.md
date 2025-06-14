@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.0.0](https://github.com/sudoleg/YouTubeGPT/compare/v2.6.0...v3.0.0) (2025-06-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* **deps:** update Chroma DB version
+
+### Bug Fixes
+
+* handle KeyError in token encoding mapping with fallback ([8c6111f](https://github.com/sudoleg/YouTubeGPT/commit/8c6111fe9e00145223d65f50189d3749fc6e96bf))
+
+
+### Miscellaneous Chores
+
+* **deps:** update Chroma DB version ([f7a75b1](https://github.com/sudoleg/YouTubeGPT/commit/f7a75b1633874dee578e0f64f14bfb3d6cddff19))
+
 ## [2.6.0](https://github.com/sudoleg/YouTubeGPT/compare/v2.5.0...v2.6.0) (2025-02-27)
 
 
