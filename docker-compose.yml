@@ -4,24 +4,12 @@ networks:
 
 services:
   chromadb:
-    image: chromadb/chroma:0.6.3
+    image: chromadb/chroma:1.0.12
     container_name: chroma-db
     volumes:
-      # Be aware that indexed data are located in "/chroma/chroma/"
-      # Default configuration for persist_directory in chromadb/config.py
-      # Read more about deployments: https://docs.trychroma.com/deployment
-      - chroma:/chroma/chroma
-    environment:
-      - IS_PERSISTENT=TRUE
-      - ALLOW_RESET=TRUE
+      - chroma:/data
     ports:
       - "8000:8000"
-    healthcheck:
-      # Adjust below to match your container port
-      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/v2/heartbeat" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
     networks:
       - net
 
