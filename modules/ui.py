@@ -95,8 +95,7 @@ def display_model_settings_sidebar():
             )
         if model != get_default_config_value("default_model.gpt"):
             st.warning(
-                """:warning: More advanced models (like gpt-4 and gpt-4o) have better reasoning capabilities and larger context windows. However, they likely won't make
-                a big difference for short videos and simple tasks, like plain summarization. Also, beware of the higher costs of other [flagship models](https://platform.openai.com/docs/models/flagship-models)."""
+                """:warning: Be aware of the higher costs and potentially higher latencies when using more advanced models (like gpt-4 and gpt-4o). You can see details (incl. costs) about the models and compare them [here](https://platform.openai.com/docs/models/compare)."""
             )
 
 
