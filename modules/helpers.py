@@ -218,7 +218,14 @@ def num_tokens_from_string(string: str, model: str = "gpt-4o-mini") -> int:
 
     See https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken
     """
-    encoding_name = tiktoken.encoding_name_for_model(model_name=model)
+
+    try:
+        encoding_name = tiktoken.encoding_name_for_model(model_name=model)
+    except KeyError as e:
+        logging.error("Couldn't map %s to tokenizer: %s", model, str(e))
+        # workaround until https://github.com/openai/tiktoken/issues/395 is fixed
+        encoding_name = "o200k_base"
+
     encoding = tiktoken.get_encoding(encoding_name)
     return len(encoding.encode(string))
 
