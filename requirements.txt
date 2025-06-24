@@ -7,7 +7,7 @@ streamlit==1.44.1
 watchdog==6.0.0
 pytest==8.4.1
 peewee==3.18.1
-python-dotenv==1.1.0
+python-dotenv==1.1.1
 chromadb==1.0.13
 langchain-chroma==0.2.4
 randomname==0.2.1
