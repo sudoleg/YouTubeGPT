@@ -12,5 +12,5 @@ chromadb==1.0.13
 langchain-chroma==0.2.4
 randomname==0.2.1
 tiktoken==0.9.0
-openai-whisper==20240930
+openai-whisper==20250625
 pytubefix==9.2.2
