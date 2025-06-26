@@ -1,7 +1,7 @@
 youtube-transcript-api==1.1.0
 langchain-core==0.3.66
 langchain-community==0.3.26
-langchain-openai==0.3.25
+langchain-openai==0.3.26
 langchain-text-splitters==0.3.8
 streamlit==1.44.1
 watchdog==6.0.0
