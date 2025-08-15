@@ -4,7 +4,7 @@ networks:
 
 services:
   chromadb:
-    image: chromadb/chroma:1.0.16
+    image: chromadb/chroma:1.0.17
     container_name: chroma-db
     volumes:
       - chroma:/data
