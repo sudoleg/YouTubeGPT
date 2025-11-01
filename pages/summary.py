@@ -2,7 +2,6 @@ import logging
 from datetime import datetime as dt
 
 import streamlit as st
-from langchain_community.callbacks.openai_info import OpenAICallbackHandler
 from langchain_openai import ChatOpenAI
 
 from modules.helpers import (
@@ -112,14 +111,13 @@ if is_api_key_set() and is_api_key_valid(st.session_state.openai_api_key):
         if summarize_button:
             try:
                 transcript = fetch_youtube_transcript(url_input)
-                cb = OpenAICallbackHandler()
                 llm = ChatOpenAI(
                     api_key=st.session_state.openai_api_key,
                     temperature=st.session_state.temperature,
                     model=st.session_state.model,
                     top_p=st.session_state.top_p,
-                    callbacks=[cb],
                     max_tokens=2048,
+                    use_responses_api=False,
                 )
                 with st.spinner("Summarizing video :gear: Hang on..."):
                     if custom_prompt:
@@ -140,10 +138,6 @@ if is_api_key_set() and is_api_key_valid(st.session_state.openai_api_key):
 
                 # button for saving summary to file
                 display_download_button(data=resp, file_name=vid_metadata["name"])
-
-                st.caption(
-                    f"The estimated cost for the request is: {cb.total_cost:.4f}$"
-                )
             except InvalidUrlException as e:
                 st.error(e.message)
                 e.log_error()
