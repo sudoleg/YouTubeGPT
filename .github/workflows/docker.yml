@@ -37,6 +37,22 @@ jobs:
       - name: Prune Docker system
         run: docker system prune -af
 
+      - name: Show disk + inode usage
+        run: |
+          df -h
+          df -i
+          docker system df -v || true
+
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: true
+
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
         with:
