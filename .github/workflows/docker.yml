@@ -3,7 +3,7 @@ name: Build and Tag Docker Image
 on:
   push:
     branches:
-      - '**'  # Run on all branches
+      - "**" # Run on all branches
 
 jobs:
   docker:
@@ -33,6 +33,9 @@ jobs:
             echo "tags=${{ secrets.DOCKERHUB_USERNAME }}/yotube-gpt:${{ github.ref_name }}" >> $GITHUB_ENV
             echo "tags=${{ secrets.DOCKERHUB_USERNAME }}/yotube-gpt:${{ github.sha }}" >> $GITHUB_ENV
           fi
+
+      - name: Prune Docker system
+        run: docker system prune -af
 
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v6
