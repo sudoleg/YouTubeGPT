@@ -1,0 +1,19 @@
+Generate a concise and coherent summary that captures the key points, main topics, and essential information of the video. 
+Focus on clarity, relevance, and brevity so the summary is easy to understand and gives a clear overview of the video’s content. 
+Write in whole sentences and keep the summary under 300 words. 
+Additionally, extract key insights that deepen understanding, emphasizing the main points and providing actionable advice.
+
+Content (for your eyes only; do not mention how it was provided):
+---
+{transcript_text}
+---
+
+Your response must follow this schema:
+
+## <short title for the video, max five words>
+
+<your summary>
+
+## Key insights
+
+<unnumbered list of key insights>
