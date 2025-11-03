@@ -3,12 +3,11 @@ import uuid
 from typing import List, Literal
 
 from chromadb import Collection
-from langchain_core.language_models import BaseChatModel
+from langchain.chat_models import BaseChatModel
+from langchain.messages import HumanMessage, SystemMessage
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from modules.helpers import num_tokens_from_string
@@ -21,26 +20,18 @@ CHUNK_SIZE_FOR_UNPROCESSED_TRANSCRIPT = 512
 # Thus, the overall amount of input is roughly the same for all chunk sizes (3072 or 2560 tokens)
 CHUNK_SIZE_TO_K_MAPPING = {1024: 3, 512: 5, 256: 10, 128: 20}
 
+# TODO: optimize the prompt
 RAG_SYSTEM_PROMPT = """You are going to receive excerpts from a video transcript as context. Furthermore, a user will provide a question or a topic.
 If you receive a question, give a detailed answer. If you receive a topic, summarize the information on this topic.
 In either case, keep your response ground solely in the facts of the context.
 If the context does not contain the facts to answer the question, apologize and say that you don't know the answer.
 """
 
-rag_user_prompt = PromptTemplate.from_template(
-    """Context: {context}
+rag_user_prompt_template = """Context: {context}
 ---
         
 Here is the users question/topic: {question}
 """
-)
-
-rag_prompt = ChatPromptTemplate.from_messages(
-    [
-        ("system", RAG_SYSTEM_PROMPT),
-        ("user", "{input}"),
-    ]
-)
 
 
 def split_text_recursively(
@@ -100,9 +91,28 @@ def find_relevant_documents(query: str, db: Chroma, k: int = 3):
     return retriever.invoke(input=query)
 
 
-def generate_response(question: str, llm: BaseChatModel, relevant_docs: List[Document]):
-    formatted_input = rag_user_prompt.format(
+def generate_response(
+    question: str, llm: BaseChatModel, relevant_docs: List[Document]
+) -> str:
+    """Generates a response from the LLM based on the question and relevant documents.
+
+    Args:
+        question (str): The user's question or topic.
+        llm (BaseChatModel): The language model instance to use for generating the response.
+        relevant_docs (List[Document]): A list of relevant documents to use as context.
+
+    Returns:
+        str: The generated response from the LLM.
+    """
+
+    formatted_input = rag_user_prompt_template.format(
         question=question, context=format_docs_for_context(relevant_docs)
     )
-    rag_chain = rag_prompt | llm | StrOutputParser()
-    return rag_chain.invoke({"input": formatted_input})
+
+    messages = [
+        SystemMessage(content=RAG_SYSTEM_PROMPT),
+        HumanMessage(content=formatted_input),
+    ]
+
+    response = llm.invoke(messages)
+    return response.content

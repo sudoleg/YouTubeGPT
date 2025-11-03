@@ -14,3 +14,12 @@ secrets.toml
 transcript_audios/
 transcribed/
 .DS_Store
+env-*
+__pycache__/
+.pytest_cache/
+LICENSE
+renovate.json
+CHANGELOG.md
+docker-compose.yml
+Dockerfile
+.github/
