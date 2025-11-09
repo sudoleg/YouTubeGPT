@@ -10,7 +10,7 @@ from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
-from modules.helpers import num_tokens_from_string
+from modules.helpers import num_tokens_from_string, read_file
 
 CHUNK_SIZE_FOR_UNPROCESSED_TRANSCRIPT = 512
 
@@ -20,17 +20,14 @@ CHUNK_SIZE_FOR_UNPROCESSED_TRANSCRIPT = 512
 # Thus, the overall amount of input is roughly the same for all chunk sizes (3072 or 2560 tokens)
 CHUNK_SIZE_TO_K_MAPPING = {1024: 3, 512: 5, 256: 10, 128: 20}
 
-# TODO: optimize the prompt
-RAG_SYSTEM_PROMPT = """You are going to receive excerpts from a video transcript as context. Furthermore, a user will provide a question or a topic.
-If you receive a question, give a detailed answer. If you receive a topic, summarize the information on this topic.
-In either case, keep your response ground solely in the facts of the context.
-If the context does not contain the facts to answer the question, apologize and say that you don't know the answer.
-"""
+RAG_SYSTEM_PROMPT = read_file("prompts/rag_system_prompt.txt")
 
-rag_user_prompt_template = """Context: {context}
+rag_user_prompt_template = """Context (for reference only; do not mention it directly):
 ---
-        
-Here is the users question/topic: {question}
+{context}
+---
+
+User question or topic: {question}
 """
 
 

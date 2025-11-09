@@ -3,37 +3,11 @@ import logging
 from langchain.chat_models import BaseChatModel
 from langchain.messages import HumanMessage, SystemMessage
 
-from .helpers import num_tokens_from_string
+from .helpers import num_tokens_from_string, read_file
 
-SYSTEM_PROMPT = """
-You are going to receive a transcript from a YouTube video. Your task is to process the transcript according to a user's request.
+SYSTEM_PROMPT = read_file("prompts/summary_system_prompt.txt")
 
-Here are some guidelines for your response:
-    - answer in markdown format
-    - don't use first level headings
-"""
-
-USER_PROMPT_TEMPLATE = """Generate a concise and coherent summary that accurately captures the key points, main topics, and essential information of the video.
-        Focus on clarity, relevance, and brevity, ensuring the summary is easy to understand and provides a clear overview of the video’s content.
-        The summary should be in whole sentences and contain no more than 300 words.
-        Additionaly, extract key insights from the video for contributing to better understanding, emphasizing the main points and providing actionable advise.
-
-        Here is the transcript, delimited by ---
-
-        ---
-        {transcript_text}
-        ---
-
-        Your response should strictly adhere to this schema:
-
-        ## <short title for the video, consisting of maximum five words>
-
-        <your summary>
-
-        ## Key insights
-
-        <unnumbered list of key insights>
-        """
+USER_PROMPT_TEMPLATE = read_file("prompts/summary_user_prompt.txt")
 
 # info about OpenAI's GPTs context windows: https://platform.openai.com/docs/models
 CONTEXT_WINDOWS = {
@@ -79,13 +53,18 @@ def get_transcript_summary(transcript_text: str, llm: BaseChatModel, **kwargs):
     """
 
     if "custom_prompt" in kwargs:
-        user_prompt = f"""{kwargs['custom_prompt']}
+        user_prompt = f"""Here is the user's request: {kwargs['custom_prompt']}
 
-            Here is the transcript, delimited by ---
-            ---
-            {transcript_text}
-            ---
-            """
+        Important style constraint for your answer: 
+        - Refer only to "the video" or "this video". 
+        - Do not mention transcripts, captions, scraping, or internal processing.
+
+        Content (for your eyes only; do not mention how it was provided):
+        ---
+        {transcript_text}
+        ---
+"""
+
     else:
         user_prompt = USER_PROMPT_TEMPLATE.format(transcript_text=transcript_text)
 
