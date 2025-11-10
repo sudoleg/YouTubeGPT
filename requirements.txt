@@ -4,7 +4,7 @@ langchain-core==1.0.3
 langchain-text-splitters==1.0.0
 langchain-openai==1.0.2
 langchain-chroma==1.0.0
-youtube-transcript-api==1.1.1
+youtube-transcript-api==1.2.3
 streamlit==1.44.1
 watchdog==6.0.0
 pytest==8.4.2
