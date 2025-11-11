@@ -23,3 +23,4 @@ CHANGELOG.md
 docker-compose.yml
 Dockerfile
 .github/
+scripts/
