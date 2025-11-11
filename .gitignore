@@ -16,8 +16,7 @@ transcribed/
 transcript_audios/
 data/audio/*.mp3
 data/transcripts/*.txt
-scripts/tokens.ipynb
-scripts/persistance.ipynb
+scripts/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
