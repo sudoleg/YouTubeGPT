@@ -7,7 +7,7 @@ langchain-chroma==1.0.0
 youtube-transcript-api==1.2.3
 streamlit==1.44.1
 watchdog==6.0.0
-pytest==8.4.2
+pytest==9.0.1
 peewee==3.18.3
 python-dotenv==1.2.1
 chromadb==1.0.21
