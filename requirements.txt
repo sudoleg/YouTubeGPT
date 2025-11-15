@@ -2,7 +2,7 @@ langchain==1.0.7
 langchain-classic==1.0.0
 langchain-core==1.0.5
 langchain-text-splitters==1.0.0
-langchain-openai==1.0.2
+langchain-openai==1.0.3
 langchain-chroma==1.0.0
 youtube-transcript-api==1.2.3
 streamlit==1.44.1
