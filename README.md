@@ -23,7 +23,7 @@ YouTubeGPT lets you **summarize and chat (Q&A)** with YouTube videos. Its featur
 
 ### :robot: Choose from different OpenAI models
 
-- currently available: ChatGPT 4-5 (incl. nano & mini) and *continously updated* with new models
+- currently available: ChatGPT 4-5 (incl. nano & mini) and *continuously updated* with new models
 - by choosing a different model, you can summarize even longer videos and get better responses
 
 ### :gear: Experiment with settings
