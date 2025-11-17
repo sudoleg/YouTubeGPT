@@ -1,7 +1,7 @@
 import logging
 
-from langchain.chat_models import BaseChatModel
 from langchain.messages import HumanMessage, SystemMessage
+from langchain_openai import ChatOpenAI
 
 from .helpers import num_tokens_from_string, read_file
 
@@ -19,6 +19,11 @@ CONTEXT_WINDOWS = {
     "gpt-4.1-nano": {"total": 1047576, "output": 32768},
     "gpt-4.1-mini": {"total": 1047576, "output": 32768},
     "gpt-4.1": {"total": 1047576, "output": 32768},
+    "gpt-5.1-chat-latest": {"total": 400000, "output": 128000},
+    "gpt-5.1": {"total": 400000, "output": 128000},
+    "gpt-5-nano": {"total": 400000, "output": 128000},
+    "gpt-5-mini": {"total": 400000, "output": 128000},
+    "gpt-5": {"total": 400000, "output": 128000},
 }
 
 
@@ -35,13 +40,13 @@ class TranscriptTooLongForModelException(Exception):
         logging.error("Transcript too long for %s.", self.model_name, exc_info=True)
 
 
-def get_transcript_summary(transcript_text: str, llm: BaseChatModel, **kwargs):
+def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
     """
     Generates a summary from a video transcript using a language model.
 
     Args:
         transcript_text (str): The full transcript text of the video.
-        llm (BaseChatModel): The language model instance to use for generating the summary.
+        llm (ChatOpenAI): The language model instance to use for generating the summary.
         **kwargs: Optional keyword arguments.
             - custom_prompt (str): A custom prompt to replace the default summary request.
 
