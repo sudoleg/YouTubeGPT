@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/sudoleg/YouTubeGPT/compare/v3.0.0...v3.1.0) (2025-11-18)
+
+
+### Features
+
+* enable support for gpt-5 models, closes [#420](https://github.com/sudoleg/YouTubeGPT/issues/420) ([1f9ac69](https://github.com/sudoleg/YouTubeGPT/commit/1f9ac69c5294482d964768cfe307fefd227288ae))
+
 ## [3.0.0](https://github.com/sudoleg/YouTubeGPT/compare/v2.6.0...v3.0.0) (2025-06-14)
 
 
