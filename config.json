@@ -7,7 +7,7 @@
     },
     "default_model": {
         "embeddings": "text-embedding-3-small",
-        "gpt": "gpt-4o-mini"
+        "gpt": "gpt-4.1-nano"
     },
     "available_models": {
         "embeddings": [
@@ -17,6 +17,11 @@
         ],
         "gpts": [
             "gpt-4.1-nano",
+            "gpt-5.1-chat-latest",
+            "gpt-5.1",
+            "gpt-5-nano",
+            "gpt-5-mini",
+            "gpt-5",
             "gpt-4.1-mini",
             "gpt-4.1",
             "gpt-4o-mini",
