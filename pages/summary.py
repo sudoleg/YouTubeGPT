@@ -132,11 +132,16 @@ if is_api_key_set() and is_api_key_valid(st.session_state.openai_api_key):
                     st.session_state.summary = resp
                 st.markdown(st.session_state.summary)
 
-                # button for saving summary to library
-                st.button(label="Save summary to library", on_click=save_summary_to_lib)
-
-                # button for saving summary to file
-                display_download_button(data=resp, file_name=vid_metadata["name"])
+                with st.container(horizontal=True):
+                    # button for saving summary to library
+                    st.button(
+                        label="Save",
+                        on_click=save_summary_to_lib,
+                        icon=":material/save:",
+                        help="Save summary to library.",
+                    )
+                    # button for saving summary to file
+                    display_download_button(data=resp, file_name=vid_metadata["name"])
             except InvalidUrlException as e:
                 st.error(e.message)
                 e.log_error()

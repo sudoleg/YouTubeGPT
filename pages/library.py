@@ -80,16 +80,17 @@ with tab_summaries:
             )
         st.header("Saved summaries")
         for i, entry in enumerate(saved_lib_entries_summaries, 0):
-            st.caption(f"{entry.video.title} - {entry.video.channel}")
+            st.subheader(f"{entry.video.title} - {entry.video.channel}")
             with st.expander("Show"):
                 st.write(entry.text)
-            display_download_button(data=entry.text, file_name=entry.video.title)
-            if st.button(
-                label="Delete entry",
-                key=f"delete_summary_{i}",
-                icon=":material/delete_forever:",
-            ):
-                execute_entry_deletion(entry)
+            with st.container(horizontal=True):
+                display_download_button(data=entry.text, file_name=entry.video.title)
+                if st.button(
+                    label="Delete entry",
+                    key=f"delete_summary_{i}",
+                    icon=":material/delete_forever:",
+                ):
+                    execute_entry_deletion(entry)
             st.divider()
     else:
         st.info("You don't have any saved summaries yet!")
@@ -135,15 +136,17 @@ with tab_answers:
             st.subheader(entry.question)
             with st.expander("Show"):
                 st.write(entry.text)
-            display_download_button(
-                data="# " + entry.question + "\n\n" + entry.text,
-                file_name=entry.question,
-            )
-            if st.button(
-                label="Delete entry",
-                key=f"delete_answer_{j}",
-            ):
-                execute_entry_deletion(entry)
+            with st.container(horizontal=True):
+                display_download_button(
+                    data="# " + entry.question + "\n\n" + entry.text,
+                    file_name=entry.question,
+                )
+                if st.button(
+                    label="Delete entry",
+                    key=f"delete_answer_{j}",
+                    icon=":material/delete_forever:",
+                ):
+                    execute_entry_deletion(entry)
             st.divider()
     else:
         st.info("You don't have any saved answers yet!")
