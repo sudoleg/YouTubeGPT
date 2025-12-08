@@ -1,6 +1,6 @@
 langchain==1.0.8
 langchain-classic==1.0.0
-langchain-core==1.1.1
+langchain-core==1.1.2
 langchain-text-splitters==1.0.0
 langchain-openai==1.0.3
 langchain-chroma==1.0.0
