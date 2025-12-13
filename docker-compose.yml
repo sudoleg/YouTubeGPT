@@ -18,7 +18,6 @@ services:
     container_name: youtube-gpt
     depends_on:
       - chromadb
-      - ollama
     build:
       context: .
       dockerfile: Dockerfile
@@ -35,7 +34,7 @@ services:
       - net
 
   ollama:
-    image: ollama/ollama:latest
+    image: ollama/ollama:0.5.7
     container_name: ollama
     volumes:
       - ollama:/root/.ollama
