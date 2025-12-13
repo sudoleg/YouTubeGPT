@@ -212,9 +212,15 @@ def save_response_as_file(
     logging.info("File saved at: %s", file_path)
 
 
-def get_preffered_languages():
+def get_preferred_languages():
+    """Return preferred languages for transcripts."""
     # TODO: return from configuration object or config.json
     return ["en-US", "en", "de"]
+
+
+def get_preffered_languages():
+    # kept for backward compatibility
+    return get_preferred_languages()
 
 
 def num_tokens_from_string(string: str, model: str = "gpt-4o-mini") -> int:

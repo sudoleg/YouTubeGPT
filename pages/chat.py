@@ -58,6 +58,7 @@ from modules.youtube import (
 )
 
 CHUNK_SIZE_FOR_UNPROCESSED_TRANSCRIPT = 512
+DEFAULT_OLLAMA_EMBEDDING_MODEL = "nomic-embed-text:latest"
 
 st.set_page_config("Chat", layout="wide", initial_sidebar_state="auto")
 if "llm_provider" not in st.session_state:
@@ -170,8 +171,8 @@ if provider_ready and chroma_connection_established:
     if not embedding_options and not provider_is_openai:
         st.warning("No Ollama embedding models available. Pull one to continue.")
         st.button(
-            "Pull nomic-embed-text:latest",
-            on_click=lambda: pull_ollama_model("nomic-embed-text:latest"),
+            f"Pull {DEFAULT_OLLAMA_EMBEDDING_MODEL}",
+            on_click=lambda: pull_ollama_model(DEFAULT_OLLAMA_EMBEDDING_MODEL),
             key="pull_embedding_model",
         )
     # --- end ---
