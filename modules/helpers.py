@@ -274,8 +274,10 @@ def is_ollama_available(host: Optional[str] = None) -> bool:
 def _is_embedding_model(model: dict) -> bool:
     """Determine whether an Ollama model is an embedding model."""
     details = model.get("details", {})
-    family = details.get("family", "")
-    return "embed" in family or "embed" in model.get("name", "")
+    family = details.get("family", "").lower()
+    model_type = details.get("model_type", "").lower()
+    name = model.get("name", "").lower()
+    return "embed" in family or "embedding" in model_type or "embed" in name
 
 
 def get_ollama_models(
