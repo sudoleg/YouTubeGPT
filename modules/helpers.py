@@ -73,6 +73,9 @@ def get_available_models(
         get_default_config_value(f"available_models.{model_type}")
     )
 
+    def _filter_available(models: List[str]) -> List[str]:
+        return [m for m in selectable_model_ids if m in models]
+
     if not api_key and not os.getenv("OPENAI_API_KEY"):
         return selectable_model_ids
 
@@ -80,9 +83,7 @@ def get_available_models(
     # the env var is set programatically below
     available_model_ids = os.getenv("AVAILABLE_MODEL_IDS")
     if available_model_ids:
-        return list(
-            filter(lambda m: m in available_model_ids.split(","), selectable_model_ids)
-        )
+        return _filter_available(available_model_ids.split(","))
 
     try:
         available_model_ids: list = [model.id for model in openai.models.list()]
@@ -102,7 +103,7 @@ def get_available_models(
         # set the AVAILABLE_MODEL_IDS env var, so that the list of available models
         # doesn't have to be fetched every time
         os.environ["AVAILABLE_MODEL_IDS"] = ",".join(available_model_ids)
-        return list(filter(lambda m: m in available_model_ids, selectable_model_ids))
+        return _filter_available(available_model_ids)
 
 
 def get_default_config_value(
@@ -237,7 +238,10 @@ def num_tokens_from_string(string: str, model: str = "gpt-4o-mini") -> int:
     try:
         encoding = tiktoken.get_encoding(encoding_name)
     except Exception as e:  # pragma: no cover - fallback for offline environments
-        logging.error("Falling back to naive token counting: %s", str(e))
+        logging.error(
+            "tiktoken encoding failed (%s). Falling back to whitespace token counting.",
+            str(e),
+        )
         return len(string.split())
     return len(encoding.encode(string))
 

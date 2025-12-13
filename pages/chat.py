@@ -308,11 +308,15 @@ if provider_ready and chroma_connection_established:
                     original_transcript = fetch_youtube_transcript(url_input)
 
                     # 3. save transcript, ormore precisely, information about it, in the database
+                    model_for_count = (
+                        chat_model.model_name
+                        if provider_is_openai
+                        else st.session_state.model
+                    )
                     saved_transcript = Transcript.create(
                         video=saved_video,
                         original_token_num=num_tokens_from_string(
-                            string=original_transcript,
-                            model=getattr(chat_model, "model_name", st.session_state.model),
+                            string=original_transcript, model=model_for_count
                         ),
                     )
 
@@ -399,6 +403,15 @@ if provider_ready and chroma_connection_established:
                 if not is_ollama_available():
                     st.warning(
                         "Ollama server is required to query this collection's embeddings."
+                    )
+                    st.stop()
+                available_ollama_embeddings = get_ollama_models(model_type="embeddings")
+                if (
+                    collection_embeddings_model
+                    and collection_embeddings_model not in available_ollama_embeddings
+                ):
+                    st.warning(
+                        f"Ollama embedding model '{collection_embeddings_model}' is not available. Please pull it before continuing."
                     )
                     st.stop()
                 retrieval_embeddings = OllamaEmbeddings(
