@@ -34,7 +34,7 @@ services:
       - net
 
   ollama:
-    image: ollama/ollama:0.5.7
+    image: ollama/ollama:0.13.3
     container_name: ollama
     volumes:
       - ollama:/root/.ollama
