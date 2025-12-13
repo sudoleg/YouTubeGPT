@@ -9,7 +9,10 @@ import openai
 import streamlit as st
 import tiktoken
 
-import ollama
+try:  # pragma: no cover
+    import ollama
+except ImportError:  # pragma: no cover
+    ollama = None
 
 
 def is_api_key_set() -> bool:
@@ -256,6 +259,9 @@ def get_ollama_host() -> str:
 
 def is_ollama_available(host: Optional[str] = None) -> bool:
     """Checks whether an Ollama server is reachable."""
+    if ollama is None:
+        logging.error("Ollama dependency is not installed.")
+        return False
     ollama_host = host or get_ollama_host()
     try:
         ollama.Client(host=ollama_host).list()
@@ -269,13 +275,16 @@ def _is_embedding_model(model: dict) -> bool:
     """Determine whether an Ollama model is an embedding model."""
     details = model.get("details", {})
     family = details.get("family", "")
-    return family == "embed" or "embed" in family or "embed" in model.get("name", "")
+    return "embed" in family or "embed" in model.get("name", "")
 
 
 def get_ollama_models(
     model_type: Literal["gpts", "embeddings"], host: Optional[str] = None
 ) -> List[str]:
     """Returns available Ollama models filtered by type."""
+    if ollama is None:
+        logging.error("Ollama dependency is not installed.")
+        return []
     ollama_host = host or get_ollama_host()
     try:
         models = ollama.Client(host=ollama_host).list().get("models", [])
@@ -290,6 +299,9 @@ def get_ollama_models(
 
 def pull_ollama_model(model_name: str, host: Optional[str] = None) -> bool:
     """Triggers pulling an Ollama model; returns True on success."""
+    if ollama is None:
+        logging.error("Ollama dependency is not installed.")
+        return False
     ollama_host = host or get_ollama_host()
     try:
         ollama.Client(host=ollama_host).pull(model=model_name, stream=False)

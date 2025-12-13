@@ -323,9 +323,7 @@ if provider_ready and chroma_connection_established:
                             "yt_video_title": saved_video.title,
                             "chunk_size": chunk_size,
                             "embeddings_model": selected_embeddings_model,
-                            "embeddings_provider": "OpenAI"
-                            if provider_is_openai
-                            else "Ollama",
+                            "embeddings_provider": "OpenAI" if provider_is_openai else "Ollama",
                         },
                     )
 
