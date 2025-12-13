@@ -8,6 +8,7 @@ from chromadb import Collection
 from chromadb.config import Settings
 from langchain_chroma import Chroma
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+from langchain_ollama import ChatOllama, OllamaEmbeddings
 
 from modules.helpers import (
     get_available_models,
@@ -15,8 +16,11 @@ from modules.helpers import (
     is_api_key_set,
     is_api_key_valid,
     is_environment_prod,
+    is_ollama_available,
     num_tokens_from_string,
     read_file,
+    get_ollama_models,
+    pull_ollama_model,
 )
 from modules.persistance import (
     SQL_DB,
@@ -56,6 +60,12 @@ from modules.youtube import (
 CHUNK_SIZE_FOR_UNPROCESSED_TRANSCRIPT = 512
 
 st.set_page_config("Chat", layout="wide", initial_sidebar_state="auto")
+if "llm_provider" not in st.session_state:
+    st.session_state.llm_provider = "OpenAI"
+if "embeddings_model" not in st.session_state:
+    st.session_state.embeddings_model = get_default_config_value(
+        "default_model.embeddings"
+    )
 display_api_key_warning()
 
 # --- part of the sidebar which doesn't require an api key ---
@@ -122,38 +132,74 @@ def save_response_to_lib():
         st.success("Saved answer to library successfully!")
 
 
-if (
-    is_api_key_set()
-    and is_api_key_valid(st.session_state.openai_api_key)
-    and chroma_connection_established
-):
-    # --- rest of the sidebar, which requires a set api key ---
-    display_model_settings_sidebar()
+display_model_settings_sidebar()
+
+provider = st.session_state.llm_provider
+provider_is_openai = provider == "OpenAI"
+ollama_ready = is_ollama_available() if not provider_is_openai else False
+openai_ready = (
+    is_api_key_set() and is_api_key_valid(st.session_state.openai_api_key)
+    if provider_is_openai
+    else False
+)
+provider_ready = (provider_is_openai and openai_ready) or (
+    not provider_is_openai and ollama_ready
+)
+
+if provider_ready and chroma_connection_established:
+    # --- rest of the sidebar, which requires a ready provider ---
     st.sidebar.info(
         "Choose **text-embedding-3-large** if your video is **not** in English!"
     )
+    if provider_is_openai:
+        embedding_options = get_available_models(
+            api_key=st.session_state.openai_api_key, model_type="embeddings"
+        )
+    else:
+        embedding_options = get_ollama_models(model_type="embeddings")
     selected_embeddings_model = st.sidebar.selectbox(
         label="Select an embedding model",
-        options=get_available_models(
-            api_key=st.session_state.openai_api_key, model_type="embeddings"
-        ),
+        options=embedding_options if embedding_options else [st.session_state.get("embeddings_model", "")],
         key="embeddings_model",
         help=get_default_config_value(key_path="help_texts.embeddings"),
+        disabled=not embedding_options,
     )
+    embeddings_available = bool(embedding_options)
+    if not embedding_options and provider_is_openai:
+        st.warning("No embedding models available for OpenAI.")
+    if not embedding_options and not provider_is_openai:
+        st.warning("No Ollama embedding models available. Pull one to continue.")
+        st.button(
+            "Pull nomic-embed-text:latest",
+            on_click=lambda: pull_ollama_model("nomic-embed-text:latest"),
+            key="pull_embedding_model",
+        )
     # --- end ---
 
-    # --- initialize OpenAI models ---
-    openai_chat_model = ChatOpenAI(
-        api_key=st.session_state.openai_api_key,
-        temperature=st.session_state.temperature,
-        model=st.session_state.model,
-        top_p=st.session_state.top_p,
-        # max_tokens=2048,
-    )
-    openai_embedding_model = OpenAIEmbeddings(
-        api_key=st.session_state.openai_api_key,
-        model=st.session_state.embeddings_model,
-    )
+    # --- initialize models ---
+    if provider_is_openai:
+        chat_model = ChatOpenAI(
+            api_key=st.session_state.openai_api_key,
+            temperature=st.session_state.temperature,
+            model=st.session_state.model,
+            top_p=st.session_state.top_p,
+            # max_tokens=2048,
+        )
+        embedding_model = OpenAIEmbeddings(
+            api_key=st.session_state.openai_api_key,
+            model=st.session_state.embeddings_model,
+        )
+    else:
+        chat_model = ChatOllama(
+            model=st.session_state.model,
+            temperature=st.session_state.temperature,
+            top_p=st.session_state.top_p,
+        )
+        embedding_model = (
+            OllamaEmbeddings(model=st.session_state.embeddings_model)
+            if embeddings_available
+            else None
+        )
     # --- end ---
 
     # fetch all saved videos from SQLite
@@ -235,7 +281,10 @@ if (
                 disabled=is_video_selected(),
             )
 
-        if process_button:
+        if process_button and not embedding_model:
+            st.warning("Please pull an Ollama embedding model before processing.")
+
+        if process_button and embedding_model:
             with st.spinner(
                 text="Preparing your video :gear: This can take a little, hang on..."
             ):
@@ -263,7 +312,7 @@ if (
                         video=saved_video,
                         original_token_num=num_tokens_from_string(
                             string=original_transcript,
-                            model=openai_chat_model.model_name,
+                            model=getattr(chat_model, "model_name", st.session_state.model),
                         ),
                     )
 
@@ -274,6 +323,9 @@ if (
                             "yt_video_title": saved_video.title,
                             "chunk_size": chunk_size,
                             "embeddings_model": selected_embeddings_model,
+                            "embeddings_provider": "OpenAI"
+                            if provider_is_openai
+                            else "Ollama",
                         },
                     )
 
@@ -310,7 +362,7 @@ if (
                     embed_excerpts(
                         collection=collection,
                         excerpts=transcript_excerpts,
-                        embeddings=openai_embedding_model,
+                        embeddings=embedding_model,
                     )
                 except InvalidUrlException as e:
                     st.error(e.message)
@@ -330,18 +382,36 @@ if (
 
     with col2:
         if collection and collection.count() > 0:
-            # the users input has to be embedded using the same embeddings model as was used for creating
-            # the embeddings for the transcript excerpts. Here we ensure that the embedding function passed
-            # as argument to the vector store is the same as was used for the embeddings
             collection_embeddings_model = collection.metadata.get("embeddings_model")
-            if collection_embeddings_model != selected_embeddings_model:
-                openai_embedding_model.model = collection_embeddings_model
+            collection_embeddings_provider = collection.metadata.get(
+                "embeddings_provider", "OpenAI"
+            )
+
+            if collection_embeddings_provider == "OpenAI":
+                if not is_api_key_set():
+                    st.warning(
+                        "OpenAI API key is required to query this collection's embeddings."
+                    )
+                    st.stop()
+                retrieval_embeddings = OpenAIEmbeddings(
+                    api_key=st.session_state.openai_api_key,
+                    model=collection_embeddings_model,
+                )
+            else:
+                if not is_ollama_available():
+                    st.warning(
+                        "Ollama server is required to query this collection's embeddings."
+                    )
+                    st.stop()
+                retrieval_embeddings = OllamaEmbeddings(
+                    model=collection_embeddings_model
+                )
 
             # init vector store
             chroma_db = Chroma(
                 client=chroma_client,
                 collection_name=collection.name,
-                embedding_function=openai_embedding_model,
+                embedding_function=retrieval_embeddings,
             )
 
             with st.expander(label=":information_source: Tips and important notes"):
@@ -364,7 +434,7 @@ if (
                         )
                         response = generate_response(
                             question=prompt,
-                            llm=openai_chat_model,
+                            llm=chat_model,
                             relevant_docs=relevant_docs,
                         )
                         st.session_state.response = response
@@ -390,3 +460,12 @@ if (
                             for d in relevant_docs:
                                 st.write(d.page_content)
                                 st.divider()
+else:
+    if not chroma_connection_established:
+        st.warning(
+            "Connection to ChromaDB could not be established! You need to have a ChromaDB instance up and running locally on port 8000!"
+        )
+    elif provider_is_openai:
+        st.warning("Please provide a valid OpenAI API key to continue.")
+    else:
+        st.warning("Ollama server is not available. Start it before proceeding.")

@@ -3,11 +3,13 @@ import logging
 import os
 import re
 from pathlib import Path
-from typing import List, Literal
+from typing import List, Literal, Optional
 
 import openai
 import streamlit as st
 import tiktoken
+
+import ollama
 
 
 def is_api_key_set() -> bool:
@@ -68,12 +70,15 @@ def get_available_models(
         get_default_config_value(f"available_models.{model_type}")
     )
 
+    if not api_key and not os.getenv("OPENAI_API_KEY"):
+        return selectable_model_ids
+
     # AVAILABLE_MODEL_IDS env var stores all the model IDs available to the user as a list (separated by a comma)
     # the env var is set programatically below
     available_model_ids = os.getenv("AVAILABLE_MODEL_IDS")
     if available_model_ids:
-        return filter(
-            lambda m: m in available_model_ids.split(","), selectable_model_ids
+        return list(
+            filter(lambda m: m in available_model_ids.split(","), selectable_model_ids)
         )
 
     try:
@@ -94,7 +99,7 @@ def get_available_models(
         # set the AVAILABLE_MODEL_IDS env var, so that the list of available models
         # doesn't have to be fetched every time
         os.environ["AVAILABLE_MODEL_IDS"] = ",".join(available_model_ids)
-        return filter(lambda m: m in available_model_ids, selectable_model_ids)
+        return list(filter(lambda m: m in available_model_ids, selectable_model_ids))
 
 
 def get_default_config_value(
@@ -226,7 +231,11 @@ def num_tokens_from_string(string: str, model: str = "gpt-4o-mini") -> int:
         # workaround until https://github.com/openai/tiktoken/issues/395 is fixed
         encoding_name = "o200k_base"
 
-    encoding = tiktoken.get_encoding(encoding_name)
+    try:
+        encoding = tiktoken.get_encoding(encoding_name)
+    except Exception as e:  # pragma: no cover - fallback for offline environments
+        logging.error("Falling back to naive token counting: %s", str(e))
+        return len(string.split())
     return len(encoding.encode(string))
 
 
@@ -238,3 +247,53 @@ def is_environment_prod():
     if os.getenv("ENVIRONMENT") == "production":
         return True
     return False
+
+
+def get_ollama_host() -> str:
+    """Return the configured Ollama host."""
+    return os.getenv("OLLAMA_HOST", "http://localhost:11434")
+
+
+def is_ollama_available(host: Optional[str] = None) -> bool:
+    """Checks whether an Ollama server is reachable."""
+    ollama_host = host or get_ollama_host()
+    try:
+        ollama.Client(host=ollama_host).list()
+    except Exception as e:
+        logging.error("Ollama connection check failed: %s", str(e))
+        return False
+    return True
+
+
+def _is_embedding_model(model: dict) -> bool:
+    """Determine whether an Ollama model is an embedding model."""
+    details = model.get("details", {})
+    family = details.get("family", "")
+    return family == "embed" or "embed" in family or "embed" in model.get("name", "")
+
+
+def get_ollama_models(
+    model_type: Literal["gpts", "embeddings"], host: Optional[str] = None
+) -> List[str]:
+    """Returns available Ollama models filtered by type."""
+    ollama_host = host or get_ollama_host()
+    try:
+        models = ollama.Client(host=ollama_host).list().get("models", [])
+    except Exception as e:
+        logging.error("Could not list Ollama models: %s", str(e))
+        return []
+
+    if model_type == "embeddings":
+        return [model["name"] for model in models if _is_embedding_model(model)]
+    return [model["name"] for model in models if not _is_embedding_model(model)]
+
+
+def pull_ollama_model(model_name: str, host: Optional[str] = None) -> bool:
+    """Triggers pulling an Ollama model; returns True on success."""
+    ollama_host = host or get_ollama_host()
+    try:
+        ollama.Client(host=ollama_host).pull(model=model_name, stream=False)
+    except Exception as e:
+        logging.error("Failed to pull Ollama model %s: %s", model_name, str(e))
+        return False
+    return True

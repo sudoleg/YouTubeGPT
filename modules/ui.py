@@ -5,8 +5,10 @@ import streamlit as st
 from modules.helpers import (
     get_available_models,
     get_default_config_value,
+    get_ollama_models,
     is_api_key_set,
     is_api_key_valid,
+    is_ollama_available,
 )
 
 GENERAL_ERROR_MESSAGE = "An unexpected error occurred. If you are a developer and run the app locally, you can view the logs to see details about the error."
@@ -14,6 +16,8 @@ GENERAL_ERROR_MESSAGE = "An unexpected error occurred. If you are a developer an
 
 def display_api_key_warning():
     """Checks whether an API key is provided and displays warning if not."""
+    if st.session_state.get("llm_provider", "OpenAI") == "Ollama":
+        return
     if not is_api_key_set():
         st.warning(
             """:warning: It seems you haven't provided an API key yet. Make sure to do so by providing it in the settings (sidebar) 
@@ -58,18 +62,43 @@ def display_model_settings_sidebar():
     For example here, the selectbox for model has the key 'model'.
     Thus the selected model can be accessed via st.session_state.model.
     """
+    if "llm_provider" not in st.session_state:
+        st.session_state.llm_provider = "OpenAI"
     if "model" not in st.session_state:
         st.session_state.model = get_default_config_value("default_model.gpt")
 
     with st.sidebar:
         st.header("Model settings")
+        provider = st.selectbox(
+            label="Select provider",
+            options=["OpenAI", "Ollama"],
+            key="llm_provider",
+        )
+        available_models = []
+        if provider == "Ollama":
+            ollama_ready = is_ollama_available()
+            if not ollama_ready:
+                st.warning(
+                    "Ollama server not reachable. Ensure it is running locally on port 11434."
+                )
+            available_models = get_ollama_models(model_type="gpts") if ollama_ready else []
+            if not available_models:
+                st.warning(
+                    "No Ollama models available. Pull a model in your terminal before proceeding."
+                )
+        else:
+            available_models = get_available_models(
+                model_type="gpts", api_key=st.session_state.openai_api_key
+            )
+        if available_models and st.session_state.model not in available_models:
+            st.session_state.model = available_models[0]
+        model_options = available_models if available_models else [st.session_state.model]
         model = st.selectbox(
             label="Select a large language model",
-            options=get_available_models(
-                model_type="gpts", api_key=st.session_state.openai_api_key
-            ),
+            options=model_options,
             key="model",
             help=get_default_config_value("help_texts.model"),
+            disabled=not available_models,
         )
         st.slider(
             label="Adjust temperature",
@@ -93,7 +122,10 @@ def display_model_settings_sidebar():
             st.warning(
                 "OpenAI generally recommends altering temperature or top_p but not both. See their [API reference](https://platform.openai.com/docs/api-reference/chat/create#chat-create-temperature)"
             )
-        if model != get_default_config_value("default_model.gpt"):
+        if (
+            provider == "OpenAI"
+            and model != get_default_config_value("default_model.gpt")
+        ):
             st.warning(
                 """:warning: Be aware of the higher costs and latencies when using more advanced (reasoning) models (like gpt-5). You can see details (incl. costs) about the models and compare them [here](https://platform.openai.com/docs/models/compare)."""
             )
