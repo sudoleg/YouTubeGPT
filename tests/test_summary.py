@@ -61,15 +61,15 @@ def test_invalid_api_key():
 def mock_llm():
     os.environ["OPENAI_API_KEY"] = "sk-proj-xyz"
     # Mock ChatOpenAI instance with the model name
-    return ChatOpenAI()
+    return ChatOpenAI(name="gpt-3.5-turbo")
 
 
-# def test_transcript_too_long_exception(mock_llm):
-#    # Create a transcript that exceeds the context window
-#    transcript = "word " * OPENAI_CONTEXT_WINDOWS["gpt-3.5-turbo"]["total"]
-#
-#    with pytest.raises(
-#        expected_exception=TranscriptTooLongForModelException,
-#        match="Your transcript exceeds the context window of the chosen model",
-#    ) as exc_info:
-#        get_transcript_summary(transcript_text=transcript, llm=mock_llm)
+def test_transcript_too_long_exception(mock_llm):
+    # Create a transcript that exceeds the context window
+    transcript = "word " * OPENAI_CONTEXT_WINDOWS["gpt-3.5-turbo"]["total"]
+
+    with pytest.raises(
+        expected_exception=TranscriptTooLongForModelException,
+        match="Your transcript exceeds the context window of the chosen model",
+    ) as exc_info:
+        get_transcript_summary(transcript_text=transcript, llm=mock_llm)
