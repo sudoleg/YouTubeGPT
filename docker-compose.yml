@@ -33,19 +33,19 @@ services:
     networks:
       - net
 
-  ollama:
-    image: ollama/ollama:0.13.3
-    container_name: ollama
-    volumes:
-      - ollama:/root/.ollama
-    ports:
-      - "11434:11434"
-    restart: unless-stopped
-    networks:
-      - net
+  #ollama:
+  #  image: ollama/ollama:0.13.3
+  #  container_name: ollama
+  #  volumes:
+  #    - ollama:/root/.ollama
+  #  ports:
+  #    - "11434:11434"
+  #  restart: unless-stopped
+  #  networks:
+  #    - net
 
 volumes:
   chroma:
     driver: local
-  ollama:
-    driver: local
+#  ollama:
+#    driver: local
