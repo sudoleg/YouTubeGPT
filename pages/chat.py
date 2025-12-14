@@ -197,6 +197,7 @@ if provider_ready and chroma_connection_established:
     else:
         chat_model = ChatOllama(
             model=st.session_state.model,
+            name=st.session_state.model,
             temperature=st.session_state.temperature,
             top_p=st.session_state.top_p,
         )
