@@ -28,6 +28,7 @@ services:
       # replace with your OpenAI API key or the name of the environment
       # variable that stores it on your PC 
       - OPENAI_API_KEY=${OPENAI_YOUTUBEGPT_API_KEY}
+      - OLLAMA_HOST=http://host.docker.internal:11434
     ports:
       - "8501:8501"
     networks:
