@@ -20,14 +20,16 @@ class DummyClient:
 
 
 def test_is_ollama_available_handles_failure(monkeypatch):
-    monkeypatch.setattr(helpers.ollama, "Client", lambda host=None: DummyClient(should_fail=True))
+    monkeypatch.setattr(
+        helpers.ollama, "Client", lambda host=None: DummyClient(should_fail=True)
+    )
     assert helpers.is_ollama_available() is False
 
 
 def test_get_ollama_models_filters_embeddings(monkeypatch):
     sample_models = [
-        {"name": "llama3", "details": {"family": "llama"}},
-        {"name": "nomic-embed-text:latest", "details": {"family": "embed"}},
+        {"model": "llama3", "details": {"family": "llama"}},
+        {"model": "nomic-embed-text:latest", "details": {"family": "embed"}},
     ]
     monkeypatch.setattr(
         helpers.ollama, "Client", lambda host=None: DummyClient(models=sample_models)
@@ -37,5 +39,7 @@ def test_get_ollama_models_filters_embeddings(monkeypatch):
 
 
 def test_pull_ollama_model_returns_false_on_error(monkeypatch):
-    monkeypatch.setattr(helpers.ollama, "Client", lambda host=None: DummyClient(should_fail=True))
+    monkeypatch.setattr(
+        helpers.ollama, "Client", lambda host=None: DummyClient(should_fail=True)
+    )
     assert helpers.pull_ollama_model("llama3") is False
