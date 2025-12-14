@@ -79,9 +79,11 @@ def display_model_settings_sidebar():
             ollama_ready = is_ollama_available()
             if not ollama_ready:
                 st.warning(
-                    "Ollama server not reachable. Ensure it is running locally on port 11434."
+                    "Ollama server not reachable. Ensure it is running locally on port 11434 or set the host via the `OLLAMA_HOST` environment variable."
                 )
-            available_models = get_ollama_models(model_type="gpts") if ollama_ready else []
+            available_models = (
+                get_ollama_models(model_type="gpts") if ollama_ready else []
+            )
             if not available_models:
                 st.warning(
                     "No Ollama models available. Pull a model in your terminal before proceeding."
@@ -92,7 +94,9 @@ def display_model_settings_sidebar():
             )
         if available_models and st.session_state.model not in available_models:
             st.session_state.model = available_models[0]
-        model_options = available_models if available_models else [st.session_state.model]
+        model_options = (
+            available_models if available_models else [st.session_state.model]
+        )
         model = st.selectbox(
             label="Select a large language model",
             options=model_options,
@@ -122,9 +126,8 @@ def display_model_settings_sidebar():
             st.warning(
                 "OpenAI generally recommends altering temperature or top_p but not both. See their [API reference](https://platform.openai.com/docs/api-reference/chat/create#chat-create-temperature)"
             )
-        if (
-            provider == "OpenAI"
-            and model != get_default_config_value("default_model.gpt")
+        if provider == "OpenAI" and model != get_default_config_value(
+            "default_model.gpt"
         ):
             st.warning(
                 """:warning: Be aware of the higher costs and latencies when using more advanced (reasoning) models (like gpt-5). You can see details (incl. costs) about the models and compare them [here](https://platform.openai.com/docs/models/compare)."""

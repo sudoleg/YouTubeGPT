@@ -1,7 +1,8 @@
 import logging
 
+import ollama
 from langchain.messages import HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
+from langchain_core.language_models import BaseChatModel
 
 from .helpers import num_tokens_from_string, read_file
 
@@ -10,7 +11,7 @@ SYSTEM_PROMPT = read_file("prompts/summary_system_prompt.txt")
 USER_PROMPT_TEMPLATE = read_file("prompts/summary_user_prompt.txt")
 
 # info about OpenAI's GPTs context windows: https://platform.openai.com/docs/models
-CONTEXT_WINDOWS = {
+OPENAI_CONTEXT_WINDOWS = {
     "gpt-3.5-turbo": {"total": 16385, "output": 4096},
     "gpt-4": {"total": 8192, "output": 4096},
     "gpt-4-turbo": {"total": 128000, "output": 4096},
@@ -40,13 +41,13 @@ class TranscriptTooLongForModelException(Exception):
         logging.error("Transcript too long for %s.", self.model_name, exc_info=True)
 
 
-def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
+def get_transcript_summary(transcript_text: str, llm: BaseChatModel, **kwargs):
     """
     Generates a summary from a video transcript using a language model.
 
     Args:
         transcript_text (str): The full transcript text of the video.
-        llm (ChatOpenAI): The language model instance to use for generating the summary.
+        llm (BaseChatModel): The language model instance to use for generating the summary.
         **kwargs: Optional keyword arguments.
             - custom_prompt (str): A custom prompt to replace the default summary request.
 
@@ -68,24 +69,30 @@ def get_transcript_summary(transcript_text: str, llm: ChatOpenAI, **kwargs):
         ---
         {transcript_text}
         ---
-"""
-
+        """
     else:
         user_prompt = USER_PROMPT_TEMPLATE.format(transcript_text=transcript_text)
 
+    if llm.name not in OPENAI_CONTEXT_WINDOWS.keys():
+        model_details = ollama.show(model=llm.name)
+        general_arch = model_details.get("general.architecture", "")
+        max_context_length = model_details.get(f"{general_arch}.context_length", 4096)
+    else:
+        max_context_length = OPENAI_CONTEXT_WINDOWS[llm.name]["total"]
+
     # if the number of tokens in the transcript (plus the number of tokens in the prompt) exceed the model's context window, an exception is raised
     if (
-        num_tokens_from_string(string=user_prompt, model=llm.model_name)
-        + num_tokens_from_string(string=SYSTEM_PROMPT, model=llm.model_name)
-        > CONTEXT_WINDOWS[llm.model_name]["total"]
+        num_tokens_from_string(string=user_prompt, model=llm.name)
+        + num_tokens_from_string(string=SYSTEM_PROMPT, model=llm.name)
+        > max_context_length
     ):
         raise TranscriptTooLongForModelException(
-            message=f"Your transcript exceeds the context window of the chosen model ({llm.model_name}), which is {CONTEXT_WINDOWS[llm.model_name]['total']} tokens. "
+            message=f"Your transcript exceeds the context window of the chosen model ({llm.name}), which is {max_context_length} tokens. "
             "Consider the following options:\n"
-            "1. Choose another model with larger context window (such as gpt-4o).\n"
+            "1. Choose another model with larger context window.\n"
             "2. Use the 'Chat' feature to ask specific questions about the video. There you won't be limited by the number of tokens.\n\n"
-            "You can get more information on context windows for different models in the [official OpenAI documentation about models](https://platform.openai.com/docs/models).",
-            model_name=llm.model_name,
+            "You can get more information on context windows for different OpenAI models in the [official documentation](https://platform.openai.com/docs/models).",
+            model_name=llm.name,
         )
 
     messages = [

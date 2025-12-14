@@ -5,14 +5,10 @@ import re
 from pathlib import Path
 from typing import List, Literal, Optional
 
+import ollama
 import openai
 import streamlit as st
 import tiktoken
-
-try:  # pragma: no cover
-    import ollama
-except ImportError:  # pragma: no cover
-    ollama = None
 
 
 def is_api_key_set() -> bool:
@@ -218,14 +214,10 @@ def get_preferred_languages():
     return ["en-US", "en", "de"]
 
 
-def get_preffered_languages():
-    # kept for backward compatibility
-    return get_preferred_languages()
-
-
-def num_tokens_from_string(string: str, model: str = "gpt-4o-mini") -> int:
+# TODO: handle Ollama models as well or fallback to other token count method
+def num_tokens_from_string(string: str, model: str = "gpt-4.1-nano") -> int:
     """
-    Returns the number of tokens in a text string.
+    Returns the number of tokens in a text string for OpenAI models.
 
     Args:
         string (str): The string to count tokens in.
@@ -241,14 +233,7 @@ def num_tokens_from_string(string: str, model: str = "gpt-4o-mini") -> int:
         # workaround until https://github.com/openai/tiktoken/issues/395 is fixed
         encoding_name = "o200k_base"
 
-    try:
-        encoding = tiktoken.get_encoding(encoding_name)
-    except Exception as e:  # pragma: no cover - fallback for offline environments
-        logging.error(
-            "tiktoken encoding failed (%s). Falling back to whitespace token counting.",
-            str(e),
-        )
-        return len(string.split())
+    encoding = tiktoken.get_encoding(encoding_name)
     return len(encoding.encode(string))
 
 
@@ -269,9 +254,6 @@ def get_ollama_host() -> str:
 
 def is_ollama_available(host: Optional[str] = None) -> bool:
     """Checks whether an Ollama server is reachable."""
-    if ollama is None:
-        logging.error("Ollama dependency is not installed.")
-        return False
     ollama_host = host or get_ollama_host()
     try:
         ollama.Client(host=ollama_host).list()
@@ -286,7 +268,7 @@ def _is_embedding_model(model: dict) -> bool:
     details = model.get("details", {})
     family = details.get("family", "").lower()
     model_type = details.get("model_type", "").lower()
-    name = model.get("name", "").lower()
+    name = model.get("model", "").lower()
     return "embed" in family or "embedding" in model_type or "embed" in name
 
 
@@ -294,9 +276,6 @@ def get_ollama_models(
     model_type: Literal["gpts", "embeddings"], host: Optional[str] = None
 ) -> List[str]:
     """Returns available Ollama models filtered by type."""
-    if ollama is None:
-        logging.error("Ollama dependency is not installed.")
-        return []
     ollama_host = host or get_ollama_host()
     try:
         models = ollama.Client(host=ollama_host).list().get("models", [])
@@ -305,15 +284,12 @@ def get_ollama_models(
         return []
 
     if model_type == "embeddings":
-        return [model["name"] for model in models if _is_embedding_model(model)]
-    return [model["name"] for model in models if not _is_embedding_model(model)]
+        return [model["model"] for model in models if _is_embedding_model(model)]
+    return [model["model"] for model in models if not _is_embedding_model(model)]
 
 
 def pull_ollama_model(model_name: str, host: Optional[str] = None) -> bool:
     """Triggers pulling an Ollama model; returns True on success."""
-    if ollama is None:
-        logging.error("Ollama dependency is not installed.")
-        return False
     ollama_host = host or get_ollama_host()
     try:
         ollama.Client(host=ollama_host).pull(model=model_name, stream=False)

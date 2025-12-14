@@ -7,20 +7,20 @@ import streamlit as st
 from chromadb import Collection
 from chromadb.config import Settings
 from langchain_chroma import Chroma
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_ollama import ChatOllama, OllamaEmbeddings
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 from modules.helpers import (
     get_available_models,
     get_default_config_value,
+    get_ollama_models,
     is_api_key_set,
     is_api_key_valid,
     is_environment_prod,
     is_ollama_available,
     num_tokens_from_string,
-    read_file,
-    get_ollama_models,
     pull_ollama_model,
+    read_file,
 )
 from modules.persistance import (
     SQL_DB,
@@ -160,7 +160,11 @@ if provider_ready and chroma_connection_established:
         embedding_options = get_ollama_models(model_type="embeddings")
     selected_embeddings_model = st.sidebar.selectbox(
         label="Select an embedding model",
-        options=embedding_options if embedding_options else [st.session_state.get("embeddings_model", "")],
+        options=(
+            embedding_options
+            if embedding_options
+            else [st.session_state.get("embeddings_model", "")]
+        ),
         key="embeddings_model",
         help=get_default_config_value(key_path="help_texts.embeddings"),
         disabled=not embedding_options,
@@ -308,7 +312,7 @@ if provider_ready and chroma_connection_established:
                     # 2. fetch transcript from youtube
                     original_transcript = fetch_youtube_transcript(url_input)
 
-                    # 3. save transcript, ormore precisely, information about it, in the database
+                    # 3. save transcript, or more precisely, information about it, in the database
                     model_for_count = (
                         chat_model.model_name
                         if provider_is_openai
@@ -328,7 +332,9 @@ if provider_ready and chroma_connection_established:
                             "yt_video_title": saved_video.title,
                             "chunk_size": chunk_size,
                             "embeddings_model": selected_embeddings_model,
-                            "embeddings_provider": "OpenAI" if provider_is_openai else "Ollama",
+                            "embeddings_provider": (
+                                "OpenAI" if provider_is_openai else "Ollama"
+                            ),
                         },
                     )
 
