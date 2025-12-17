@@ -75,17 +75,17 @@ def get_transcript_summary(transcript_text: str, llm: BaseChatModel, **kwargs):
 
     if llm.name not in OPENAI_CONTEXT_WINDOWS.keys():
         model_details = ollama.show(model=llm.name)
-        general_arch = model_details.get("general.architecture", "")
-        max_context_length = model_details.get(f"{general_arch}.context_length", 4096)
+        model_info = model_details.get("modelinfo", {})
+        general_arch = model_info.get("general.architecture", "")
+        max_context_length = model_info.get(f"{general_arch}.context_length", 4096)
     else:
         max_context_length = OPENAI_CONTEXT_WINDOWS[llm.name]["total"]
 
     # if the number of tokens in the transcript (plus the number of tokens in the prompt) exceed the model's context window, an exception is raised
-    if (
-        num_tokens_from_string(string=user_prompt, model=llm.name)
-        + num_tokens_from_string(string=SYSTEM_PROMPT, model=llm.name)
-        > max_context_length
-    ):
+    total_tokens = num_tokens_from_string(
+        string=user_prompt, model=llm.name
+    ) + num_tokens_from_string(string=SYSTEM_PROMPT, model=llm.name)
+    if total_tokens > max_context_length:
         raise TranscriptTooLongForModelException(
             message=f"Your transcript exceeds the context window of the chosen model ({llm.name}), which is {max_context_length} tokens. "
             "Consider the following options:\n"
@@ -100,5 +100,8 @@ def get_transcript_summary(transcript_text: str, llm: BaseChatModel, **kwargs):
         HumanMessage(content=user_prompt),
     ]
 
+    logging.info(
+        "Generating summary using model: %s. Total tokens: %d", llm.name, total_tokens
+    )
     response = llm.invoke(messages)
     return response.content
