@@ -127,7 +127,6 @@ if provider_ready:
                 transcript = fetch_youtube_transcript(url_input)
                 if provider_is_openai:
                     llm = ChatOpenAI(
-                        name=st.session_state.model,
                         api_key=st.session_state.openai_api_key,
                         temperature=st.session_state.temperature,
                         model=st.session_state.model,
@@ -136,7 +135,6 @@ if provider_ready:
                     )
                 else:
                     llm = ChatOllama(
-                        name=st.session_state.model,
                         model=st.session_state.model,
                         temperature=st.session_state.temperature,
                         top_p=st.session_state.top_p,

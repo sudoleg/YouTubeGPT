@@ -221,7 +221,7 @@ def num_tokens_from_string(string: str, model: str = "gpt-4.1-nano") -> int:
 
     Args:
         string (str): The string to count tokens in.
-        model (str): Name of the model. Default is 'gpt-4o-mini'
+        model (str): Name of the model. Default is 'gpt-4.1-nano'
 
     See https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken
     """
@@ -233,8 +233,15 @@ def num_tokens_from_string(string: str, model: str = "gpt-4.1-nano") -> int:
         # workaround until https://github.com/openai/tiktoken/issues/395 is fixed
         encoding_name = "o200k_base"
 
-    encoding = tiktoken.get_encoding(encoding_name)
-    return len(encoding.encode(string))
+    try:
+        encoding = tiktoken.get_encoding(encoding_name)
+        return len(encoding.encode(string))
+    except Exception as e:  # pragma: no cover - fallback for offline environments
+        logging.error(
+            "tiktoken encoding failed (%s). Falling back to whitespace token counting.",
+            str(e),
+        )
+        return len(string.split())
 
 
 def read_file(file_path: str):
@@ -268,7 +275,7 @@ def _is_embedding_model(model: dict) -> bool:
     details = model.get("details", {})
     family = details.get("family", "").lower()
     model_type = details.get("model_type", "").lower()
-    name = model.get("model", "").lower()
+    name = (model.get("name") or model.get("model") or "").lower()
     return "embed" in family or "embedding" in model_type or "embed" in name
 
 
