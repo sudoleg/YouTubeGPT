@@ -3,8 +3,9 @@ import logging
 import os
 import re
 from pathlib import Path
-from typing import List, Literal
+from typing import List, Literal, Optional
 
+import ollama
 import openai
 import streamlit as st
 import tiktoken
@@ -68,13 +69,17 @@ def get_available_models(
         get_default_config_value(f"available_models.{model_type}")
     )
 
+    def _filter_available(models: List[str]) -> List[str]:
+        return [m for m in selectable_model_ids if m in models]
+
+    if not api_key and not os.getenv("OPENAI_API_KEY"):
+        return selectable_model_ids
+
     # AVAILABLE_MODEL_IDS env var stores all the model IDs available to the user as a list (separated by a comma)
     # the env var is set programatically below
     available_model_ids = os.getenv("AVAILABLE_MODEL_IDS")
     if available_model_ids:
-        return filter(
-            lambda m: m in available_model_ids.split(","), selectable_model_ids
-        )
+        return _filter_available(available_model_ids.split(","))
 
     try:
         available_model_ids: list = [model.id for model in openai.models.list()]
@@ -94,7 +99,7 @@ def get_available_models(
         # set the AVAILABLE_MODEL_IDS env var, so that the list of available models
         # doesn't have to be fetched every time
         os.environ["AVAILABLE_MODEL_IDS"] = ",".join(available_model_ids)
-        return filter(lambda m: m in available_model_ids, selectable_model_ids)
+        return _filter_available(available_model_ids)
 
 
 def get_default_config_value(
@@ -203,14 +208,16 @@ def save_response_as_file(
     logging.info("File saved at: %s", file_path)
 
 
-def get_preffered_languages():
+def get_preferred_languages():
+    """Return preferred languages for transcripts."""
     # TODO: return from configuration object or config.json
     return ["en-US", "en", "de"]
 
 
-def num_tokens_from_string(string: str, model: str = "gpt-4o-mini") -> int:
+# TODO: handle Ollama models as well or fallback to other token count method
+def num_tokens_from_string(string: str, model: str = "gpt-4.1-nano") -> int:
     """
-    Returns the number of tokens in a text string.
+    Returns the number of tokens in a text string for OpenAI models.
 
     Args:
         string (str): The string to count tokens in.
@@ -238,3 +245,55 @@ def is_environment_prod():
     if os.getenv("ENVIRONMENT") == "production":
         return True
     return False
+
+
+def get_ollama_host() -> str:
+    """Return the configured Ollama host."""
+    return os.getenv("OLLAMA_HOST", "http://localhost:11434")
+
+
+def is_ollama_available(host: Optional[str] = None) -> bool:
+    """Checks whether an Ollama server is reachable."""
+    ollama_host = host or get_ollama_host()
+    try:
+        ollama.Client(host=ollama_host).list()
+    except Exception as e:
+        logging.error("Ollama connection check failed: %s", str(e))
+        return False
+    return True
+
+
+def _is_embedding_model(model: dict) -> bool:
+    """Determine whether an Ollama model is an embedding model."""
+    details = model.get("details", {})
+    family = details.get("family", "").lower()
+    model_type = details.get("model_type", "").lower()
+    name = model.get("model", "").lower()
+    return "embed" in family or "embedding" in model_type or "embed" in name
+
+
+def get_ollama_models(
+    model_type: Literal["gpts", "embeddings"], host: Optional[str] = None
+) -> List[str]:
+    """Returns available Ollama models filtered by type."""
+    ollama_host = host or get_ollama_host()
+    try:
+        models = ollama.Client(host=ollama_host).list().get("models", [])
+    except Exception as e:
+        logging.error("Could not list Ollama models: %s", str(e))
+        return []
+
+    if model_type == "embeddings":
+        return [model["model"] for model in models if _is_embedding_model(model)]
+    return [model["model"] for model in models if not _is_embedding_model(model)]
+
+
+def pull_ollama_model(model_name: str, host: Optional[str] = None) -> bool:
+    """Triggers pulling an Ollama model; returns True on success."""
+    ollama_host = host or get_ollama_host()
+    try:
+        ollama.Client(host=ollama_host).pull(model=model_name, stream=False)
+    except Exception as e:
+        logging.error("Failed to pull Ollama model %s: %s", model_name, str(e))
+        return False
+    return True

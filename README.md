@@ -6,7 +6,9 @@
 
 ## Features :sparkles:
 
-YouTubeGPT lets you **summarize and chat (Q&A)** with YouTube videos. Its features include:
+YouTubeGPT is a web app that can be run fully locally and lets you **summarize and chat (Q&A)** with YouTube videos. You can either use OpenAI's API or a (local) Ollama instance.
+
+YouTubeGPT's features include:
 
 ### :writing_hand: Provide a custom prompt for summaries  [**VIEW DEMO**](https://youtu.be/rJqx3qvebws)
 
@@ -21,8 +23,9 @@ YouTubeGPT lets you **summarize and chat (Q&A)** with YouTube videos. Its featur
 - the summaries and answers can be saved to a library accessible at a separate page!
 - additionally, summaries and answers can be exported/downloaded as Markdown files!
 
-### :robot: Choose from different OpenAI models
+### :robot: Choose provider and models
 
+- choose between OpenAI's API or a (local) Ollama instance
 - currently available: ChatGPT 4-5 (incl. nano & mini) and *continuously updated* with new models
 - by choosing a different model, you can summarize even longer videos and get better responses
 
@@ -36,7 +39,11 @@ YouTubeGPT lets you **summarize and chat (Q&A)** with YouTube videos. Its featur
 
 ## Installation & usage
 
-No matter how you choose to run the app, you will first need to get an OpenAI API-Key. This is very straightforward and free. Have a look at [their instructions](https://platform.openai.com/docs/quickstart/account-setup) to get started.  
+If you want to use OpenAI's API, you will first need to get an OpenAI API-Key. This is very straightforward and free. Have a look at [their instructions](https://platform.openai.com/docs/quickstart/account-setup) to get started.
+
+If you want to use Ollama, you need to have an Ollama server running locally or remotely. You can download Ollama for macOS, Linux, or Windows [on their website](https://ollama.com/download). Make sure the server is reachable either on the default port `11434` or set the `OLLAMA_HOST` environment variable to point to your Ollama server. Also, you need to **pull the models** you want to use.
+
+> **Note**: Ollama limits the context window to 4k tokens by default. I strongly recommend to adjust it to at least 16k tokens. This can be done in the Ollama app settings.
 
 ### Run with Docker
 

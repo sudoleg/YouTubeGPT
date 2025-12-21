@@ -6,7 +6,7 @@ from requests.exceptions import RequestException
 from youtube_transcript_api import CouldNotRetrieveTranscript, YouTubeTranscriptApi
 from youtube_transcript_api.formatters import TextFormatter
 
-from .helpers import extract_youtube_video_id, get_preffered_languages
+from .helpers import extract_youtube_video_id, get_preferred_languages
 
 OEMBED_PROVIDER = "https://noembed.com/embed"
 
@@ -66,7 +66,7 @@ def fetch_youtube_transcript(url: str):
 
     try:
         transcript = YouTubeTranscriptApi().fetch(
-            video_id, languages=get_preffered_languages()
+            video_id, languages=get_preferred_languages()
         )
     except CouldNotRetrieveTranscript as e:
         logging.error("Failed to retrieve transcript for URL: %s", str(e))

@@ -6,7 +6,7 @@ from streamlit.testing.v1 import AppTest
 
 from modules.helpers import is_api_key_valid
 from modules.summary import (
-    CONTEXT_WINDOWS,
+    OPENAI_CONTEXT_WINDOWS,
     TranscriptTooLongForModelException,
     get_transcript_summary,
 )
@@ -61,12 +61,12 @@ def test_invalid_api_key():
 def mock_llm():
     os.environ["OPENAI_API_KEY"] = "sk-proj-xyz"
     # Mock ChatOpenAI instance with the model name
-    return ChatOpenAI()
+    return ChatOpenAI(name="gpt-3.5-turbo")
 
 
 def test_transcript_too_long_exception(mock_llm):
     # Create a transcript that exceeds the context window
-    transcript = "word " * CONTEXT_WINDOWS["gpt-3.5-turbo"]["total"]
+    transcript = "word " * OPENAI_CONTEXT_WINDOWS["gpt-3.5-turbo"]["total"]
 
     with pytest.raises(
         expected_exception=TranscriptTooLongForModelException,
