@@ -89,9 +89,12 @@ def display_model_settings_sidebar():
                     "No Ollama models available. Pull a model in your terminal before proceeding."
                 )
         else:
-            available_models = get_available_models(
-                model_type="gpts", api_key=st.session_state.openai_api_key
-            )
+            if is_api_key_set(st.session_state.openai_api_key):
+                available_models = get_available_models(
+                    model_type="gpts", api_key=st.session_state.openai_api_key
+                )
+            else:
+                available_models = []
         if available_models and st.session_state.model not in available_models:
             st.session_state.model = available_models[0]
         model_options = (
