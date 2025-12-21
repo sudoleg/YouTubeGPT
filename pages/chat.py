@@ -150,7 +150,7 @@ provider_ready = (provider_is_openai and openai_ready) or (
 if provider_ready and chroma_connection_established:
     # --- rest of the sidebar, which requires a ready provider ---
     st.sidebar.info(
-        "Choose **text-embedding-3-large** if your video is **not** in English!"
+        "Choose a multilingual embedding model if your video is **not** in English!"
     )
     if provider_is_openai:
         embedding_options = get_available_models(
