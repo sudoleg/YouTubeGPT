@@ -1,5 +1,3 @@
-import pytest
-
 from modules import helpers
 
 
