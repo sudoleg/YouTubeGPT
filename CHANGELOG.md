@@ -1,5 +1,21 @@
 # Changelog
 
+## [3.2.0](https://github.com/sudoleg/YouTubeGPT/compare/v3.1.0...v3.2.0) (2025-12-21)
+
+
+### Features
+
+* add ollama provider support ([9bb0f15](https://github.com/sudoleg/YouTubeGPT/commit/9bb0f15ae430223e15ca6ea09a286e38aeba695b))
+
+
+### Bug Fixes
+
+* add model name to ChatOllama initialization ([775722e](https://github.com/sudoleg/YouTubeGPT/commit/775722ed6ced30c2e58a5e69951f17e1df225ea6))
+* correct API key check in display_model_settings_sidebar function ([4bfb46c](https://github.com/sudoleg/YouTubeGPT/commit/4bfb46c91f91401137fac935a51439e1ab188ab0))
+* don't display available models if no API key is set ([15c5b9e](https://github.com/sudoleg/YouTubeGPT/commit/15c5b9e320ea0d46b0b5bed99b6686d5e967ba63))
+* update context length retrieval for Ollama models and improve token counting logic in transcript summary ([523c7ec](https://github.com/sudoleg/YouTubeGPT/commit/523c7eccdc4cc93999b47725ebac9c3dc79be88b))
+* update mock_llm to include model name and restore transcript length exception test ([74a1074](https://github.com/sudoleg/YouTubeGPT/commit/74a10740742534abee6eb0520c9c8899572a970e))
+
 ## [3.1.0](https://github.com/sudoleg/YouTubeGPT/compare/v3.0.0...v3.1.0) (2025-11-18)
 
 
