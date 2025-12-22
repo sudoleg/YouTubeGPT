@@ -62,6 +62,36 @@ class Transcript(BaseModel):
     chroma_collection_name = CharField(null=True)
 
 
+def get_or_create_video(yt_video_id: str, link: str, title: str, channel: str, saved_on):
+    """Gets an existing video or creates a new one if it doesn't exist.
+
+    Args:
+        yt_video_id (str): The YouTube video ID.
+        link (str): The URL of the video.
+        title (str): The title of the video.
+        channel (str): The channel name.
+        saved_on: The timestamp when the video was saved.
+
+    Returns:
+        tuple: A tuple containing (Video instance, created boolean).
+            created is True if a new video was created, False if it already existed.
+    """
+    try:
+        video = Video.get(Video.yt_video_id == yt_video_id)
+        logging.info("Video with yt_video_id '%s' already exists in database.", yt_video_id)
+        return video, False
+    except Video.DoesNotExist:
+        video = Video.create(
+            yt_video_id=yt_video_id,
+            link=link,
+            title=title,
+            channel=channel,
+            saved_on=saved_on,
+        )
+        logging.info("Created new video entry for yt_video_id '%s'.", yt_video_id)
+        return video, True
+
+
 def delete_video(
     video_title: str,
 ):

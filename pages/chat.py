@@ -28,6 +28,7 @@ from modules.persistance import (
     Transcript,
     Video,
     delete_video,
+    get_or_create_video,
     save_library_entry,
 )
 from modules.rag import (
@@ -303,7 +304,7 @@ if provider_ready and chroma_connection_established:
                     )
 
                     # 1. save video in the database
-                    saved_video = Video.create(
+                    saved_video, created = get_or_create_video(
                         yt_video_id=extract_youtube_video_id(url_input),
                         link=url_input,
                         title=video_metadata["name"],
