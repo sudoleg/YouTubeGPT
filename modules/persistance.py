@@ -81,7 +81,9 @@ def get_or_create_video(
     """
     try:
         video = Video.get(Video.yt_video_id == yt_video_id)
-        logging.info("Video with yt_video_id '%s' already exists in database.", yt_video_id)
+        logging.info(
+            "Video with yt_video_id '%s' already exists in database.", yt_video_id
+        )
         return video, False
     except Video.DoesNotExist:
         video = Video.create(
