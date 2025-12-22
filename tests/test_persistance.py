@@ -1,5 +1,3 @@
-import os
-import tempfile
 from datetime import datetime as dt
 
 import pytest
