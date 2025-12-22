@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.2.1](https://github.com/sudoleg/YouTubeGPT/compare/v3.2.0...v3.2.1) (2025-12-22)
+
+
+### Bug Fixes
+
+* remove duplicate name assignment in ChatOllama initialization ([0395161](https://github.com/sudoleg/YouTubeGPT/commit/0395161263a9b0fd977f2487ced5e379294979e6))
+
 ## [3.2.0](https://github.com/sudoleg/YouTubeGPT/compare/v3.1.0...v3.2.0) (2025-12-21)
 
 
