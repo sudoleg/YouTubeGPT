@@ -12,7 +12,13 @@ from modules.helpers import (
     is_api_key_valid,
     is_ollama_available,
 )
-from modules.persistance import SQL_DB, LibraryEntry, Video, save_library_entry
+from modules.persistance import (
+    SQL_DB,
+    LibraryEntry,
+    Video,
+    get_or_create_video,
+    save_library_entry,
+)
 from modules.summary import TranscriptTooLongForModelException, get_transcript_summary
 from modules.ui import (
     GENERAL_ERROR_MESSAGE,
@@ -57,7 +63,7 @@ def display_dialog(message: str):
 def save_summary_to_lib():
     """Wrapper func for saving summaries to the library."""
     try:
-        saved_video = Video.create(
+        saved_video, created = get_or_create_video(
             yt_video_id=extract_youtube_video_id(url_input),
             link=url_input,
             title=vid_metadata["name"],
