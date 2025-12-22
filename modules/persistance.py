@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from typing import Literal
 
 from peewee import (
@@ -62,7 +63,9 @@ class Transcript(BaseModel):
     chroma_collection_name = CharField(null=True)
 
 
-def get_or_create_video(yt_video_id: str, link: str, title: str, channel: str, saved_on):
+def get_or_create_video(
+    yt_video_id: str, link: str, title: str, channel: str, saved_on: datetime
+):
     """Gets an existing video or creates a new one if it doesn't exist.
 
     Args:
