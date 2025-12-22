@@ -28,6 +28,7 @@ from modules.persistance import (
     Transcript,
     Video,
     delete_video,
+    get_or_create_video,
     save_library_entry,
 )
 from modules.rag import (
@@ -184,6 +185,7 @@ if provider_ready and chroma_connection_established:
     # --- initialize models ---
     if provider_is_openai:
         chat_model = ChatOpenAI(
+            name=st.session_state.model,
             api_key=st.session_state.openai_api_key,
             temperature=st.session_state.temperature,
             model=st.session_state.model,
@@ -196,8 +198,8 @@ if provider_ready and chroma_connection_established:
         )
     else:
         chat_model = ChatOllama(
-            model=st.session_state.model,
             name=st.session_state.model,
+            model=st.session_state.model,
             temperature=st.session_state.temperature,
             top_p=st.session_state.top_p,
         )
@@ -303,7 +305,7 @@ if provider_ready and chroma_connection_established:
                     )
 
                     # 1. save video in the database
-                    saved_video = Video.create(
+                    saved_video, created = get_or_create_video(
                         yt_video_id=extract_youtube_video_id(url_input),
                         link=url_input,
                         title=video_metadata["name"],
@@ -314,15 +316,15 @@ if provider_ready and chroma_connection_established:
                     original_transcript = fetch_youtube_transcript(url_input)
 
                     # 3. save transcript, or more precisely, information about it, in the database
-                    model_for_count = (
-                        chat_model.model_name
-                        if provider_is_openai
-                        else st.session_state.model
-                    )
                     saved_transcript = Transcript.create(
                         video=saved_video,
                         original_token_num=num_tokens_from_string(
-                            string=original_transcript, model=model_for_count
+                            string=original_transcript,
+                            model=(
+                                chat_model.model_name
+                                if provider_is_openai
+                                else st.session_state.model
+                            ),
                         ),
                     )
 
