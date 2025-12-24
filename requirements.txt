@@ -4,7 +4,7 @@ langchain-core==1.2.5
 langchain-ollama==1.0.1
 langchain-text-splitters==1.0.0
 langchain-openai==1.1.6
-langchain-chroma==1.0.0
+langchain-chroma==1.1.0
 youtube-transcript-api==1.2.3
 streamlit==1.51.0
 watchdog==6.0.0
