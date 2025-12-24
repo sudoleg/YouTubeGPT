@@ -104,7 +104,9 @@ def get_transcript_summary(transcript_text: str, llm: BaseChatModel, **kwargs):
     ]
 
     logging.info(
-        "Generating summary using model: %s. Total tokens: %d", llm.name, total_tokens
+        "Generating summary using model: %s. Total input tokens: %d",
+        llm.name,
+        total_tokens,
     )
     response = llm.invoke(messages)
     return response.content
