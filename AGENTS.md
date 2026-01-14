@@ -15,7 +15,7 @@ Main entrypoint is `main.py`. Streamlit pages live in `pages/`. Shared logic is 
 ```bash
 .
 ├── main.py                  # Streamlit entrypoint and app shell
-├── pages/                   # Streamlit pages (summary, chat, library)
+├── pages/                   # Streamlit pages
 │   ├── chat.py              # RAG-based Q&A UI flow
 │   ├── library.py           # Saved summaries/answers UI
 │   └── summary.py           # Summary UI flow
@@ -47,6 +47,7 @@ Main entrypoint is `main.py`. Streamlit pages live in `pages/`. Shared logic is 
 - Format with Black.
 - Use snake_case for variables/functions, PascalCase for classes.
 - Provide Google-style docstrings for all classes and functions.
+- Assume features will evolve over time; write code that is easy to extend and modify.
 
 ## Testing
 
