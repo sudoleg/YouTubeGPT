@@ -25,3 +25,4 @@ Dockerfile
 .github/
 scripts/
 .env
+AGENTS.md
