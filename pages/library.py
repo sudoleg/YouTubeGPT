@@ -125,6 +125,23 @@ with tab_answers:
             file_name=f"Answers from {selected_video_title}",
             label=f"Download all answers from '{selected_video_title}'",
         )
+        
+        # Check if there's a summary for the selected video
+        saved_summary = (
+            LibraryEntry.select()
+            .join(Video)
+            .where(
+                LibraryEntry.entry_type == "S",
+                Video.title == st.session_state.selected_video,
+            )
+            .first()
+        )
+        
+        if saved_summary:
+            st.subheader("Video Summary")
+            with st.expander("Show Summary"):
+                st.write(saved_summary.text)
+            st.divider()
     else:
         saved_lib_entries_answers = (
             LibraryEntry.select().where(LibraryEntry.entry_type == "A").execute()
