@@ -403,11 +403,11 @@ if provider_ready and chroma_connection_established:
                 )
                 .first()
             )
-            
+
             if saved_summary:
                 with st.expander("Show Summary"):
                     st.write(saved_summary.text)
-        
+
         if collection and collection.count() > 0:
             collection_embeddings_model = collection.metadata.get("embeddings_model")
             collection_embeddings_provider = collection.metadata.get(

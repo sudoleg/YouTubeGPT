@@ -4,7 +4,20 @@ from modules.youtube import get_video_metadata
 from pytubefix import YouTube
 
 
-model = whisper.load_model("base")
+# Lazy load whisper model to avoid network issues at import time
+# Note: This uses a simple global variable pattern which is safe for
+# single-threaded Streamlit apps but not thread-safe for concurrent use
+model = None
+
+def get_whisper_model():
+    """Lazy-load the Whisper model on first use.
+    
+    Returns the singleton Whisper model instance.
+    """
+    global model
+    if model is None:
+        model = whisper.load_model("base")
+    return model
 
 
 def download_mp3(video_id: str, download_folder_path: str):
@@ -24,5 +37,5 @@ def generate_transcript(file_path: str):
 
     Returns the transcription as plain text.
     """
-    transcription = model.transcribe(file_path)
+    transcription = get_whisper_model().transcribe(file_path)
     return transcription["text"]
