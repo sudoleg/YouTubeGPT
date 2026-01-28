@@ -2,8 +2,14 @@
 
 ## Purpose
 
-This repository is a Streamlit app that uses LLMs and RAG to summarize and chat with
+This repository is a Streamlit app that uses LLMs and Retrieval Augmented Generation (RAG) to summarize and chat with
 YouTube videos, plus a Library page to save outputs.
+
+## Tech Stack
+
+- Languages: Python
+- Frameworks / libraries: Streamlit, LangChain, YouTube Transcript API, peewee
+- Databases: ChromaDB (vector store)
 
 ## How to Navigate
 
@@ -11,6 +17,8 @@ Main entrypoint is `main.py`. Streamlit pages live in `pages/`. Shared logic is 
 `modules/`. Prompts are in `prompts/`. Tests are in `tests/`.
 
 ## Repository Structure
+
+High-level architecture: The app consists of three main components: Summary, Chat and Library. Summary generates summaries of YouTube videos, Chat leverages RAG to answer user questions based on video content, and Library manages saved summaries and answers from Q&A sessions.
 
 ```bash
 .
@@ -44,6 +52,8 @@ Main entrypoint is `main.py`. Streamlit pages live in `pages/`. Shared logic is 
 ## Coding Standards
 
 - Follow SOLID principles.
+- Code should be: simple, readable and maintainable.
+- Commit messages: follow conventional commits.
 - Format with Black.
 - Use snake_case for variables/functions, PascalCase for classes.
 - Provide Google-style docstrings for all classes and functions.
