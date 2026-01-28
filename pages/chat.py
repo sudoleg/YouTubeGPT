@@ -393,6 +393,21 @@ if provider_ready and chroma_connection_established:
                     )
 
     with col2:
+        # Check if there's a summary for the selected video
+        if saved_video:
+            saved_summary = (
+                LibraryEntry.select()
+                .where(
+                    LibraryEntry.entry_type == "S",
+                    LibraryEntry.video == saved_video,
+                )
+                .first()
+            )
+
+            if saved_summary:
+                with st.expander("Show Summary"):
+                    st.write(saved_summary.text)
+
         if collection and collection.count() > 0:
             collection_embeddings_model = collection.metadata.get("embeddings_model")
             collection_embeddings_provider = collection.metadata.get(
