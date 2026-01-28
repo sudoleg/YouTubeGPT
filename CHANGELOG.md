@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.0](https://github.com/sudoleg/YouTubeGPT/compare/v3.2.1...v3.3.0) (2026-01-28)
+
+
+### Features
+
+* gpt-5.2, fixes [#481](https://github.com/sudoleg/YouTubeGPT/issues/481) ([e84a20d](https://github.com/sudoleg/YouTubeGPT/commit/e84a20d926df93d87a9bd7201e3bc8cd20767ac4))
+
 ## [3.2.1](https://github.com/sudoleg/YouTubeGPT/compare/v3.2.0...v3.2.1) (2025-12-22)
 
 
