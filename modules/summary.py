@@ -44,6 +44,24 @@ class TranscriptTooLongForModelException(Exception):
         logging.error("Transcript too long for %s.", self.model_name, exc_info=True)
 
 
+def get_max_context_length(llm: BaseChatModel) -> int:
+    """
+    Returns the maximum context length for the provided model.
+
+    Args:
+        llm (BaseChatModel): The language model instance.
+
+    Returns:
+        int: The maximum context window size in tokens.
+    """
+    if llm.name not in OPENAI_CONTEXT_WINDOWS.keys():
+        model_details = ollama.show(model=llm.name)
+        model_info = model_details.get("modelinfo", {})
+        general_arch = model_info.get("general.architecture", "")
+        return model_info.get(f"{general_arch}.context_length", 4096)
+    return OPENAI_CONTEXT_WINDOWS[llm.name]["total"]
+
+
 def get_transcript_summary(transcript_text: str, llm: BaseChatModel, **kwargs):
     """
     Generates a summary from a video transcript using a language model.
@@ -76,13 +94,7 @@ def get_transcript_summary(transcript_text: str, llm: BaseChatModel, **kwargs):
     else:
         user_prompt = USER_PROMPT_TEMPLATE.format(transcript_text=transcript_text)
 
-    if llm.name not in OPENAI_CONTEXT_WINDOWS.keys():
-        model_details = ollama.show(model=llm.name)
-        model_info = model_details.get("modelinfo", {})
-        general_arch = model_info.get("general.architecture", "")
-        max_context_length = model_info.get(f"{general_arch}.context_length", 4096)
-    else:
-        max_context_length = OPENAI_CONTEXT_WINDOWS[llm.name]["total"]
+    max_context_length = get_max_context_length(llm)
 
     # if the number of tokens in the transcript (plus the number of tokens in the prompt) exceed the model's context window, an exception is raised
     total_tokens = num_tokens_from_string(

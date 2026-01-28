@@ -46,6 +46,13 @@ SQL_DB.create_tables([Video, LibraryEntry], safe=True)
 st.set_page_config("Summaries", layout="wide", initial_sidebar_state="auto")
 if "llm_provider" not in st.session_state:
     st.session_state.llm_provider = "OpenAI"
+if "summary" not in st.session_state:
+    st.session_state.summary = ""
+if "video_metadata" not in st.session_state:
+    st.session_state.video_metadata = None
+if "video_url" not in st.session_state:
+    st.session_state.video_url = ""
+
 display_api_key_warning()
 
 # --- part of the sidebar which doesn't require an api key ---
@@ -57,23 +64,40 @@ display_link_to_repo("summary")
 
 @st.dialog(title="Transcript too long", width="large")
 def display_dialog(message: str):
+    """
+    Displays a warning dialog with the provided message.
+
+    Args:
+        message (str): The message to display in the dialog.
+    """
     st.warning(message)
 
 
 def save_summary_to_lib():
-    """Wrapper func for saving summaries to the library."""
+    """
+    Wrapper func for saving summaries to the library.
+
+    Returns:
+        None
+    """
+    summary_text = st.session_state.get("summary", "")
+    summary_url = st.session_state.get("video_url", "")
+    summary_metadata = st.session_state.get("video_metadata") or {}
+    if not summary_text or not summary_url or not summary_metadata:
+        st.error("No summary is ready to save yet.")
+        return
     try:
         saved_video, created = get_or_create_video(
-            yt_video_id=extract_youtube_video_id(url_input),
-            link=url_input,
-            title=vid_metadata["name"],
-            channel=vid_metadata["channel"],
+            yt_video_id=extract_youtube_video_id(url=summary_url),
+            link=summary_url,
+            title=summary_metadata.get("name", ""),
+            channel=summary_metadata.get("channel", ""),
             saved_on=dt.now(),
         )
         save_library_entry(
             entry_type="S",
             question_text=None,
-            response_text=st.session_state.summary,
+            response_text=summary_text,
             video=saved_video,
         )
     except Exception as e:
@@ -112,7 +136,7 @@ if provider_ready:
         summarize_button = st.button("Summarize", key="summarize_button")
         if url_input != "":
             try:
-                vid_metadata = get_video_metadata(url_input)
+                video_metadata = get_video_metadata(url_input)
             except InvalidUrlException as e:
                 st.error(e.message)
                 e.log_error()
@@ -120,9 +144,10 @@ if provider_ready:
                 logging.error("An unexpected error occurred %s", str(e))
                 st.error(GENERAL_ERROR_MESSAGE)
             else:
-                if vid_metadata:
+                if video_metadata:
+                    st.session_state.video_metadata = video_metadata
                     st.subheader(
-                        f"'{vid_metadata['name']}' from {vid_metadata['channel']}.",
+                        f"'{video_metadata['name']}' from {video_metadata['channel']}.",
                         divider="gray",
                     )
                 st.video(url_input)
@@ -158,7 +183,9 @@ if provider_ready:
                         resp = get_transcript_summary(
                             transcript_text=transcript, llm=llm
                         )
-                    st.session_state.summary = resp
+                st.session_state.summary = resp
+                st.session_state.video_metadata = video_metadata
+                st.session_state.video_url = url_input
                 st.markdown(st.session_state.summary)
 
                 with st.container(horizontal=True):
@@ -170,7 +197,7 @@ if provider_ready:
                         help="Save summary to library.",
                     )
                     # button for saving summary to file
-                    display_download_button(data=resp, file_name=vid_metadata["name"])
+                    display_download_button(data=resp, file_name=video_metadata["name"])
             except InvalidUrlException as e:
                 st.error(e.message)
                 e.log_error()
