@@ -64,7 +64,7 @@ High-level architecture: The app consists of three main components: Summary, Cha
 - Use these types: feat, fix, docs, style, refactor, perf, test, chore, ci.
 - Use imperative mood: "add" not "added".
 - Keep the subject <= 72 characters.
-- Include scope when clear (e.g., api, ui, auth).
+- Include scope when clear (e.g., chat, summary, library, rag etc.).
 - If multiple logical changes, summarize the most important one.
 
 ## Testing
