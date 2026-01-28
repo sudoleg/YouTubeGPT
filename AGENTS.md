@@ -53,11 +53,19 @@ High-level architecture: The app consists of three main components: Summary, Cha
 
 - Follow SOLID principles.
 - Code should be: simple, readable and maintainable.
-- Commit messages: follow conventional commits.
 - Format with Black.
 - Use snake_case for variables/functions, PascalCase for classes.
 - Provide Google-style docstrings for all classes and functions.
 - Assume features will evolve over time; write code that is easy to extend and modify.
+
+## Commit messages
+
+- Use the Conventional Commits format: type(scope): description.
+- Use these types: feat, fix, docs, style, refactor, perf, test, chore, ci.
+- Use imperative mood: "add" not "added".
+- Keep the subject <= 72 characters.
+- Include scope when clear (e.g., api, ui, auth).
+- If multiple logical changes, summarize the most important one.
 
 ## Testing
 
