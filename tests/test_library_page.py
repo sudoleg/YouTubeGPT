@@ -108,3 +108,64 @@ def test_no_summary_for_video_in_answers_tab(setup_test_db):
 
     # Verify no summary was found
     assert saved_summary is None
+
+
+def test_get_summary_for_video_in_chat_page(setup_test_db):
+    """Test that we can retrieve a summary for a selected video in chat page."""
+    # Create a video
+    video, _ = get_or_create_video(
+        yt_video_id="test_video_789",
+        link="https://www.youtube.com/watch?v=test_video_789",
+        title="Chat Test Video",
+        channel="Test Channel",
+        saved_on=dt.now(),
+    )
+
+    # Save a summary for the video
+    save_library_entry(
+        entry_type="S",
+        question_text=None,
+        response_text="This is a summary for the chat page test.",
+        video=video,
+    )
+
+    # Query for the summary (simulating what happens in the chat page)
+    saved_summary = (
+        LibraryEntry.select()
+        .where(
+            LibraryEntry.entry_type == "S",
+            LibraryEntry.video == video,
+        )
+        .first()
+    )
+
+    # Verify the summary was found
+    assert saved_summary is not None
+    assert saved_summary.text == "This is a summary for the chat page test."
+    assert saved_summary.entry_type == "S"
+    assert saved_summary.video == video
+
+
+def test_no_summary_for_video_in_chat_page(setup_test_db):
+    """Test that when no summary exists in chat page, the query returns None."""
+    # Create a video
+    video, _ = get_or_create_video(
+        yt_video_id="test_video_999",
+        link="https://www.youtube.com/watch?v=test_video_999",
+        title="Chat Video Without Summary",
+        channel="Test Channel",
+        saved_on=dt.now(),
+    )
+
+    # Query for the summary (simulating what happens in the chat page)
+    saved_summary = (
+        LibraryEntry.select()
+        .where(
+            LibraryEntry.entry_type == "S",
+            LibraryEntry.video == video,
+        )
+        .first()
+    )
+
+    # Verify no summary was found
+    assert saved_summary is None
