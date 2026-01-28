@@ -405,8 +405,8 @@ if provider_ready and chroma_connection_established:
             )
 
             if saved_summary:
-                with st.expander("Show Summary"):
-                    st.write(saved_summary.text)
+                with st.expander("Video Summary"):
+                    st.container(height=512, border=False).write(saved_summary.text)
 
         if collection and collection.count() > 0:
             collection_embeddings_model = collection.metadata.get("embeddings_model")
