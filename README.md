@@ -78,19 +78,19 @@ This is a small side-project and it's easy to get started! If you want to contri
 
 ### Development in virtual environment
 
+If you don't have [`uv`](https://github.com/astral-sh/uv) installed, please follow the installation instructions in the official documentation before running the commands below.
 ```bash
-# create and activate a virtual environment
-python -m venv .venv
-source .venv/bin/activate
-# install requirements
-pip install -r requirements.txt
+# create a virtual environment and install dependencies
+uv sync
 # you'll need an API key
 export OPENAI_API_KEY=<your-openai-api-key>
 # run chromadb (necessary for chat)
 docker-compose up -d chromadb
 # run app
-streamlit run main.py
+uv run streamlit run main.py
 ```
+
+Note: `pyproject.toml` and `uv.lock` are the source of truth for dependencies. `requirements.txt` is kept for legacy pip users.
 
 The app will be accessible in the browser under <http://localhost:8501> and the ChromaDB API under <http://localhost:8000/docs>.
 
