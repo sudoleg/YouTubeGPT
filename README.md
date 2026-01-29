@@ -78,6 +78,7 @@ This is a small side-project and it's easy to get started! If you want to contri
 
 ### Development in virtual environment
 
+If you don't have [`uv`](https://github.com/astral-sh/uv) installed, please follow the installation instructions in the official documentation before running the commands below.
 ```bash
 # create a virtual environment and install dependencies
 uv sync
