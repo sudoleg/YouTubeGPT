@@ -4,13 +4,16 @@ FROM python:3.13.11-slim
 WORKDIR /app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y ffmpeg
+RUN apt-get update && apt-get install -y ffmpeg curl && rm -rf /var/lib/apt/lists/*
 
-# Copy just the requirements.txt first to leverage Docker cache
-COPY requirements.txt .
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:0.9.27 /uv /uvx /bin/
+
+# Copy pyproject and lock file to leverage Docker cache
+COPY pyproject.toml uv.lock ./
 
 # Install Python dependencies
-RUN pip3 install --upgrade pip && pip3 install -r requirements.txt
+RUN uv sync --frozen --no-dev --no-install-workspace
 
 # Copy application's code
 COPY . /app/
@@ -28,4 +31,4 @@ EXPOSE 8501
 HEALTHCHECK CMD curl --fail http://localhost:8501/_stcore/health
 
 # Set the entrypoint
-ENTRYPOINT ["streamlit", "run", "main.py", "--server.address=0.0.0.0"]
+ENTRYPOINT ["uv", "run", "streamlit", "run", "main.py", "--server.address=0.0.0.0"]
