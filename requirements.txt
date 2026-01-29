@@ -9,7 +9,7 @@ youtube-transcript-api==1.2.4
 streamlit==1.52.2
 watchdog==6.0.0
 pytest==9.0.2
-peewee==3.18.3
+peewee==3.19.0
 python-dotenv==1.2.1
 chromadb==1.4.1
 randomname==0.2.1
