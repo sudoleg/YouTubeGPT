@@ -73,6 +73,6 @@ High-level architecture: The app consists of three main components: Summary, Cha
 
 ## Run (local)
 
-- `python -m venv .venv` and `pip install -r requirements.txt`
+- `uv sync`
 - `docker-compose up -d chromadb`
-- `streamlit run main.py`
+- `uv run streamlit run main.py`
