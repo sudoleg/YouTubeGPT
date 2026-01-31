@@ -61,11 +61,12 @@ The app will be accessible in the browser under <http://localhost:8501>.
 
 > :information_source: For the best user-experience, you need to be in `Tier 1` [usage tier](https://platform.openai.com/docs/guides/rate-limits/usage-tiers), which requires a one-time payment of 5$. However it's worth it, since then, you'll have access to all models and higher rate limits.
 
-## Configuration :gear:
+<details>
+<summary><h2>Configuration :gear:</h2></summary>
 
 ### Environment Variables (Optional)
 
-You can customize the default settings using environment variables. These are optional and will override the defaults in `config.json`:
+You can customize the default settings using environment variables. These are optional and will use built-in defaults if not set:
 
 | Environment Variable | Description | Default | Example |
 |---------------------|-------------|---------|---------|
@@ -98,6 +99,8 @@ docker-compose up -d
 ```
 
 > **Note**: These settings apply at startup and set the initial values in the UI. Users can still change these settings in the sidebar during their session.
+
+</details>
 
 ## Contributing & Support :handshake:
 

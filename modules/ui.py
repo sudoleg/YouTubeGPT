@@ -1,4 +1,4 @@
-from os import getenv
+import os
 
 import streamlit as st
 
@@ -36,7 +36,7 @@ def set_api_key_in_session_state():
     """If the env-var OPENAI_API_KEY is set, it's value is assigned to openai_api_key property in streamlit's session state.
     Otherwise an input field for the API key is diplayed.
     """
-    OPENAI_API_KEY = getenv("OPENAI_API_KEY")
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     if not OPENAI_API_KEY:
         st.sidebar.text_input(
             "Enter your OpenAI API key",
@@ -48,9 +48,9 @@ def set_api_key_in_session_state():
 
 
 def is_temperature_and_top_p_altered() -> bool:
-    if st.session_state.temperature != get_default_config_value(
-        "temperature"
-    ) and st.session_state.top_p != get_default_config_value("top_p"):
+    default_temperature = float(os.getenv("YTGPT_TEMPERATURE", "1.0"))
+    default_top_p = float(os.getenv("YTGPT_TOP_P", "1.0"))
+    if st.session_state.temperature != default_temperature and st.session_state.top_p != default_top_p:
         return True
     return False
 
@@ -63,7 +63,7 @@ def display_model_settings_sidebar():
     Thus the selected model can be accessed via st.session_state.model.
     """
     if "llm_provider" not in st.session_state:
-        st.session_state.llm_provider = get_default_config_value("llm_provider")
+        st.session_state.llm_provider = os.getenv("YTGPT_LLM_PROVIDER", "OpenAI")
     if "model" not in st.session_state:
         st.session_state.model = get_default_config_value("default_model.gpt")
 
@@ -113,7 +113,7 @@ def display_model_settings_sidebar():
             max_value=2.0,
             step=0.1,
             key="temperature",
-            value=get_default_config_value("temperature"),
+            value=float(os.getenv("YTGPT_TEMPERATURE", "1.0")),
             help=get_default_config_value("help_texts.temperature"),
         )
         st.slider(
@@ -122,7 +122,7 @@ def display_model_settings_sidebar():
             max_value=1.0,
             step=0.1,
             key="top_p",
-            value=get_default_config_value("top_p"),
+            value=float(os.getenv("YTGPT_TOP_P", "1.0")),
             help=get_default_config_value("help_texts.top_p"),
         )
         if is_temperature_and_top_p_altered():

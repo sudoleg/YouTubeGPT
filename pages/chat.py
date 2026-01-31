@@ -1,4 +1,5 @@
 import logging
+import os
 from datetime import datetime as dt
 
 import chromadb
@@ -63,7 +64,7 @@ DEFAULT_OLLAMA_EMBEDDING_MODEL = "nomic-embed-text:latest"
 
 st.set_page_config("Chat", layout="wide", initial_sidebar_state="auto")
 if "llm_provider" not in st.session_state:
-    st.session_state.llm_provider = get_default_config_value("llm_provider")
+    st.session_state.llm_provider = os.getenv("YTGPT_LLM_PROVIDER", "OpenAI")
 if "embeddings_model" not in st.session_state:
     st.session_state.embeddings_model = get_default_config_value(
         "default_model.embeddings"

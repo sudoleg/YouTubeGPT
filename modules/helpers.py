@@ -107,14 +107,7 @@ def get_default_config_value(
     config_file_path: str = "./config.json",
 ) -> str:
     """
-    Retrieves a configuration value from environment variables or a JSON file using a specified key path.
-    
-    Environment variables take precedence over config.json values. The following mappings are supported:
-    - YTGPT_LLM_PROVIDER: maps to llm_provider (OpenAI or Ollama)
-    - YTGPT_DEFAULT_GPT_MODEL: maps to default_model.gpt
-    - YTGPT_DEFAULT_EMBEDDINGS_MODEL: maps to default_model.embeddings
-    - YTGPT_TEMPERATURE: maps to temperature (float)
-    - YTGPT_TOP_P: maps to top_p (float)
+    Retrieves a configuration value from a JSON file using a specified key path.
 
     Args:
         config_file_path (str): A string representing the relative path to the JSON config file.
@@ -124,40 +117,12 @@ def get_default_config_value(
 
 
     Returns:
-        The value corresponding to the key path, first checking environment variables, 
-        then falling back to the configuration file. If the key path does not exist,
+        The value corresponding to the key path within the configuration file. If the key path does not exist,
         a KeyError is raised.
 
     Raises:
         KeyError: If the specified key path is not found in the configuration.
     """
-    # Define mappings from key paths to environment variable names
-    env_var_mapping = {
-        "llm_provider": "YTGPT_LLM_PROVIDER",
-        "default_model.gpt": "YTGPT_DEFAULT_GPT_MODEL",
-        "default_model.embeddings": "YTGPT_DEFAULT_EMBEDDINGS_MODEL",
-        "temperature": "YTGPT_TEMPERATURE",
-        "top_p": "YTGPT_TOP_P",
-    }
-    
-    # Check if there's an environment variable for this key path
-    if key_path in env_var_mapping:
-        env_var = env_var_mapping[key_path]
-        env_value = os.getenv(env_var)
-        if env_value is not None:
-            # Convert to appropriate type
-            if key_path in ["temperature", "top_p"]:
-                try:
-                    return float(env_value)
-                except ValueError:
-                    logging.warning(
-                        "Invalid value for %s: %s. Using config.json default.",
-                        env_var,
-                        env_value,
-                    )
-            else:
-                return env_value
-    
     with open(config_file_path, "r", encoding="utf-8") as config_file:
         config = json.load(config_file)
 

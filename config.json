@@ -5,7 +5,6 @@
         "summary": "https://github.com/sudoleg/ytai/blob/main/pages/summary.py",
         "chat": "https://github.com/sudoleg/ytai/blob/main/pages/chat.py"
     },
-    "llm_provider": "OpenAI",
     "default_model": {
         "embeddings": "text-embedding-3-small",
         "gpt": "gpt-4.1-nano"
@@ -32,8 +31,6 @@
             "gpt-4o"
         ]
     },
-    "temperature": 1.0,
-    "top_p": 1.0,
     "help_texts": {
         "youtube_url": "Copy directly from the adress bar or use the 'Share' button.",
         "custom_prompt": "You can ask a specific question, require a more detailed summary, create a plan, specify the format etc.",
