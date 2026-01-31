@@ -61,6 +61,44 @@ The app will be accessible in the browser under <http://localhost:8501>.
 
 > :information_source: For the best user-experience, you need to be in `Tier 1` [usage tier](https://platform.openai.com/docs/guides/rate-limits/usage-tiers), which requires a one-time payment of 5$. However it's worth it, since then, you'll have access to all models and higher rate limits.
 
+## Configuration :gear:
+
+### Environment Variables (Optional)
+
+You can customize the default settings using environment variables. These are optional and will override the defaults in `config.json`:
+
+| Environment Variable | Description | Default | Example |
+|---------------------|-------------|---------|---------|
+| `YTGPT_LLM_PROVIDER` | Default LLM provider | `OpenAI` | `OpenAI` or `Ollama` |
+| `YTGPT_DEFAULT_GPT_MODEL` | Default language model | `gpt-4.1-nano` | `gpt-4o`, `llama3` |
+| `YTGPT_DEFAULT_EMBEDDINGS_MODEL` | Default embeddings model | `text-embedding-3-small` | `text-embedding-3-large`, `nomic-embed-text:latest` |
+| `YTGPT_TEMPERATURE` | Model temperature (0.0-2.0) | `1.0` | `0.7` |
+| `YTGPT_TOP_P` | Model top-p (0.0-1.0) | `1.0` | `0.9` |
+
+**Example usage:**
+
+```bash
+# Set environment variables
+export YTGPT_LLM_PROVIDER=Ollama
+export YTGPT_DEFAULT_GPT_MODEL=llama3
+export YTGPT_TEMPERATURE=0.7
+export YTGPT_TOP_P=0.9
+
+# Run the app
+streamlit run main.py
+```
+
+Or with Docker:
+
+```bash
+# Add to docker-compose.yml or set before running
+export YTGPT_LLM_PROVIDER=OpenAI
+export YTGPT_DEFAULT_GPT_MODEL=gpt-4o
+docker-compose up -d
+```
+
+> **Note**: These settings apply at startup and set the initial values in the UI. Users can still change these settings in the sidebar during their session.
+
 ## Contributing & Support :handshake:
 
 I’m working on adding more features and am open to feedback and contributions. Don't hesitate to create an issue or a pull request. Also, if you are enjoying the app or find it useful, please consider giving the repository a star :star:

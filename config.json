@@ -5,6 +5,7 @@
         "summary": "https://github.com/sudoleg/ytai/blob/main/pages/summary.py",
         "chat": "https://github.com/sudoleg/ytai/blob/main/pages/chat.py"
     },
+    "llm_provider": "OpenAI",
     "default_model": {
         "embeddings": "text-embedding-3-small",
         "gpt": "gpt-4.1-nano"

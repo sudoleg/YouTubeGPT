@@ -45,7 +45,7 @@ SQL_DB.create_tables([Video, LibraryEntry], safe=True)
 
 st.set_page_config("Summaries", layout="wide", initial_sidebar_state="auto")
 if "llm_provider" not in st.session_state:
-    st.session_state.llm_provider = "OpenAI"
+    st.session_state.llm_provider = get_default_config_value("llm_provider")
 if "summary" not in st.session_state:
     st.session_state.summary = ""
 if "video_metadata" not in st.session_state:

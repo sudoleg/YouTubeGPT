@@ -63,7 +63,7 @@ def display_model_settings_sidebar():
     Thus the selected model can be accessed via st.session_state.model.
     """
     if "llm_provider" not in st.session_state:
-        st.session_state.llm_provider = "OpenAI"
+        st.session_state.llm_provider = get_default_config_value("llm_provider")
     if "model" not in st.session_state:
         st.session_state.model = get_default_config_value("default_model.gpt")
 
