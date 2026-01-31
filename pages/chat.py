@@ -13,7 +13,7 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 
 from modules.helpers import (
     get_available_models,
-    get_default_config_value,
+    get_config_value,
     get_ollama_models,
     is_api_key_set,
     is_api_key_valid,
@@ -66,9 +66,7 @@ st.set_page_config("Chat", layout="wide", initial_sidebar_state="auto")
 if "llm_provider" not in st.session_state:
     st.session_state.llm_provider = os.getenv("YTGPT_LLM_PROVIDER", "OpenAI")
 if "embeddings_model" not in st.session_state:
-    st.session_state.embeddings_model = get_default_config_value(
-        "default_model.embeddings"
-    )
+    st.session_state.embeddings_model = get_config_value("default_model.embeddings")
 display_api_key_warning()
 
 # --- part of the sidebar which doesn't require an api key ---
@@ -168,7 +166,7 @@ if provider_ready and chroma_connection_established:
             else [st.session_state.get("embeddings_model", "")]
         ),
         key="embeddings_model",
-        help=get_default_config_value(key_path="help_texts.embeddings"),
+        help=get_config_value(key_path="help_texts.embeddings"),
         disabled=not embedding_options,
     )
     embeddings_available = bool(embedding_options)
@@ -227,7 +225,7 @@ if provider_ready and chroma_connection_established:
             ],
             index=None,
             key="selected_video",
-            help=get_default_config_value("help_texts.selected_video"),
+            help=get_config_value("help_texts.selected_video"),
         )
         url_input = display_video_url_input(
             label="Or enter the URL of a new video:", disabled=is_video_selected()
@@ -280,13 +278,13 @@ if provider_ready and chroma_connection_established:
                 key="chunk_size",
                 options=[128, 256, 512, 1024],
                 index=2,
-                help=get_default_config_value("help_texts.chunk_size"),
+                help=get_config_value("help_texts.chunk_size"),
                 disabled=is_video_selected(),
             )
             transcription_checkbox = st.checkbox(
                 label="Enable advanced transcription",
                 key="preprocessing_checkbox",
-                help=get_default_config_value("help_texts.preprocess_checkbox"),
+                help=get_config_value("help_texts.preprocess_checkbox"),
                 disabled=is_video_selected(),
             )
 

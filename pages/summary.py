@@ -8,7 +8,7 @@ from langchain_openai import ChatOpenAI
 
 from modules.helpers import (
     extract_youtube_video_id,
-    get_default_config_value,
+    get_config_value,
     is_api_key_set,
     is_api_key_valid,
     is_ollama_available,
@@ -132,7 +132,7 @@ if provider_ready:
         custom_prompt = st.text_area(
             "Enter a custom prompt if you want:",
             key="custom_prompt_input",
-            help=get_default_config_value("help_texts.custom_prompt"),
+            help=get_config_value("help_texts.custom_prompt"),
         )
         summarize_button = st.button("Summarize", key="summarize_button")
         if url_input != "":
