@@ -5,11 +5,10 @@ from unittest.mock import mock_open, patch
 import pytest
 
 
-def test_provider_env_var_default():
+def test_provider_env_var_default(monkeypatch):
     """Test that YTGPT_LLM_PROVIDER defaults to OpenAI."""
     # Ensure env var is not set
-    if "YTGPT_LLM_PROVIDER" in os.environ:
-        del os.environ["YTGPT_LLM_PROVIDER"]
+    monkeypatch.delenv("YTGPT_LLM_PROVIDER", raising=False)
     
     result = os.getenv("YTGPT_LLM_PROVIDER", "OpenAI")
     assert result == "OpenAI"
@@ -22,10 +21,9 @@ def test_provider_env_var_override(monkeypatch):
     assert result == "Ollama"
 
 
-def test_temperature_env_var_default():
+def test_temperature_env_var_default(monkeypatch):
     """Test that YTGPT_TEMPERATURE defaults to 1.0."""
-    if "YTGPT_TEMPERATURE" in os.environ:
-        del os.environ["YTGPT_TEMPERATURE"]
+    monkeypatch.delenv("YTGPT_TEMPERATURE", raising=False)
     
     result = float(os.getenv("YTGPT_TEMPERATURE", "1.0"))
     assert result == 1.0
@@ -40,10 +38,9 @@ def test_temperature_env_var_override(monkeypatch):
     assert isinstance(result, float)
 
 
-def test_top_p_env_var_default():
+def test_top_p_env_var_default(monkeypatch):
     """Test that YTGPT_TOP_P defaults to 1.0."""
-    if "YTGPT_TOP_P" in os.environ:
-        del os.environ["YTGPT_TOP_P"]
+    monkeypatch.delenv("YTGPT_TOP_P", raising=False)
     
     result = float(os.getenv("YTGPT_TOP_P", "1.0"))
     assert result == 1.0
