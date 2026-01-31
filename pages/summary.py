@@ -1,4 +1,5 @@
 import logging
+import os
 from datetime import datetime as dt
 
 import streamlit as st
@@ -7,7 +8,7 @@ from langchain_openai import ChatOpenAI
 
 from modules.helpers import (
     extract_youtube_video_id,
-    get_default_config_value,
+    get_config_value,
     is_api_key_set,
     is_api_key_valid,
     is_ollama_available,
@@ -45,7 +46,7 @@ SQL_DB.create_tables([Video, LibraryEntry], safe=True)
 
 st.set_page_config("Summaries", layout="wide", initial_sidebar_state="auto")
 if "llm_provider" not in st.session_state:
-    st.session_state.llm_provider = "OpenAI"
+    st.session_state.llm_provider = os.getenv("YTGPT_LLM_PROVIDER", "OpenAI")
 if "summary" not in st.session_state:
     st.session_state.summary = ""
 if "video_metadata" not in st.session_state:
@@ -131,7 +132,7 @@ if provider_ready:
         custom_prompt = st.text_area(
             "Enter a custom prompt if you want:",
             key="custom_prompt_input",
-            help=get_default_config_value("help_texts.custom_prompt"),
+            help=get_config_value("help_texts.custom_prompt"),
         )
         summarize_button = st.button("Summarize", key="summarize_button")
         if url_input != "":

@@ -1,10 +1,10 @@
-from os import getenv
+import os
 
 import streamlit as st
 
 from modules.helpers import (
     get_available_models,
-    get_default_config_value,
+    get_config_value,
     get_ollama_models,
     is_api_key_set,
     is_api_key_valid,
@@ -36,7 +36,7 @@ def set_api_key_in_session_state():
     """If the env-var OPENAI_API_KEY is set, it's value is assigned to openai_api_key property in streamlit's session state.
     Otherwise an input field for the API key is diplayed.
     """
-    OPENAI_API_KEY = getenv("OPENAI_API_KEY")
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     if not OPENAI_API_KEY:
         st.sidebar.text_input(
             "Enter your OpenAI API key",
@@ -48,9 +48,12 @@ def set_api_key_in_session_state():
 
 
 def is_temperature_and_top_p_altered() -> bool:
-    if st.session_state.temperature != get_default_config_value(
-        "temperature"
-    ) and st.session_state.top_p != get_default_config_value("top_p"):
+    default_temperature = float(os.getenv("YTGPT_TEMPERATURE", "1.0"))
+    default_top_p = float(os.getenv("YTGPT_TOP_P", "1.0"))
+    if (
+        st.session_state.temperature != default_temperature
+        and st.session_state.top_p != default_top_p
+    ):
         return True
     return False
 
@@ -63,9 +66,9 @@ def display_model_settings_sidebar():
     Thus the selected model can be accessed via st.session_state.model.
     """
     if "llm_provider" not in st.session_state:
-        st.session_state.llm_provider = "OpenAI"
+        st.session_state.llm_provider = os.getenv("YTGPT_LLM_PROVIDER", "OpenAI")
     if "model" not in st.session_state:
-        st.session_state.model = get_default_config_value("default_model.gpt")
+        st.session_state.model = get_config_value("default_model.gpt")
 
     with st.sidebar:
         st.header("Model settings")
@@ -104,7 +107,7 @@ def display_model_settings_sidebar():
             label="Select a large language model",
             options=model_options,
             key="model",
-            help=get_default_config_value("help_texts.model"),
+            help=get_config_value("help_texts.model"),
             disabled=not available_models,
         )
         st.slider(
@@ -113,8 +116,8 @@ def display_model_settings_sidebar():
             max_value=2.0,
             step=0.1,
             key="temperature",
-            value=get_default_config_value("temperature"),
-            help=get_default_config_value("help_texts.temperature"),
+            value=float(os.getenv("YTGPT_TEMPERATURE", "1.0")),
+            help=get_config_value("help_texts.temperature"),
         )
         st.slider(
             label="Adjust Top P",
@@ -122,23 +125,21 @@ def display_model_settings_sidebar():
             max_value=1.0,
             step=0.1,
             key="top_p",
-            value=get_default_config_value("top_p"),
-            help=get_default_config_value("help_texts.top_p"),
+            value=float(os.getenv("YTGPT_TOP_P", "1.0")),
+            help=get_config_value("help_texts.top_p"),
         )
         if is_temperature_and_top_p_altered():
             st.warning(
                 "OpenAI generally recommends altering temperature or top_p but not both. See their [API reference](https://platform.openai.com/docs/api-reference/chat/create#chat-create-temperature)"
             )
-        if provider == "OpenAI" and model != get_default_config_value(
-            "default_model.gpt"
-        ):
+        if provider == "OpenAI" and model != get_config_value("default_model.gpt"):
             st.warning(
                 """:warning: Be aware of the higher costs and latencies when using more advanced (reasoning) models (like gpt-5). You can see details (incl. costs) about the models and compare them [here](https://platform.openai.com/docs/models/compare)."""
             )
 
 
 def display_link_to_repo(view: str = "main"):
-    gh_link = get_default_config_value(f"github_repo_links.{view}")
+    gh_link = get_config_value(f"github_repo_links.{view}")
     st.sidebar.write(f"[View the source code]({gh_link})")
 
 
@@ -150,7 +151,7 @@ def display_video_url_input(
         label=label,
         key="url_input",
         disabled=disabled,
-        help=get_default_config_value("help_texts.youtube_url"),
+        help=get_config_value("help_texts.youtube_url"),
     )
 
 

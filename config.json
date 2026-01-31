@@ -31,8 +31,6 @@
             "gpt-4o"
         ]
     },
-    "temperature": 1.0,
-    "top_p": 1.0,
     "help_texts": {
         "youtube_url": "Copy directly from the adress bar or use the 'Share' button.",
         "custom_prompt": "You can ask a specific question, require a more detailed summary, create a plan, specify the format etc.",

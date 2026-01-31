@@ -65,9 +65,7 @@ def get_available_models(
         If an authentication error or any other exception occurs during the API call, an empty list is returned.
     """
     openai.api_key = api_key
-    selectable_model_ids = list(
-        get_default_config_value(f"available_models.{model_type}")
-    )
+    selectable_model_ids = list(get_config_value(f"available_models.{model_type}"))
 
     def _filter_available(models: List[str]) -> List[str]:
         return [m for m in selectable_model_ids if m in models]
@@ -102,7 +100,7 @@ def get_available_models(
         return _filter_available(available_model_ids)
 
 
-def get_default_config_value(
+def get_config_value(
     key_path: str,
     config_file_path: str = "./config.json",
 ) -> str:
