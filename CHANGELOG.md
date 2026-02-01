@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.3.0](https://github.com/sudoleg/YouTubeGPT/compare/v3.2.1...v3.3.0) (2026-01-31)
+
+
+### Features
+
+* **config:** add environment variable support for settings ([064080e](https://github.com/sudoleg/YouTubeGPT/commit/064080e7182e51292882af6600902814c47cb8bc))
+* gpt-5.2, fixes [#481](https://github.com/sudoleg/YouTubeGPT/issues/481) ([e84a20d](https://github.com/sudoleg/YouTubeGPT/commit/e84a20d926df93d87a9bd7201e3bc8cd20767ac4))
+
+
+### Bug Fixes
+
+* **deps:** update dependency langchain-chroma to v1.1.0 ([4512ef2](https://github.com/sudoleg/YouTubeGPT/commit/4512ef25a241ced3b01fbab55deb529958962d7b))
+* **deps:** update dependency langchain-chroma to v1.1.0 ([7aba6cb](https://github.com/sudoleg/YouTubeGPT/commit/7aba6cb8a0772b93dbadc961e9813825d8f85472))
+* **deps:** update dependency peewee to v3.19.0 ([2ab6a9a](https://github.com/sudoleg/YouTubeGPT/commit/2ab6a9ae781478aa52c3a6a620fb5617b5fe43a9))
+* **deps:** update dependency peewee to v3.19.0 ([fff2855](https://github.com/sudoleg/YouTubeGPT/commit/fff285572995d493ea125f0a05d62d5a523ed451))
+* **deps:** update dependency pytubefix to v10 ([b358020](https://github.com/sudoleg/YouTubeGPT/commit/b3580203a292fe9b528ef0b804e0211570a738ac))
+* **deps:** update dependency pytubefix to v10 ([659baa8](https://github.com/sudoleg/YouTubeGPT/commit/659baa808d3e34abbdf6faf77f4f7df37a495a3d))
+* **deps:** update dependency streamlit to v1.53.1 ([0892d8c](https://github.com/sudoleg/YouTubeGPT/commit/0892d8c5e28ba0111751960f1659b769ba5c9995))
+* **deps:** update dependency streamlit to v1.53.1 ([f741a07](https://github.com/sudoleg/YouTubeGPT/commit/f741a0723ae8d33b840ffc1d178aea1150eae1e5))
+* **deps:** update dependency youtube-transcript-api to v1.2.4 ([#509](https://github.com/sudoleg/YouTubeGPT/issues/509)) ([9a734f8](https://github.com/sudoleg/YouTubeGPT/commit/9a734f88d741efb62177745df40b0b71e152300a))
+
 ## [3.2.1](https://github.com/sudoleg/YouTubeGPT/compare/v3.2.0...v3.2.1) (2025-12-22)
 
 
