@@ -8,7 +8,7 @@ dependencies = [
   "langchain==1.2.7",
   "langchain-chroma==1.1.0",
   "langchain-classic==1.0.1",
-  "langchain-core==1.2.7",
+  "langchain-core==1.2.8",
   "langchain-ollama==1.0.1",
   "langchain-openai==1.1.7",
   "langchain-text-splitters==1.1.0",
