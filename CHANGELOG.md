@@ -1,5 +1,15 @@
 # Changelog
 
+## [3.3.1](https://github.com/sudoleg/YouTubeGPT/compare/v3.3.0...v3.3.1) (2026-02-06)
+
+
+### Bug Fixes
+
+* **deps:** update dependency langchain to v1.2.8 ([#513](https://github.com/sudoleg/YouTubeGPT/issues/513)) ([90f0b4e](https://github.com/sudoleg/YouTubeGPT/commit/90f0b4e481b075e7573f8218b1bec2833092410e))
+* **deps:** update dependency langchain to v1.2.9 ([#523](https://github.com/sudoleg/YouTubeGPT/issues/523)) ([4b2dbe3](https://github.com/sudoleg/YouTubeGPT/commit/4b2dbe3dcfb31cb6afda3d1f6998a8ee7086a734))
+* **deps:** update dependency langchain-core to v1.2.8 ([#514](https://github.com/sudoleg/YouTubeGPT/issues/514)) ([6deb914](https://github.com/sudoleg/YouTubeGPT/commit/6deb914c3491fe22c0eb7223173a3d1fa1135dd4))
+* **deps:** update dependency langchain-core to v1.2.9 ([#521](https://github.com/sudoleg/YouTubeGPT/issues/521)) ([693c460](https://github.com/sudoleg/YouTubeGPT/commit/693c4602f486fbf9df5317798aa585c596a08f50))
+
 ## [3.3.0](https://github.com/sudoleg/YouTubeGPT/compare/v3.2.1...v3.3.0) (2026-01-31)
 
 
