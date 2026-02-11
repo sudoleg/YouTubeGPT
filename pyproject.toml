@@ -10,7 +10,7 @@ dependencies = [
   "langchain-classic==1.0.1",
   "langchain-core==1.2.11",
   "langchain-ollama==1.0.1",
-  "langchain-openai==1.1.8",
+  "langchain-openai==1.1.9",
   "langchain-text-splitters==1.1.0",
   "youtube-transcript-api==1.2.4",
   "streamlit==1.53.1",
