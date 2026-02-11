@@ -5,7 +5,7 @@ description = "Streamlit app for summarizing and chatting with YouTube videos."
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
 dependencies = [
-  "langchain==1.2.9",
+  "langchain==1.2.10",
   "langchain-chroma==1.1.0",
   "langchain-classic==1.0.1",
   "langchain-core==1.2.11",
