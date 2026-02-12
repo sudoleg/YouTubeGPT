@@ -68,7 +68,9 @@ def display_model_settings_sidebar():
     if "llm_provider" not in st.session_state:
         st.session_state.llm_provider = os.getenv("YTGPT_LLM_PROVIDER", "OpenAI")
     if "model" not in st.session_state:
-        st.session_state.model = get_config_value("default_model.gpt")
+        st.session_state.model = os.getenv(
+            "YTGPT_DEFAULT_GPT_MODEL", get_config_value("default_model.gpt")
+        )
 
     with st.sidebar:
         st.header("Model settings")
