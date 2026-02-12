@@ -17,6 +17,7 @@ transcript_audios/
 data/audio/*.mp3
 data/transcripts/*.txt
 scripts/
+compose.override.yml
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
