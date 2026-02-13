@@ -3,5 +3,19 @@
   "extends": [
     "config:recommended",
     ":automergePatch"
+  ],
+  "packageRules": [
+    {
+      "groupName": "chroma",
+      "matchPackageNames": [
+        "chromadb",
+        "chromadb/chroma"
+      ],
+      "matchManagers": [
+        "pep621",
+        "docker-compose",
+        "pip_requirements"
+      ]
+    }
   ]
 }
