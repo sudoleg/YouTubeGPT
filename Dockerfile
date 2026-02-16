@@ -7,7 +7,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y ffmpeg curl && rm -rf /var/lib/apt/lists/*
 
 # Install uv
-COPY --from=ghcr.io/astral-sh/uv:0.10.2 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.10.3 /uv /uvx /bin/
 
 # Copy pyproject and lock file to leverage Docker cache
 COPY pyproject.toml uv.lock ./
