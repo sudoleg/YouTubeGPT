@@ -11,7 +11,7 @@ dependencies = [
   "langchain-core==1.2.13",
   "langchain-ollama==1.0.1",
   "langchain-openai==1.1.10",
-  "langchain-text-splitters==1.1.0",
+  "langchain-text-splitters==1.1.1",
   "youtube-transcript-api==1.2.4",
   "streamlit==1.53.1",
   "watchdog==6.0.0",
