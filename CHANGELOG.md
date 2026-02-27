@@ -1,5 +1,30 @@
 # Changelog
 
+## [3.3.1](https://github.com/sudoleg/YouTubeGPT/compare/v3.3.0...v3.3.1) (2026-02-27)
+
+
+### Bug Fixes
+
+* **deps:** update dependency langchain to v1.2.10 ([#527](https://github.com/sudoleg/YouTubeGPT/issues/527)) ([164c603](https://github.com/sudoleg/YouTubeGPT/commit/164c603fc15031347e3b66d1925daa8358fbd183))
+* **deps:** update dependency langchain to v1.2.8 ([#513](https://github.com/sudoleg/YouTubeGPT/issues/513)) ([90f0b4e](https://github.com/sudoleg/YouTubeGPT/commit/90f0b4e481b075e7573f8218b1bec2833092410e))
+* **deps:** update dependency langchain to v1.2.9 ([#523](https://github.com/sudoleg/YouTubeGPT/issues/523)) ([4b2dbe3](https://github.com/sudoleg/YouTubeGPT/commit/4b2dbe3dcfb31cb6afda3d1f6998a8ee7086a734))
+* **deps:** update dependency langchain-core to v1.2.11 ([#528](https://github.com/sudoleg/YouTubeGPT/issues/528)) ([30b2cdc](https://github.com/sudoleg/YouTubeGPT/commit/30b2cdc4cddbd8c9200a8bd46a74fa1a035777e9))
+* **deps:** update dependency langchain-core to v1.2.12 ([#530](https://github.com/sudoleg/YouTubeGPT/issues/530)) ([cac4417](https://github.com/sudoleg/YouTubeGPT/commit/cac441739313f419b645818aa699d129d5a7ce27))
+* **deps:** update dependency langchain-core to v1.2.13 ([#532](https://github.com/sudoleg/YouTubeGPT/issues/532)) ([c5c89cd](https://github.com/sudoleg/YouTubeGPT/commit/c5c89cd3ebcb7ef6993abf654b45e039855d78eb))
+* **deps:** update dependency langchain-core to v1.2.14 ([1b90404](https://github.com/sudoleg/YouTubeGPT/commit/1b904041243bac177657dcecefdf9ae1a6bb472b))
+* **deps:** update dependency langchain-core to v1.2.14 ([7b6f7d1](https://github.com/sudoleg/YouTubeGPT/commit/7b6f7d10014c86f2100d390c8674bdfcb5dced91))
+* **deps:** update dependency langchain-core to v1.2.15 ([#540](https://github.com/sudoleg/YouTubeGPT/issues/540)) ([16a0d62](https://github.com/sudoleg/YouTubeGPT/commit/16a0d62b2641171bc4fe8ae09e0fd3545b244b36))
+* **deps:** update dependency langchain-core to v1.2.16 ([#543](https://github.com/sudoleg/YouTubeGPT/issues/543)) ([8a0127c](https://github.com/sudoleg/YouTubeGPT/commit/8a0127cee551f384730ea31b5201417867d81eb6))
+* **deps:** update dependency langchain-core to v1.2.8 ([#514](https://github.com/sudoleg/YouTubeGPT/issues/514)) ([6deb914](https://github.com/sudoleg/YouTubeGPT/commit/6deb914c3491fe22c0eb7223173a3d1fa1135dd4))
+* **deps:** update dependency langchain-core to v1.2.9 ([#521](https://github.com/sudoleg/YouTubeGPT/issues/521)) ([693c460](https://github.com/sudoleg/YouTubeGPT/commit/693c4602f486fbf9df5317798aa585c596a08f50))
+* **deps:** update dependency langchain-openai to v1.1.10 ([#535](https://github.com/sudoleg/YouTubeGPT/issues/535)) ([193aa2f](https://github.com/sudoleg/YouTubeGPT/commit/193aa2feca344fd394a9c515e7ff05cbe465cf8f))
+* **deps:** update dependency langchain-openai to v1.1.8 ([49c8828](https://github.com/sudoleg/YouTubeGPT/commit/49c882816600cbe2dac2328e5af2744de43d6011))
+* **deps:** update dependency langchain-openai to v1.1.8 ([05064ce](https://github.com/sudoleg/YouTubeGPT/commit/05064ce517386ffe4259c5aaf2daa680c59fbe49))
+* **deps:** update dependency langchain-openai to v1.1.9 ([#529](https://github.com/sudoleg/YouTubeGPT/issues/529)) ([d9c2a49](https://github.com/sudoleg/YouTubeGPT/commit/d9c2a4988c295613f3645ef1bca2d5b739e46c35))
+* **deps:** update dependency langchain-text-splitters to v1.1.1 ([#536](https://github.com/sudoleg/YouTubeGPT/issues/536)) ([69647c7](https://github.com/sudoleg/YouTubeGPT/commit/69647c79c6429d5bbc970b484b0658dbb43ea68d))
+* **deps:** update dependency pytubefix to v10.3.8 ([#538](https://github.com/sudoleg/YouTubeGPT/issues/538)) ([d2fad0c](https://github.com/sudoleg/YouTubeGPT/commit/d2fad0cbfa3e0ac480a2998b87b164af5f8005a1))
+* **ui:** update default model retrieval to use environment variable ([2e226af](https://github.com/sudoleg/YouTubeGPT/commit/2e226af1d9a1eca676c97132c2f5378eaf614c88))
+
 ## [3.3.0](https://github.com/sudoleg/YouTubeGPT/compare/v3.2.1...v3.3.0) (2026-01-31)
 
 
