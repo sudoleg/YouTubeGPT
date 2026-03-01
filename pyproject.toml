@@ -16,7 +16,7 @@ dependencies = [
   "streamlit==1.53.1",
   "watchdog==6.0.0",
   "peewee==3.19.0",
-  "python-dotenv==1.2.1",
+  "python-dotenv==1.2.2",
   "chromadb==1.4.1",
   "randomname==0.2.1",
   "tiktoken==0.12.0",
