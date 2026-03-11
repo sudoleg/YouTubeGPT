@@ -1,4 +1,4 @@
-langchain==1.2.10
+langchain==1.2.11
 langchain-classic==1.0.2
 langchain-core==1.2.18
 langchain-ollama==1.0.1
