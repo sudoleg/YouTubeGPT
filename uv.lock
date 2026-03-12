@@ -750,16 +750,16 @@ wheels = [
 
 [[package]]
 name = "langchain"
-version = "1.2.11"
+version = "1.2.12"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "langchain-core" },
     { name = "langgraph" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/8a/ed/990ec469ee2c4876adc367a1bb10143132a54a6fd9757269d2e440d65b37/langchain-1.2.11.tar.gz", hash = "sha256:1b0f680de88c178898a69f9814025729110fc68365b2c33cd2ba978114d5fc0a", size = 566207, upload-time = "2026-03-10T19:46:14.519Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d8/1d/1af2fc0ac084d4781778b7846b1aed62e05006bf2d73fdf84ac3a8f5225c/langchain-1.2.12.tar.gz", hash = "sha256:ed705b5b293799f7e3e394387f398a1b71707542758283206c8c21415759d991", size = 566444, upload-time = "2026-03-11T22:21:00.712Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/10/24/c9fd2d6f31ef7444e163aa9295c2c661892c8b2b683b4b6dd190ffd29a2f/langchain-1.2.11-py3-none-any.whl", hash = "sha256:ccc5d23e2568efa6e3cb2dde268a267d7f090bdad47d7e1ee5f0c9769e8cb7b9", size = 112136, upload-time = "2026-03-10T19:46:12.433Z" },
+    { url = "https://files.pythonhosted.org/packages/ca/51/09bb1cfb0b57ae9440ca56cc576e4dc792f83d030eef7637d2c516dcb0a0/langchain-1.2.12-py3-none-any.whl", hash = "sha256:60eff184b8f92c2610f5a4c9a97ad339a891adb01901e83e4df8e6c9c69cf852", size = 112373, upload-time = "2026-03-11T22:20:59.508Z" },
 ]
 
 [[package]]
@@ -854,7 +854,7 @@ wheels = [
 
 [[package]]
 name = "langgraph"
-version = "1.1.0"
+version = "1.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "langchain-core" },
@@ -864,9 +864,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "xxhash" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/c6/de/be274968aa1ce40a109e0e638718d4e31872e97dbc84d3b5c7ab81a18d4e/langgraph-1.1.0.tar.gz", hash = "sha256:2decaef5d6716166dc5c13e0fdf65637e5a1837ef4c94fd82b6bcf2115cb5c78", size = 542647, upload-time = "2026-03-10T12:46:34.156Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6d/1a/6dbad0c87fb39a58e5ced85297511cc4bcad06cc420b20898eecafece2a2/langgraph-1.1.1.tar.gz", hash = "sha256:cd6282efc657c955b41bff6bd9693de58137ad18f7e7f16b4d17c7d2118d53e1", size = 544040, upload-time = "2026-03-11T22:14:47.845Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/61/0c/4920a1c5d2d1059f706b547019091e4da74ab30cd95fe114af737a89236f/langgraph-1.1.0-py3-none-any.whl", hash = "sha256:7d29e01312340c9c7c09eb0178db5edd0514c3f35929fa5b32a247fcd9a9cd65", size = 167249, upload-time = "2026-03-10T12:46:32.546Z" },
+    { url = "https://files.pythonhosted.org/packages/dc/c1/572187bb61a534050ef2d5030e7abe46b19694ec106604fe12ddcb8672c7/langgraph-1.1.1-py3-none-any.whl", hash = "sha256:d0cc8d347131cbfc010e65aad9b0f1afbd0e151f470c288bec1f3df8336c50c6", size = 167502, upload-time = "2026-03-11T22:14:46.121Z" },
 ]
 
 [[package]]
@@ -2272,6 +2272,8 @@ dependencies = [
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ec/23/2c9fe0c9c27f7f6cb865abcea8a4568f29f00acaeadfc6a37f6801f84cb4/torch-2.10.0-2-cp313-none-macosx_11_0_arm64.whl", hash = "sha256:e521c9f030a3774ed770a9c011751fb47c4d12029a3d6522116e48431f2ff89e", size = 79498254, upload-time = "2026-02-10T21:44:44.095Z" },
+    { url = "https://files.pythonhosted.org/packages/ab/c6/4dfe238342ffdcec5aef1c96c457548762d33c40b45a1ab7033bb26d2ff2/torch-2.10.0-3-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:80b1b5bfe38eb0e9f5ff09f206dcac0a87aadd084230d4a36eea5ec5232c115b", size = 915627275, upload-time = "2026-03-11T14:16:11.325Z" },
+    { url = "https://files.pythonhosted.org/packages/d8/f0/72bf18847f58f877a6a8acf60614b14935e2f156d942483af1ffc081aea0/torch-2.10.0-3-cp313-cp313t-manylinux_2_28_x86_64.whl", hash = "sha256:46b3574d93a2a8134b3f5475cfb98e2eb46771794c57015f6ad1fb795ec25e49", size = 915523474, upload-time = "2026-03-11T14:17:44.422Z" },
     { url = "https://files.pythonhosted.org/packages/c9/6f/f2e91e34e3fcba2e3fc8d8f74e7d6c22e74e480bbd1db7bc8900fdf3e95c/torch-2.10.0-cp313-cp313-manylinux_2_28_aarch64.whl", hash = "sha256:5c4d217b14741e40776dd7074d9006fd28b8a97ef5654db959d8635b2fe5f29b", size = 146004247, upload-time = "2026-01-21T16:24:29.335Z" },
     { url = "https://files.pythonhosted.org/packages/98/fb/5160261aeb5e1ee12ee95fe599d0541f7c976c3701d607d8fc29e623229f/torch-2.10.0-cp313-cp313-manylinux_2_28_x86_64.whl", hash = "sha256:6b71486353fce0f9714ca0c9ef1c850a2ae766b409808acd58e9678a3edb7738", size = 915716445, upload-time = "2026-01-21T16:22:45.353Z" },
     { url = "https://files.pythonhosted.org/packages/6a/16/502fb1b41e6d868e8deb5b0e3ae926bbb36dab8ceb0d1b769b266ad7b0c3/torch-2.10.0-cp313-cp313-win_amd64.whl", hash = "sha256:c2ee399c644dc92ef7bc0d4f7e74b5360c37cdbe7c5ba11318dda49ffac2bc57", size = 113757050, upload-time = "2026-01-21T16:24:19.204Z" },
@@ -2648,7 +2650,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "chromadb", specifier = "==1.5.5" },
-    { name = "langchain", specifier = "==1.2.11" },
+    { name = "langchain", specifier = "==1.2.12" },
     { name = "langchain-chroma", specifier = "==1.1.0" },
     { name = "langchain-classic", specifier = "==1.0.2" },
     { name = "langchain-core", specifier = "==1.2.18" },
