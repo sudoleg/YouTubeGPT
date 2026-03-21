@@ -14,7 +14,7 @@ services:
       - net
 
   youtubegpt:
-    image: sudoleg/yotube-gpt:latest
+    image: sudoleg156/yotube-gpt:latest
     container_name: youtube-gpt
     depends_on:
       - chromadb

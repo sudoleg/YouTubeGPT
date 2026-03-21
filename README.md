@@ -53,7 +53,7 @@ If you want to use Ollama, you need to have an Ollama server running locally or 
 ```bash
 # pull from docker hub
 docker-compose up -d
-# or build locally
+# or build image locally
 docker-compose up --build -d
 ```
 
@@ -68,13 +68,13 @@ The app will be accessible in the browser under <http://localhost:8501>.
 
 You can customize the default settings using environment variables. These are optional and will use built-in defaults if not set:
 
-| Environment Variable | Description | Default | Example |
-|---------------------|-------------|---------|---------|
-| `YTGPT_LLM_PROVIDER` | Default LLM provider | `OpenAI` | `OpenAI` or `Ollama` |
-| `YTGPT_DEFAULT_GPT_MODEL` | Default language model | `gpt-4.1-nano` | `gpt-4o`, `llama3` |
-| `YTGPT_DEFAULT_EMBEDDINGS_MODEL` | Default embeddings model | `text-embedding-3-small` | `text-embedding-3-large`, `nomic-embed-text:latest` |
-| `YTGPT_TEMPERATURE` | Model temperature (0.0-2.0) | `1.0` | `0.7` |
-| `YTGPT_TOP_P` | Model top-p (0.0-1.0) | `1.0` | `0.9` |
+| Environment Variable             | Description                 | Default                  | Example                                             |
+| -------------------------------- | --------------------------- | ------------------------ | --------------------------------------------------- |
+| `YTGPT_LLM_PROVIDER`             | Default LLM provider        | `OpenAI`                 | `OpenAI` or `Ollama`                                |
+| `YTGPT_DEFAULT_GPT_MODEL`        | Default language model      | `gpt-4.1-nano`           | `gpt-4o`, `llama3`                                  |
+| `YTGPT_DEFAULT_EMBEDDINGS_MODEL` | Default embeddings model    | `text-embedding-3-small` | `text-embedding-3-large`, `nomic-embed-text:latest` |
+| `YTGPT_TEMPERATURE`              | Model temperature (0.0-2.0) | `1.0`                    | `0.7`                                               |
+| `YTGPT_TOP_P`                    | Model top-p (0.0-1.0)       | `1.0`                    | `0.9`                                               |
 
 **Example usage:**
 
