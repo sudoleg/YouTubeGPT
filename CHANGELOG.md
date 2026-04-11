@@ -1,5 +1,29 @@
 # Changelog
 
+## [3.3.2](https://github.com/sudoleg/YouTubeGPT/compare/v3.3.1...v3.3.2) (2026-04-11)
+
+
+### Bug Fixes
+
+* **deps:** update chroma to v1.5.6 ([#585](https://github.com/sudoleg/YouTubeGPT/issues/585)) ([9d1d2d0](https://github.com/sudoleg/YouTubeGPT/commit/9d1d2d04c0b587d1331ca876dd12ea0a8eb939ec))
+* **deps:** update chroma to v1.5.7 ([#591](https://github.com/sudoleg/YouTubeGPT/issues/591)) ([0a09698](https://github.com/sudoleg/YouTubeGPT/commit/0a096987860a4fa14764e485d4fdc682878256f2))
+* **deps:** update dependency langchain to v1.2.14 ([#577](https://github.com/sudoleg/YouTubeGPT/issues/577)) ([0469e08](https://github.com/sudoleg/YouTubeGPT/commit/0469e08c1fd7eb0a160f73312aa30ffbf8e95cc2))
+* **deps:** update dependency langchain to v1.2.15 ([#583](https://github.com/sudoleg/YouTubeGPT/issues/583)) ([f92a111](https://github.com/sudoleg/YouTubeGPT/commit/f92a11120027d47c5d12e96ef3501372a86f54dc))
+* **deps:** update dependency langchain-core to v1.2.21 ([#569](https://github.com/sudoleg/YouTubeGPT/issues/569)) ([32ebb98](https://github.com/sudoleg/YouTubeGPT/commit/32ebb98531648678e1160686a5b4a82885446aae))
+* **deps:** update dependency langchain-core to v1.2.22 ([#573](https://github.com/sudoleg/YouTubeGPT/issues/573)) ([ec90334](https://github.com/sudoleg/YouTubeGPT/commit/ec903348b2969fd523a9b3b077792b54fec7a328))
+* **deps:** update dependency langchain-core to v1.2.23 ([#576](https://github.com/sudoleg/YouTubeGPT/issues/576)) ([b0f72c7](https://github.com/sudoleg/YouTubeGPT/commit/b0f72c732a95a6e4ce7e7692544194bd11a2025d))
+* **deps:** update dependency langchain-core to v1.2.24 ([#580](https://github.com/sudoleg/YouTubeGPT/issues/580)) ([1215b24](https://github.com/sudoleg/YouTubeGPT/commit/1215b24cfd00ef96b579b828aed07e66505fdd81))
+* **deps:** update dependency langchain-core to v1.2.25 ([#582](https://github.com/sudoleg/YouTubeGPT/issues/582)) ([706a331](https://github.com/sudoleg/YouTubeGPT/commit/706a331ad5f97bf93fc9995a8e19f3937d3ee88a))
+* **deps:** update dependency langchain-core to v1.2.26 ([#584](https://github.com/sudoleg/YouTubeGPT/issues/584)) ([b0bd73e](https://github.com/sudoleg/YouTubeGPT/commit/b0bd73e23b1a270b03ef2f4053b8b61124d63c42))
+* **deps:** update dependency langchain-core to v1.2.27 ([#588](https://github.com/sudoleg/YouTubeGPT/issues/588)) ([c9a9446](https://github.com/sudoleg/YouTubeGPT/commit/c9a9446a6ed8196f05c8d4a44b1f631a9fe410c8))
+* **deps:** update dependency langchain-core to v1.2.28 [security] ([#592](https://github.com/sudoleg/YouTubeGPT/issues/592)) ([973b4de](https://github.com/sudoleg/YouTubeGPT/commit/973b4deaadfbb778f953634b15dad5a0f8956779))
+* **deps:** update dependency langchain-ollama to v1.1.0 ([db82f3a](https://github.com/sudoleg/YouTubeGPT/commit/db82f3ae085de6201f905f2bfcb7ced4bb74bb24))
+* **deps:** update dependency langchain-ollama to v1.1.0 ([a9bab23](https://github.com/sudoleg/YouTubeGPT/commit/a9bab23b7dbabc67be14476372ac719a7e635eac))
+* **deps:** update dependency langchain-openai to v1.1.12 ([#571](https://github.com/sudoleg/YouTubeGPT/issues/571)) ([ef9e0b8](https://github.com/sudoleg/YouTubeGPT/commit/ef9e0b8ddb2d2294e004073ff3735dea8090048e))
+* **deps:** update dependency peewee to v4.0.3 ([#575](https://github.com/sudoleg/YouTubeGPT/issues/575)) ([b5dfcf9](https://github.com/sudoleg/YouTubeGPT/commit/b5dfcf90c7472f27fb9ddba593e26845403ace2f))
+* **deps:** update dependency peewee to v4.0.4 ([#581](https://github.com/sudoleg/YouTubeGPT/issues/581)) ([2e6e4f3](https://github.com/sudoleg/YouTubeGPT/commit/2e6e4f39139cebfee6156ced96d330d55ec978a0))
+* typo in image name ([6bdaeaf](https://github.com/sudoleg/YouTubeGPT/commit/6bdaeaf6970f72ed76c1ab6b1a56fecbf36a3d71))
+
 ## [3.3.1](https://github.com/sudoleg/YouTubeGPT/compare/v3.3.0...v3.3.1) (2026-03-21)
 
 
