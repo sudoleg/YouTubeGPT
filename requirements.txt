@@ -6,7 +6,7 @@ langchain-text-splitters==1.1.2
 langchain-openai==1.1.14
 langchain-chroma==1.1.0
 youtube-transcript-api==1.2.4
-streamlit==1.55.0
+streamlit==1.57.0
 watchdog==6.0.0
 pytest==9.0.3
 peewee==4.0.4
