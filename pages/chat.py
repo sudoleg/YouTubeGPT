@@ -14,6 +14,7 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from modules.helpers import (
     get_available_models,
     get_config_value,
+    get_openai_base_url,
     get_ollama_models,
     is_api_key_set,
     is_api_key_valid,
@@ -186,6 +187,7 @@ if provider_ready and chroma_connection_established:
         chat_model = ChatOpenAI(
             name=st.session_state.model,
             api_key=st.session_state.openai_api_key,
+            base_url=get_openai_base_url(),
             temperature=st.session_state.temperature,
             model=st.session_state.model,
             top_p=st.session_state.top_p,
@@ -193,6 +195,7 @@ if provider_ready and chroma_connection_established:
         )
         embedding_model = OpenAIEmbeddings(
             api_key=st.session_state.openai_api_key,
+            base_url=get_openai_base_url(),
             model=st.session_state.embeddings_model,
         )
     else:
