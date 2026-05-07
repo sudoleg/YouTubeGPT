@@ -18,6 +18,19 @@ def is_api_key_set() -> bool:
     return False
 
 
+def get_openai_base_url() -> str:
+    """Return the configured OpenAI base URL."""
+    return os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
+
+
+def get_openai_client(api_key: str = "") -> openai.OpenAI:
+    """Return an OpenAI client configured from environment variables."""
+    return openai.OpenAI(
+        api_key=api_key or os.getenv("OPENAI_API_KEY"),
+        base_url=get_openai_base_url(),
+    )
+
+
 @st.cache_data
 def is_api_key_valid(api_key: str):
     """
@@ -30,9 +43,9 @@ def is_api_key_valid(api_key: str):
         bool: True if the API key is valid, False if the API key is invalid.
     """
 
-    openai.api_key = api_key
+    client = get_openai_client(api_key)
     try:
-        openai.models.list()
+        client.models.list()
     except openai.AuthenticationError as e:
         logging.error(
             "An authentication error occurred when checking API key validity: %s",
@@ -54,18 +67,21 @@ def get_available_models(
     model_type: Literal["gpts", "embeddings"], api_key: str = ""
 ) -> List[str]:
     """
-    Retrieve a filtered list of available model IDs from OpenAI's API or environment variables, based on the specified model type.
+    Retrieve a list of available model IDs from OpenAI's API or environment variables, based on the specified model type.
+
+    When using the default OpenAI base URL, the list is filtered against configured selectable models.
+    When using a non-default base URL, all available models are returned without filtering.
 
     Args:
         model_type (Literal["gpts", "embeddings"]): The type of models to retrieve, such as 'gpts' or 'embeddings'.
         api_key (str, optional): The API key for authenticating with OpenAI. Defaults to an empty string.
 
     Returns:
-        List[str]: A filtered list of available model IDs matching the specified model type. The list is derived either from the environment variable `AVAILABLE_MODEL_IDS` if set, or from a call to OpenAI's API.
+        List[str]: A list of available model IDs matching the specified model type. The list is derived either from the environment variable `AVAILABLE_MODEL_IDS` if set, or from a call to OpenAI's API.
         If an authentication error or any other exception occurs during the API call, an empty list is returned.
     """
-    openai.api_key = api_key
     selectable_model_ids = list(get_config_value(f"available_models.{model_type}"))
+    is_custom_base_url = get_openai_base_url() != "https://api.openai.com/v1"
 
     def _filter_available(models: List[str]) -> List[str]:
         return [m for m in selectable_model_ids if m in models]
@@ -77,10 +93,13 @@ def get_available_models(
     # the env var is set programatically below
     available_model_ids = os.getenv("AVAILABLE_MODEL_IDS")
     if available_model_ids:
-        return _filter_available(available_model_ids.split(","))
+        models_list = available_model_ids.split(",")
+        return models_list if is_custom_base_url else _filter_available(models_list)
 
     try:
-        available_model_ids: list = [model.id for model in openai.models.list()]
+        available_model_ids: list = [
+            model.id for model in get_openai_client(api_key).models.list()
+        ]
     except openai.AuthenticationError as e:
         logging.error(
             "An authentication error occurred when fetching available models: %s",
@@ -97,7 +116,11 @@ def get_available_models(
         # set the AVAILABLE_MODEL_IDS env var, so that the list of available models
         # doesn't have to be fetched every time
         os.environ["AVAILABLE_MODEL_IDS"] = ",".join(available_model_ids)
-        return _filter_available(available_model_ids)
+        return (
+            available_model_ids
+            if is_custom_base_url
+            else _filter_available(available_model_ids)
+        )
 
 
 def get_config_value(
