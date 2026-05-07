@@ -783,7 +783,7 @@ wheels = [
 
 [[package]]
 name = "langchain-classic"
-version = "1.0.5"
+version = "1.0.6"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "langchain-core" },
@@ -794,9 +794,9 @@ dependencies = [
     { name = "requests" },
     { name = "sqlalchemy" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/5a/46/2b7dff9566a7c3985a05e11b43ca28801ff02b9f2fe3b0eff745f70ebd77/langchain_classic-1.0.5.tar.gz", hash = "sha256:33c2c0d8483ce7523e81b7e9107459a666497b39ad1018d7e635999b790e52c6", size = 10553125, upload-time = "2026-05-03T17:32:07.406Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/3b/41/6c246b47980c18b21ab34a0609e0228ae36d4867d7ff528677b5d138226e/langchain_classic-1.0.6.tar.gz", hash = "sha256:5e9daa0bbc8af92b53343909162f35c6d321eed61bfc8ed6135919ff103510eb", size = 10554854, upload-time = "2026-05-05T21:02:17.685Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/10/b7/f370c946d10c1c7161c6c9eba6a2df1a87a35d0400803472a0efa99ba53c/langchain_classic-1.0.5-py3-none-any.whl", hash = "sha256:824755c79c029a1c1ad389a6e2a75fd8eecdb87d427197d8777570ec55512022", size = 1040496, upload-time = "2026-05-03T17:32:05.329Z" },
+    { url = "https://files.pythonhosted.org/packages/8e/ed/71455eae66718a0c8feea759778dfb4609e787390328c96196c17d6a1005/langchain_classic-1.0.6-py3-none-any.whl", hash = "sha256:ee3c75e63c5d55c22e7711f9576f3c55dd84cd4ac1c8d734e4bf014f12d1a409", size = 1041916, upload-time = "2026-05-05T21:02:15.592Z" },
 ]
 
 [[package]]
@@ -2711,7 +2711,7 @@ requires-dist = [
     { name = "chromadb", specifier = "==1.5.9" },
     { name = "langchain", specifier = "==1.2.17" },
     { name = "langchain-chroma", specifier = "==1.1.0" },
-    { name = "langchain-classic", specifier = "==1.0.5" },
+    { name = "langchain-classic", specifier = "==1.0.6" },
     { name = "langchain-core", specifier = "==1.3.3" },
     { name = "langchain-ollama", specifier = "==1.1.0" },
     { name = "langchain-openai", specifier = "==1.2.1" },
