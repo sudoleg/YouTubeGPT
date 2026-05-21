@@ -80,14 +80,14 @@ def get_available_models(
         List[str]: A list of available model IDs matching the specified model type. The list is derived either from the environment variable `AVAILABLE_MODEL_IDS` if set, or from a call to OpenAI's API.
         If an authentication error or any other exception occurs during the API call, an empty list is returned.
     """
-    selectable_model_ids = list(get_config_value(f"available_models.{model_type}"))
+    supported_models = list(get_config_value(f"supported_models.{model_type}"))
     is_custom_base_url = get_openai_base_url() != "https://api.openai.com/v1"
 
     def _filter_available(models: List[str]) -> List[str]:
-        return [m for m in selectable_model_ids if m in models]
+        return [m for m in supported_models if m in models]
 
     if not api_key and not os.getenv("OPENAI_API_KEY"):
-        return selectable_model_ids
+        return supported_models
 
     # AVAILABLE_MODEL_IDS env var stores all the model IDs available to the user as a list (separated by a comma)
     # the env var is set programatically below
