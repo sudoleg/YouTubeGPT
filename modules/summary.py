@@ -52,14 +52,26 @@ def get_max_context_length(llm: BaseChatModel) -> int:
         llm (BaseChatModel): The language model instance.
 
     Returns:
-        int: The maximum context window size in tokens.
+        int: The maximum context window size in tokens. Defaults to 128k if not found.
     """
-    if llm.name not in OPENAI_CONTEXT_WINDOWS.keys():
+    # Check if llm.name is a substring of any OpenAI model in OPENAI_CONTEXT_WINDOWS
+    for model_name in OPENAI_CONTEXT_WINDOWS.keys():
+        if llm.name in model_name:
+            return OPENAI_CONTEXT_WINDOWS[model_name]["total"]
+    
+    # Try retrieving via ollama client
+    try:
         model_details = ollama.show(model=llm.name)
         model_info = model_details.get("modelinfo", {})
         general_arch = model_info.get("general.architecture", "")
-        return model_info.get(f"{general_arch}.context_length", 4096)
-    return OPENAI_CONTEXT_WINDOWS[llm.name]["total"]
+        context_length = model_info.get(f"{general_arch}.context_length")
+        if context_length:
+            return context_length
+    except Exception as e:
+        logging.warning("Could not retrieve context length for model %s via Ollama: %s", llm.name, str(e))
+    
+    # Fallback to 128k
+    return 128000
 
 
 def get_transcript_summary(transcript_text: str, llm: BaseChatModel, **kwargs):

@@ -9,6 +9,7 @@ from langchain_openai import ChatOpenAI
 from modules.helpers import (
     extract_youtube_video_id,
     get_config_value,
+    get_openai_base_url,
     is_api_key_set,
     is_api_key_valid,
     is_ollama_available,
@@ -161,6 +162,7 @@ if provider_ready:
                     llm = ChatOpenAI(
                         name=st.session_state.model,
                         api_key=st.session_state.openai_api_key,
+                        base_url=get_openai_base_url(),
                         temperature=st.session_state.temperature,
                         model=st.session_state.model,
                         top_p=st.session_state.top_p,

@@ -9,7 +9,7 @@
         "embeddings": "text-embedding-3-small",
         "gpt": "gpt-4.1-nano"
     },
-    "available_models": {
+    "supported_models": {
         "embeddings": [
             "text-embedding-3-small",
             "text-embedding-3-large",

@@ -6,6 +6,7 @@ from modules.helpers import (
     get_available_models,
     get_config_value,
     get_ollama_models,
+    get_openai_base_url,
     is_api_key_set,
     is_api_key_valid,
     is_ollama_available,
@@ -100,6 +101,12 @@ def display_model_settings_sidebar():
                 )
             else:
                 available_models = []
+            # Warn if using a non-default OpenAI base URL
+            openai_base_url = get_openai_base_url()
+            if openai_base_url != "https://api.openai.com/v1":
+                st.info(
+                    f":information_source: Using custom OpenAI base URL: `{openai_base_url}`"
+                )
         if available_models and st.session_state.model not in available_models:
             st.session_state.model = available_models[0]
         model_options = (

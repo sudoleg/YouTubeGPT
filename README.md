@@ -27,6 +27,7 @@ YouTubeGPT's features include:
 
 - choose between OpenAI's API or a (local) Ollama instance
 - currently available: ChatGPT 4-5 (incl. nano & mini) and *continuously updated* with new models
+- custom OpenAI-compatible endpoints are supported as well!
 - by choosing a different model, you can summarize even longer videos and get better responses
 
 ### :gear: Experiment with settings
@@ -48,7 +49,8 @@ If you want to use Ollama, you need to have an Ollama server running locally or 
 ### Run with Docker
 
 1. set the `OPENAI_API_KEY` environment variable either in [docker-compose.yml](docker-compose.yml) or by running `export OPENAI_API_KEY=<your-actual-key>` in your terminal
-2. execute the following command:
+2. optionally set `OPENAI_BASE_URL` if you want to point the app at a compatible OpenAI endpoint; it defaults to `https://api.openai.com/v1`
+3. execute the following command:
 
 ```bash
 # pull from docker hub
@@ -68,13 +70,14 @@ The app will be accessible in the browser under <http://localhost:8501>.
 
 You can customize the default settings using environment variables. These are optional and will use built-in defaults if not set:
 
-| Environment Variable             | Description                 | Default                  | Example                                             |
-| -------------------------------- | --------------------------- | ------------------------ | --------------------------------------------------- |
-| `YTGPT_LLM_PROVIDER`             | Default LLM provider        | `OpenAI`                 | `OpenAI` or `Ollama`                                |
-| `YTGPT_DEFAULT_GPT_MODEL`        | Default language model      | `gpt-4.1-nano`           | `gpt-4o`, `llama3`                                  |
-| `YTGPT_DEFAULT_EMBEDDINGS_MODEL` | Default embeddings model    | `text-embedding-3-small` | `text-embedding-3-large`, `nomic-embed-text:latest` |
-| `YTGPT_TEMPERATURE`              | Model temperature (0.0-2.0) | `1.0`                    | `0.7`                                               |
-| `YTGPT_TOP_P`                    | Model top-p (0.0-1.0)       | `1.0`                    | `0.9`                                               |
+| Environment Variable             | Description                 | Default                     | Example                                             |
+| -------------------------------- | --------------------------- | --------------------------- | --------------------------------------------------- |
+| `YTGPT_LLM_PROVIDER`             | Default LLM provider        | `OpenAI`                    | `OpenAI` or `Ollama`                                |
+| `YTGPT_DEFAULT_GPT_MODEL`        | Default language model      | `gpt-4.1-nano`              | `gpt-4o`, `llama3`                                  |
+| `YTGPT_DEFAULT_EMBEDDINGS_MODEL` | Default embeddings model    | `text-embedding-3-small`    | `text-embedding-3-large`, `nomic-embed-text:latest` |
+| `YTGPT_TEMPERATURE`              | Model temperature (0.0-2.0) | `1.0`                       | `0.7`                                               |
+| `YTGPT_TOP_P`                    | Model top-p (0.0-1.0)       | `1.0`                       | `0.9`                                               |
+| `OPENAI_BASE_URL`                | OpenAI API base URL         | `https://api.openai.com/v1` | `https://your-endpoint.example/v1`                  |
 
 **Example usage:**
 
