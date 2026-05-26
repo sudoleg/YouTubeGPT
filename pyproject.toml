@@ -21,7 +21,7 @@ dependencies = [
   "randomname==0.2.1",
   "tiktoken==0.13.0",
   "openai-whisper==20250625",
-  "pytubefix==10.7.2",
+  "pytubefix==10.7.3",
   "ollama==0.6.2",
 ]
 
