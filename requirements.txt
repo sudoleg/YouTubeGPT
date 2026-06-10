@@ -15,5 +15,5 @@ chromadb==1.5.9
 randomname==0.2.1
 tiktoken==0.13.0
 openai-whisper==20250625
-pytubefix==10.8.1
+pytubefix==10.9.0
 ollama==0.6.2

@@ -1904,15 +1904,15 @@ wheels = [
 
 [[package]]
 name = "pytubefix"
-version = "10.8.1"
+version = "10.9.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
     { name = "nodejs-wheel-binaries" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/e0/ec/aaa5603c2c3171636f8f35d6c89b12cc10a2ada797e045fe9a6fd4523b46/pytubefix-10.8.1.tar.gz", hash = "sha256:64166dfb807df73ef9f0992ca384f4b2ebbe2bc425662c4d2e1ad94c86f7c787", size = 1519123, upload-time = "2026-05-30T17:40:29.945Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/a5/2c/b7ae077ff7ea58966f6ea4233f67d82460d17b357a0a763c4ed01738ed19/pytubefix-10.9.0.tar.gz", hash = "sha256:ee285b7603308e978ebe76ba066f33605c11688248e1774202b7e9e7d0990da8", size = 1520756, upload-time = "2026-06-03T19:30:27.214Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/ff/41/94c0111a4947e1c50e943f0c9ef23b4c28b598c66d0ffab53dc1544bbabe/pytubefix-10.8.1-py3-none-any.whl", hash = "sha256:f5727179cd3810169458aa27f9175e2fdfeaf3e56702d8cf3176600e9268a37c", size = 1528863, upload-time = "2026-05-30T17:40:28.073Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/35/cc65ed8961f76496756d33c89dda7da51fead619e832489f8d67f8013326/pytubefix-10.9.0-py3-none-any.whl", hash = "sha256:158c9bda1eb7b3de57a4c61d544090c7b2cbaa5808dc28d40a337e324d4c8576", size = 1529687, upload-time = "2026-06-03T19:30:23.168Z" },
 ]
 
 [[package]]
@@ -2705,7 +2705,7 @@ requires-dist = [
     { name = "openai-whisper", specifier = "==20250625" },
     { name = "peewee", specifier = "==4.0.6" },
     { name = "python-dotenv", specifier = "==1.2.2" },
-    { name = "pytubefix", specifier = "==10.8.1" },
+    { name = "pytubefix", specifier = "==10.9.0" },
     { name = "randomname", specifier = "==0.2.1" },
     { name = "streamlit", specifier = "==1.55.0" },
     { name = "tiktoken", specifier = "==0.13.0" },
