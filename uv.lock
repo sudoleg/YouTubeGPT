@@ -1581,11 +1581,11 @@ wheels = [
 
 [[package]]
 name = "peewee"
-version = "4.0.9"
+version = "4.5.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/ce/26/46df74ce42e0a5c7dcc9d5a18042d3f513946c952a2713e80e8a25dc68f8/peewee-4.0.9.tar.gz", hash = "sha256:ace65e01d468d2703faf3c73973200fb0a53cd899b73f054edbc4b8b93d8b1a9", size = 752371, upload-time = "2026-06-16T00:21:08.595Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ed/9b/74f549937d7edfb75742f426347a7483b0aab70909e2250e44f067027094/peewee-4.5.1.tar.gz", hash = "sha256:8005cb45c54e1a282a2f24ddd583f0f7a80cd5d9c635d50d63f57c11d88c392a", size = 823179, upload-time = "2026-09-08T01:20:10.449Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/94/31/f455d289d39aa9ecf51ccacc28bcb0458ea210e66f361e56fb5b455fdf2f/peewee-4.0.9-py3-none-any.whl", hash = "sha256:a679241dece68125dfc9b6ecaa5e41e531a52d81793942150e20f9180bb91139", size = 155269, upload-time = "2026-06-16T00:21:07.162Z" },
+    { url = "https://files.pythonhosted.org/packages/13/90/3ddf6ef69090c63b6fe0d42b41e5dd3323d95dfe01eda6766305337be862/peewee-4.5.1-py3-none-any.whl", hash = "sha256:dbbdc93e9be08d1df49ceed48dc5d609bfeda6112848086f1f6c1f1debe70975", size = 193883, upload-time = "2026-09-08T01:20:09.027Z" },
 ]
 
 [[package]]
@@ -2703,7 +2703,7 @@ requires-dist = [
     { name = "langchain-text-splitters", specifier = "==1.1.2" },
     { name = "ollama", specifier = "==0.6.2" },
     { name = "openai-whisper", specifier = "==20250625" },
-    { name = "peewee", specifier = "==4.0.9" },
+    { name = "peewee", specifier = "==4.5.1" },
     { name = "python-dotenv", specifier = "==1.2.3" },
     { name = "pytubefix", specifier = "==10.9.0" },
     { name = "randomname", specifier = "==0.2.1" },
